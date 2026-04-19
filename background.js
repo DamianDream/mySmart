@@ -1,0 +1,27 @@
+// Toggle sidebar on icon click
+chrome.action.onClicked.addListener(async (tab) => {
+  if (!tab.url?.includes('console.smartsender.com')) return;
+  chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' });
+});
+
+// CORS-free API requests
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'API_REQUEST') {
+    handleApiRequest(message).then(sendResponse).catch(err => {
+      sendResponse({ ok: false, error: err.message });
+    });
+    return true;
+  }
+});
+
+async function handleApiRequest({ url, method = 'GET', headers = {}, body = null }) {
+  try {
+    const options = { method, headers };
+    if (body) options.body = body;
+    const res = await fetch(url, options);
+    const data = await res.json();
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}

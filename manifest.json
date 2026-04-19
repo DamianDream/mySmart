@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "mySender Tools",
+  "version": "2.0.0",
+  "description": "Tag search & variables manager for mySender",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": [
+    "https://console.smartsender.com/*",
+    "https://api.smartsender.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "mySender Tools"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://console.smartsender.com/*"],
+      "js": ["interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://console.smartsender.com/*"],
+      "js": ["content.js"],
+      "css": ["sidebar.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
