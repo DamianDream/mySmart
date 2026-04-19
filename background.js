@@ -19,7 +19,15 @@ async function handleApiRequest({ url, method = 'GET', headers = {}, body = null
     const options = { method, headers };
     if (body) options.body = body;
     const res = await fetch(url, options);
-    const data = await res.json();
+    
+    let data = null;
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      data = await res.text();
+    }
+    
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
     return { ok: false, error: err.message };

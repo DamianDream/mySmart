@@ -1,21 +1,40 @@
 (() => {
   'use strict';
 
+  // SVG icons (shared)
+  const iGear = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>`;
+  const iCopy = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  const iEdit = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const iReset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>`;
+  const iHistory = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+  const iSearch = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+  const iClock = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+  const iPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>`;
+  const iSave = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
+  const iTrash = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
+  const iPen = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+   const iAddToPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>`;
+  const iTune = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>`;
+  const iFilter = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>`;
+
   // ─── COLORS ───────────────────────────────────────────────────────────────
   const THEMES = {
     dark: {
-      '--bg': '#1e1e2e', '--bg2': '#252537', '--bg3': '#2e2e42', '--bg4': '#181828',
-      '--border': '#3a3a52', '--border2': '#4a4a62',
-      '--text': '#e8e8f0', '--text2': '#c8c8d8', '--text3': '#a0a0b8', '--text4': '#70708a', '--text5': '#50506a',
-      '--accent': '#1380F6', '--accent2': '#3a96ff', '--accent-bg': '#0d2040',
-      '--success': '#22c55e', '--error': '#ef4444', '--mark-bg': '#0d2040', '--mark-text': '#a0c4ff',
+      '--bg-solid': '#202124', '--bg': 'rgba(32, 33, 36, 0.75)', '--bg2': 'rgba(42, 43, 46, 0.65)', '--bg3': 'rgba(255, 255, 255, 0.08)', '--bg4': 'rgba(28, 29, 32, 0.75)',
+      '--border': 'rgba(255, 255, 255, 0.08)', '--border2': 'rgba(255, 255, 255, 0.15)',
+      '--text': '#ffffff', '--text2': '#f8fafc', '--text3': '#cbd5e1', '--text4': '#94a3b8', '--text5': '#64748b',
+      '--accent': '#3b82f6', '--accent2': '#60a5fa', '--accent-bg': 'rgba(59, 130, 246, 0.18)',
+      '--success': '#10b981', '--error': '#ef4444', '--mark-bg': '#0d2040', '--mark-text': '#a0c4ff',
+      '--shadow': 'rgba(0,0,0,0.3)', '--blur-depth': '24px'
     },
     light: {
-      '--bg': '#f0f2f5', '--bg2': '#ffffff', '--bg3': '#e8eaf0', '--bg4': '#f8f9fc',
-      '--border': '#d8dae8', '--border2': '#b8bacc',
-      '--text': '#0f0f1a', '--text2': '#1e1e2e', '--text3': '#3a3a52', '--text4': '#60607a', '--text5': '#90909a',
-      '--accent': '#1380F6', '--accent2': '#0060d0', '--accent-bg': '#e0eeff',
-      '--success': '#16a34a', '--error': '#dc2626', '--mark-bg': '#bdd6ff', '--mark-text': '#0040a0',
+      '--bg-solid': '#f0f2f5', '--bg': 'rgba(255, 255, 255, 0.70)', '--bg2': 'rgba(255, 255, 255, 0.55)', '--bg3': 'rgba(0, 0, 0, 0.04)', '--bg4': 'rgba(245, 245, 250, 0.5)',
+      '--border': 'rgba(0, 0, 0, 0.06)', '--border2': 'rgba(0, 0, 0, 0.14)',
+      '--text': '#0f172a', '--text2': '#1e293b', '--text3': '#475569', '--text4': '#64748b', '--text5': '#94a3b8',
+      '--accent': '#2563eb', '--accent2': '#3b82f6', '--accent-bg': 'rgba(37, 99, 235, 0.12)',
+      '--success': '#059669', '--error': '#dc2626', '--mark-bg': '#bdd6ff', '--mark-text': '#0040a0',
+      '--shadow': 'rgba(0,0,0,0.06)', '--blur-depth': '24px'
     },
   };
 
@@ -28,7 +47,10 @@
   const K_THEME = 'ms_theme';
   const K_VAR_HISTORY = 'ms_var_history';     // edit history per variable
   const K_SEARCH_HIST = (pid) => `ms_search_hist_${pid}`;  // search term history
+  const K_CONTACT_SEARCH_HIST = (pid) => `ss_contact_search_hist_${pid}`;
   const K_VAR_PRESETS = (pid) => `ms_var_presets_${pid}`;  // var presets per project
+  const K_CONTACT_SETTINGS = 'ss_contacts_display_settings';
+  const K_TAB_STATE = (pid) => `ss_active_tab_${pid}`;  // var presets per project
   const K_LAST_TAB = (pid) => `ms_last_tab_${pid}`;
 
   // ─── STORAGE HELPERS ──────────────────────────────────────────────────────
@@ -63,9 +85,21 @@
     } catch { }
   };
 
+  const loadContactSearchHist = (pid) => { try { return JSON.parse(localStorage.getItem(K_CONTACT_SEARCH_HIST(pid)) || '[]'); } catch { return []; } };
+  const saveContactSearchHist = (pid, term) => {
+    try {
+      const arr = loadContactSearchHist(pid).filter(t => t !== term);
+      arr.unshift(term);
+      localStorage.setItem(K_CONTACT_SEARCH_HIST(pid), JSON.stringify(arr.slice(0, 10)));
+    } catch { }
+  };
+
   // Var presets per project
   const loadVarPresets = (pid) => { try { return JSON.parse(localStorage.getItem(K_VAR_PRESETS(pid)) || '[]'); } catch { return []; } };
   const saveVarPresets = (pid, p) => localStorage.setItem(K_VAR_PRESETS(pid), JSON.stringify(p));
+
+  const loadContactSettings = () => { try { return JSON.parse(localStorage.getItem(K_CONTACT_SETTINGS)) || { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } catch { return { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } };
+  const saveContactSettings = (s) => localStorage.setItem(K_CONTACT_SETTINGS, JSON.stringify(s));
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const state = {
@@ -81,9 +115,14 @@
     varShowSearchHist: false,
     varPresetsOpen: false,
     varPresetEditing: null,
-    varPresetPanelId: null, // id of var whose preset-panel is open
+    varPresetPanelId: null,
     varPresetConfigPanelId: null,
     varViewingPresetId: null,
+    contactResults: [], isSearchingContact: false, contactSearchPerformed: false,
+    contactShowSearchHist: false,
+    contactSettingsOpen: false,
+    contactSettings: loadContactSettings(),
+    contactInfoOpen: false, contactInfoId: null, contactInfo: null, isFetchingContactInfo: false
   };
 
   // ─── THEME ────────────────────────────────────────────────────────────────
@@ -213,8 +252,9 @@
   function renderNav() {
     const nav = document.getElementById('ss-nav'); if (!nav) return;
     nav.innerHTML = `
-      <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars"><span class="ss-nav-icon">⚡</span><span>Variables</span></button>
-      <button class="ss-nav-item ${state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags"><span class="ss-nav-icon">🏷</span><span>Tags</span></button>
+      <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars"><span>Variables</span></button>
+      <button class="ss-nav-item ${state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags"><span>Tags</span></button>
+      <button class="ss-nav-item ${state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts"><span>Contacts</span></button>
     `;
     nav.querySelectorAll('.ss-nav-item').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -233,14 +273,23 @@
 
     body.innerHTML = `
       <div style="margin-bottom:14px;">
-        <div class="ss-section-label">Appearance</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button class="ss-theme-toggle" id="ss-theme-toggle">${themeIcon}</button>
-          <select class="ss-input ss-font-select" id="ss-font-select" style="flex:1;padding:7px 10px;">
-            <option value="small"${state.fontSize === 'small' ? ' selected' : ''}>Small</option>
-            <option value="regular"${state.fontSize === 'regular' ? ' selected' : ''}>Regular</option>
-            <option value="large"${state.fontSize === 'large' ? ' selected' : ''}>Large</option>
-          </select>
+        <div class="ss-section-label" style="margin-bottom:12px;">Appearance</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+            <span style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
+            <label class="ss-theme-switch" title="Toggle Theme" style="flex-shrink:0;">
+              <input type="checkbox" id="ss-theme-toggle-input"${state.theme === 'dark' ? ' checked' : ''}>
+              <span class="ss-slider"></span>
+            </label>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex:1;">
+            <span style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;margin-right:2px;">Font Size</span>
+            <select class="ss-input ss-font-select" id="ss-font-select" style="max-width:110px;padding:5px 8px;font-size:11px;">
+              <option value="small"${state.fontSize === 'small' ? ' selected' : ''}>Small</option>
+              <option value="regular"${state.fontSize === 'regular' ? ' selected' : ''}>Regular</option>
+              <option value="large"${state.fontSize === 'large' ? ' selected' : ''}>Large</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="ss-divider"></div>
@@ -272,7 +321,7 @@
       </div>
     `;
 
-    document.getElementById('ss-theme-toggle').onclick = () => { applyTheme(state.theme === 'dark' ? 'light' : 'dark'); renderSettings(); };
+    document.getElementById('ss-theme-toggle-input').onchange = (e) => { applyTheme(e.target.checked ? 'dark' : 'light'); renderSettings(); };
     document.getElementById('ss-font-select').onchange = (e) => { applyFontSize(e.target.value); };
 
     body.querySelectorAll('.ss-preset-delete').forEach(btn => {
@@ -317,77 +366,42 @@
           <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" />
           <button class="ss-btn-search" id="ss-btn-search">Find</button>
         </div>
-        <div class="ss-dropdown" id="ss-dropdown"></div>
+        <div class="ss-dropdown" id="ss-dropdown" style="margin-top:8px;"></div>
       </div>
-      <div style="margin-bottom:14px;">
-        <div class="ss-section-label">Selected tags (AND)</div>
-        <div class="ss-tags-list" id="ss-tags-list">
-          <div class="ss-empty" id="ss-tags-empty">Add tags to search</div>
-        </div>
-      </div>
-      <div class="ss-divider"></div>
-      <div style="margin-bottom:14px;">
-        <div class="ss-section-label">Subscription date</div>
-        <div class="ss-search-row" style="margin-bottom:4px;">
-          <select class="ss-input" id="ss-date-op" style="flex:0 0 auto;width:70px;padding:8px 6px;">
-            <option value="=">=</option><option value=">">&gt;</option><option value=">=">&gt;=</option><option value="<">&lt;</option><option value="<=">&lt;=</option>
-          </select>
-          <input class="ss-input" id="ss-date-val" type="date" style="flex:1;" />
-        </div>
-        <div class="ss-hint">Leave empty to skip date filter</div>
-      </div>
-      <div class="ss-divider"></div>
-      <button class="ss-btn-primary" id="ss-btn-find" disabled>Find Contacts</button>
       <div class="ss-error" id="ss-error"></div>
-      <div class="ss-loading" id="ss-loading"><div class="ss-spinner"></div><span class="ss-loading-text">Counting...</span></div>
-      <div class="ss-result" id="ss-result"></div>
+      <div class="ss-loading" id="ss-loading" style="display:none;"><div class="ss-spinner"></div><span class="ss-loading-text">Searching...</span></div>
     `;
-    renderTags(); bindMainEvents();
+    bindMainEvents();
   }
 
-  function renderTags() {
-    const list = document.getElementById('ss-tags-list'), empty = document.getElementById('ss-tags-empty'), btn = document.getElementById('ss-btn-find');
-    if (!list) return;
-    list.querySelectorAll('.ss-tag-card').forEach(e => e.remove());
-    if (!state.selectedTags.length) { if (empty) empty.style.display = 'block'; if (btn) btn.disabled = true; return; }
-    if (empty) empty.style.display = 'none'; if (btn) btn.disabled = false;
-    state.selectedTags.forEach((tag, i) => {
-      const c = document.createElement('div'); c.className = 'ss-tag-card';
-      c.innerHTML = `<div class="ss-tag-card-info"><div class="ss-tag-card-name">${esc(tag.name)}</div><div class="ss-tag-card-meta">ID: ${tag.id} · ${tag.createdAt.split('T')[0]}</div></div><button class="ss-tag-remove" data-index="${i}">×</button>`;
-      list.appendChild(c);
-    });
-    list.querySelectorAll('.ss-tag-remove').forEach(b => { b.onclick = () => { state.selectedTags.splice(parseInt(b.dataset.index), 1); renderTags(); hideResult(); }; });
-  }
 
   function showDropdown(tags, term = '', isExact = false) {
+    const iCopy = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+
     const dd = document.getElementById('ss-dropdown'); if (!dd) return; dd.innerHTML = '';
     if (!tags.length) { dd.innerHTML = `<div class="ss-dropdown-empty">No tags found</div>`; dd.classList.add('visible'); return; }
     const hint = document.createElement('div'); hint.className = 'ss-dropdown-hint';
     hint.textContent = isExact ? `✓ exact · ${tags.length}` : `~ partial · ${tags.length}`; dd.appendChild(hint);
-    let added = 0;
     tags.forEach(tag => {
-      if (state.selectedTags.find(t => t.id === tag.id)) return;
       let name = esc(tag.name);
-      if (term) { const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'); name = tag.name.replace(re, `<mark style="background:var(--mark-bg);color:var(--mark-text);border-radius:2px;padding:0 2px;">$1</mark>`); }
-      const item = document.createElement('div'); item.className = 'ss-dropdown-item';
-      item.innerHTML = `<div style="min-width:0;flex:1;"><div class="ss-dropdown-item-name">${name}</div><div class="ss-dropdown-item-id">ID: ${tag.id}</div></div><span class="ss-dropdown-add">+</span>`;
-      item.onclick = () => { state.selectedTags.push(tag); renderTags(); hideResult(); closeDropdown(); const inp = document.getElementById('ss-tag-input'); if (inp) inp.value = ''; };
-      dd.appendChild(item); added++;
+      if (term) { const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi'); name = tag.name.replace(re, `<mark style="background:var(--mark-bg);color:var(--mark-text);border-radius:2px;padding:0 2px;">$1</mark>`); }
+      const item = document.createElement('div'); item.className = 'ss-dropdown-item'; item.style.cursor = 'default';
+      item.innerHTML = `<div style="min-width:0;flex:1;"><div class="ss-dropdown-item-name">${name}</div><div class="ss-dropdown-item-id" style="font-size:11px;color:var(--success);margin-top:4px;">ID: <b style="font-size:12px;">${tag.id}</b></div></div><button class="ss-var-btn ss-tag-copy-btn" title="Copy ID">${iCopy}</button>`;
+      const copyBtn = item.querySelector('.ss-tag-copy-btn');
+      copyBtn.onclick = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(tag.id);
+        copyBtn.innerHTML = iDone;
+        copyBtn.style.color = 'var(--success)';
+        setTimeout(() => { copyBtn.innerHTML = iCopy; copyBtn.style.color = ''; }, 1500);
+      };
+      dd.appendChild(item);
     });
-    if (!added) dd.innerHTML = `<div class="ss-dropdown-empty">All found tags already added</div>`;
     dd.classList.add('visible');
   }
 
   const closeDropdown = () => { const d = document.getElementById('ss-dropdown'); if (d) { d.classList.remove('visible'); d.innerHTML = ''; } };
-  const hideResult = () => { const r = document.getElementById('ss-result'); if (r) { r.classList.remove('visible'); r.innerHTML = ''; } };
-
-  function showResult(total, dv, dop) {
-    const r = document.getElementById('ss-result'); if (!r) return;
-    const chips = state.selectedTags.map(t => `<span class="ss-result-tag-chip">${esc(t.name)}</span>`).join('');
-    const dateDesc = dv ? `<div style="font-size:11px;color:var(--text4);margin-top:6px;font-family:monospace;">date ${dop} ${dv}</div>` : '';
-    r.innerHTML = `<div class="ss-result-card"><div class="ss-result-label">Contacts found</div><div class="ss-result-count">${total.toLocaleString()}</div><div class="ss-result-tags-used">${chips}</div>${dateDesc}</div>`;
-    r.classList.add('visible');
-  }
 
   function showTagError(msg) { const el = document.getElementById('ss-error'); if (!el) return; el.textContent = `⚠ ${msg}`; el.classList.add('visible'); setTimeout(() => el.classList.remove('visible'), 4000); }
   function setLoading(v) { const el = document.getElementById('ss-loading'); if (el) el.classList.toggle('visible', v); }
@@ -400,47 +414,331 @@
       if (state.isSearching) return;
       state.isSearching = true;
       if (searchBtn) { searchBtn.disabled = true; searchBtn.textContent = '...'; }
+      setLoading(true);
       closeDropdown();
       try {
         const data = await searchTags(state.projectId, term); const col = data.collection || [];
-        if (data.isExact && col.length === 1 && !state.selectedTags.find(t => t.id === col[0].id)) {
-          state.selectedTags.push(col[0]); renderTags(); hideResult(); closeDropdown(); if (tagInput) tagInput.value = '';
-        } else { showDropdown(col, term, data.isExact); }
+        showDropdown(col, term, data.isExact);
       } catch (err) { showTagError(err.message); }
-      finally { state.isSearching = false; if (searchBtn) { searchBtn.disabled = false; searchBtn.textContent = 'Find'; } }
+      finally { state.isSearching = false; setLoading(false); if (searchBtn) { searchBtn.disabled = false; searchBtn.textContent = 'Find'; } }
     }
     searchBtn?.addEventListener('click', doSearch);
     tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); if (e.key === 'Escape') closeDropdown(); });
-    document.getElementById('ss-btn-find')?.addEventListener('click', async () => {
-      if (!state.selectedTags.length || !state.projectId || state.isCounting) return;
-      state.isCounting = true; hideResult(); setLoading(true);
-      const fb = document.getElementById('ss-btn-find'); if (fb) fb.disabled = true;
+  }
+
+  // ─── CONTACTS TAB ──────────────────────────────────────────────────────────
+  async function findContacts(term) {
+    const h = authHeaders(); if (!h) throw new Error('No API token. Open Settings ⚙');
+    const isEmail = term.includes('@');
+    const looksLikeId = /^\d+$/.test(term);
+    let results = [];
+
+    if (looksLikeId) {
       try {
-        const dv = document.getElementById('ss-date-val')?.value || '';
-        const dop = document.getElementById('ss-date-op')?.value || '=';
-        const data = await countContacts(state.projectId, state.selectedTags, dv, dop);
-        showResult(data.total ?? 0, dv, dop);
-      } catch (err) { showTagError(err.message); }
-      finally { state.isCounting = false; setLoading(false); const fb = document.getElementById('ss-btn-find'); if (fb) fb.disabled = false; }
+        const res = await bgFetch(`https://api.smartsender.com/v1/contacts/${term}`, 'GET', h);
+        if (res && res.id) results.push(res);
+      } catch (e) { console.warn('[Contacts] ID lookup failed:', e.message); }
+    }
+
+    if (results.length === 0) {
+      const params = new URLSearchParams({ page: 1, limitation: 10, term: term.trim() });
+      try {
+        const res = await bgFetch(`https://api.smartsender.com/v1/contacts/search?${params}`, 'GET', h);
+        results = res?.collection || (Array.isArray(res) ? res : []);
+      } catch (e) {
+        console.error('[Contacts] Search failed:', e.message);
+        throw e;
+      }
+    }
+    return results;
+  }
+
+  async function fetchContactInfo(id) {
+    const h = authHeaders(); if (!h) throw new Error('No API token.');
+    return bgFetch(`https://api.smartsender.com/v1/contacts/${id}/info`, 'GET', h);
+  }
+
+  function renderContactInfoPanel(id) {
+    const panel = document.getElementById('ss-info-panel');
+    if (!panel) return;
+    
+    state.contactInfoOpen = true;
+    state.contactInfoId = id;
+    panel.classList.add('open');
+    
+    panel.innerHTML = `
+      <div class="ss-info-header">
+        <div class="ss-info-title">Contact Info</div>
+        <button class="ss-close" id="ss-info-close">✕</button>
+      </div>
+      <div class="ss-info-body" id="ss-info-body">
+        <div class="ss-loading" style="display:flex;"><div class="ss-spinner"></div><span class="ss-loading-text">Loading details...</span></div>
+      </div>
+    `;
+    
+    document.getElementById('ss-info-close').onclick = () => {
+      state.contactInfoOpen = false;
+      panel.classList.remove('open');
+    };
+    
+    fetchContactInfo(id).then(data => {
+      if (state.contactInfoId !== id) return;
+      state.contactInfo = data;
+      const body = document.getElementById('ss-info-body');
+      if (!body) return;
+      
+      const standardKeys = ['id', 'name', 'firstName', 'lastName', 'fullName', 'email', 'phone', 'photo', 'createdAt', 'notes', 'tags', 'values', 'thumb', 'updatedAt', 'system_city', 'system_country', 'system_continent', 'system_timezone', 'system_os', 'system_browser', 'is_active', 'userId', 'projectId'];
+      
+      let vars = (data.values || []).map(v => ({ name: v.name, value: v.value }));
+      // Extract root level keys as fallback/addition
+      Object.keys(data).forEach(k => {
+        if (!standardKeys.includes(k) && data[k] !== null && typeof data[k] !== 'object') {
+          if (!vars.find(v => v.name === k)) vars.push({ name: k, value: data[k] });
+        }
+      });
+
+      const renderVars = (filter = '') => {
+        const terms = filter.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+        const filtered = vars.filter(v => {
+          if (!terms.length) return true;
+          const vn = v.name.toLowerCase();
+          const vv = String(v.value).toLowerCase();
+          return terms.some(t => vn.includes(t) || vv.includes(t));
+        });
+        return filtered.map(v => `
+          <div class="ss-info-var">
+            <div class="ss-info-var-name">${esc(v.name)}</div>
+            <div class="ss-info-var-val">${esc(String(v.value))}</div>
+          </div>
+        `).join('') || '<div class="ss-hint">No matching variables</div>';
+      };
+
+      const tagsHtml = (data.tags || []).map(t => `<span class="ss-info-tag" title="Created: ${t.createdAt}">${esc(t.name)}</span>`).join('');
+      
+      body.innerHTML = `
+        ${state.contactSettings.showProfile ? `
+        <div class="ss-info-section" style="display:flex;align-items:center;gap:12px;background:var(--bg2);padding:12px;border-radius:12px;margin-bottom:16px;">
+          ${data.photo ? `<img src="${data.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>`}
+          <div style="flex:1;overflow:hidden;">
+            <div style="font-weight:800;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</div>
+            <div style="font-size:11px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
+          </div>
+        </div>
+        ` : ''}
+
+        ${state.contactSettings.showDetails ? `
+        <div class="ss-info-section">
+          <div class="ss-info-label">Basic Data</div>
+          ${data.email ? `<div class="ss-info-detail-row"><span class="ss-info-detail-label">Email</span><span class="ss-info-detail-value">${esc(data.email)}</span></div>` : ''}
+          ${data.phone ? `<div class="ss-info-detail-row"><span class="ss-info-detail-label">Phone</span><span class="ss-info-detail-value">${esc(data.phone)}</span></div>` : ''}
+          <div class="ss-info-detail-row"><span class="ss-info-detail-label">Created</span><span class="ss-info-detail-value">${new Date(data.createdAt).toLocaleDateString()}</span></div>
+        </div>
+        ` : ''}
+        
+        ${state.contactSettings.showTags ? `
+        <div class="ss-info-section">
+          <div class="ss-info-label">Tags (${(data.tags || []).length})</div>
+          <div class="ss-info-tags">${tagsHtml || '<div class="ss-hint">No tags assigned</div>'}</div>
+        </div>
+        ` : ''}
+        
+        ${state.contactSettings.showVars ? `
+        <div class="ss-info-section">
+          <div class="ss-info-label">Variables (${vars.length})</div>
+          <div style="margin-bottom:8px;">
+            <input class="ss-input" id="ss-info-var-search" type="text" placeholder="Filter variables..." style="font-size:11px;padding:6px 10px;height:28px;" />
+          </div>
+          <div class="ss-info-vars" id="ss-info-vars-list">${renderVars()}</div>
+        </div>
+        ` : ''}
+      `;
+
+      const vSearch = document.getElementById('ss-info-var-search');
+      if (vSearch) {
+        vSearch.onclick = (e) => e.stopPropagation();
+        vSearch.oninput = (e) => {
+          document.getElementById('ss-info-vars-list').innerHTML = renderVars(e.target.value);
+        };
+      }
+    }).catch(err => {
+      const body = document.getElementById('ss-info-body');
+      if (body) body.innerHTML = `<div class="ss-error visible">⚠ ${err.message}</div>`;
     });
   }
 
-  // ─── VARS TAB ─────────────────────────────────────────────────────────────
+  function renderContactsTab() {
+    const body = document.getElementById('ss-body');
+    body.innerHTML = `
+      <div style="margin-bottom:10px;">
+        <div class="ss-section-label">Contact search</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+          <div style="position:relative;flex:1;">
+            <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" />
+          </div>
+          <button class="ss-var-btn ss-var-btn-hist-search" id="ss-contact-hist-btn" title="Search history">${iClock}</button>
+          <div style="position:relative;">
+            <button class="ss-var-btn" id="ss-contact-settings-btn" title="Filter contact info">${iTune}</button>
+            <div id="ss-contact-settings-panel" class="ss-settings-panel" style="display:none;"></div>
+          </div>
+          <button class="ss-btn-search" id="ss-contact-btn">Find</button>
+        </div>
+        <!-- Search history dropdown -->
+        <div id="ss-contact-search-hist" class="ss-search-hist-panel" style="display:none;"></div>
+      </div>
+      <div id="ss-contact-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <div class="ss-error" id="ss-contact-error"></div>
+      <div class="ss-loading" id="ss-contact-loading" style="display:none;"><div class="ss-spinner"></div><span class="ss-loading-text">Searching...</span></div>
+    `;
+    renderContacts();
+    bindContactsEvents();
+  }
 
-  // SVG icons (shared)
-  const iGear = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>`;
-  const iCopy = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-  const iEdit = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-  const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const iReset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>`;
-  const iHistory = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
-  const iSearch = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
-  const iClock = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
-  const iPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>`;
-  const iSave = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
-  const iTrash = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
-  const iPen = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
-  const iAddToPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>`;
+  function bindContactsEvents() {
+    const input = document.getElementById('ss-contact-input');
+    const btn = document.getElementById('ss-contact-btn');
+    const load = document.getElementById('ss-contact-loading');
+    const errEl = document.getElementById('ss-contact-error');
+    const histBtn = document.getElementById('ss-contact-hist-btn');
+    const histPanel = document.getElementById('ss-contact-search-hist');
+    const setBtn = document.getElementById('ss-contact-settings-btn');
+    const setPanel = document.getElementById('ss-contact-settings-panel');
+
+    const toggleHist = () => {
+      state.contactShowSearchHist = !state.contactShowSearchHist;
+      if (!state.contactShowSearchHist) { histPanel.style.display = 'none'; return; }
+      const hist = loadContactSearchHist(state.projectId);
+      if (!hist.length) { histPanel.innerHTML = '<div class="ss-hist-term" style="opacity:0.5;cursor:default;">No history</div>'; }
+      else {
+        histPanel.innerHTML = hist.map((t, i) => `<div class="ss-hist-term" data-index="${i}">${esc(t)}</div>`).join('');
+        histPanel.querySelectorAll('.ss-hist-term').forEach(el => {
+          el.onclick = () => {
+            input.value = loadContactSearchHist(state.projectId)[parseInt(el.dataset.index)];
+            toggleHist();
+            doSearch();
+          };
+        });
+      }
+      histPanel.style.display = 'block';
+    };
+
+    const doSearch = async () => {
+      const term = input.value.trim(); if (!term) return;
+      saveContactSearchHist(state.projectId, term);
+      state.contactShowSearchHist = false; if (histPanel) histPanel.style.display = 'none';
+      state.isSearchingContact = true; state.contactSearchPerformed = true;
+      btn.disabled = true; load.style.display = 'flex'; errEl.classList.remove('visible');
+      try {
+        state.contactResults = await findContacts(term);
+        renderContacts();
+      } catch (e) { errEl.textContent = `⚠ ${e.message}`; errEl.classList.add('visible'); }
+      finally { state.isSearchingContact = false; btn.disabled = false; load.style.display = 'none'; }
+    };
+
+    if (histBtn) histBtn.onclick = (e) => { e.stopPropagation(); toggleHist(); };
+    if (setBtn) setBtn.onclick = (e) => {
+      e.stopPropagation();
+      state.contactSettingsOpen = !state.contactSettingsOpen;
+      setPanel.style.display = state.contactSettingsOpen ? 'flex' : 'none';
+      if (state.contactSettingsOpen) renderContactSettingsPanel();
+    };
+    if (btn) btn.onclick = doSearch;
+    if (input) input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(); };
+
+    document.addEventListener('click', (e) => {
+      if (state.contactShowSearchHist && histPanel && !histPanel.contains(e.target) && e.target !== histBtn) {
+        state.contactShowSearchHist = false; histPanel.style.display = 'none';
+      }
+      if (state.contactSettingsOpen && setPanel && !setPanel.contains(e.target) && e.target !== setBtn) {
+        state.contactSettingsOpen = false; setPanel.style.display = 'none';
+      }
+    });
+  }
+
+  function renderContactSettingsPanel() {
+    const p = document.getElementById('ss-contact-settings-panel'); if (!p) return;
+    p.innerHTML = `
+      <div class="ss-settings-item" id="ss-toggle-profile">
+        <span>Profile Header</span>
+        <div class="ss-settings-check ${state.contactSettings.showProfile ? 'active' : ''}">${state.contactSettings.showProfile ? '✓' : ''}</div>
+      </div>
+      <div class="ss-settings-item" id="ss-toggle-details">
+        <span>Basic Data</span>
+        <div class="ss-settings-check ${state.contactSettings.showDetails ? 'active' : ''}">${state.contactSettings.showDetails ? '✓' : ''}</div>
+      </div>
+      <div class="ss-settings-item" id="ss-toggle-tags">
+        <span>Tags</span>
+        <div class="ss-settings-check ${state.contactSettings.showTags ? 'active' : ''}">${state.contactSettings.showTags ? '✓' : ''}</div>
+      </div>
+      <div class="ss-settings-item" id="ss-toggle-vars">
+        <span>Variables</span>
+        <div class="ss-settings-check ${state.contactSettings.showVars ? 'active' : ''}">${state.contactSettings.showVars ? '✓' : ''}</div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="ss-settings-item" id="ss-toggle-compact">
+        <span>Compact Search Cards</span>
+        <div class="ss-settings-check ${state.contactSettings.compactCards ? 'active' : ''}">${state.contactSettings.compactCards ? '✓' : ''}</div>
+      </div>
+    `;
+    p.querySelectorAll('.ss-settings-item').forEach(el => {
+      el.onclick = (e) => {
+        e.stopPropagation();
+        let type;
+        if (el.id === 'ss-toggle-profile') type = 'showProfile';
+        else if (el.id === 'ss-toggle-details') type = 'showDetails';
+        else if (el.id === 'ss-toggle-tags') type = 'showTags';
+        else if (el.id === 'ss-toggle-vars') type = 'showVars';
+        else if (el.id === 'ss-toggle-compact') type = 'compactCards';
+        
+        state.contactSettings[type] = !state.contactSettings[type];
+        saveContactSettings(state.contactSettings);
+        renderContactSettingsPanel();
+        if (state.contactInfoId) renderContactInfoPanel(state.contactInfoId);
+        renderContacts();
+      };
+    });
+  }
+
+  function renderContacts() {
+    const list = document.getElementById('ss-contact-list'); if (!list) return;
+    list.innerHTML = '';
+    if (!state.contactResults.length) {
+      if (state.contactSearchPerformed) list.innerHTML = `<div class="ss-empty">No contacts found</div>`;
+      return;
+    }
+
+    state.contactResults.forEach(c => {
+      const card = document.createElement('div'); card.className = 'ss-var-card';
+      card.style.padding = '12px';
+      card.onclick = () => renderContactInfoPanel(c.id);
+      
+      const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>`;
+      
+      card.innerHTML = `
+        <div style="display:flex;gap:12px;align-items:center;${state.contactSettings.compactCards ? '' : 'margin-bottom:8px;'}">
+          ${thumb}
+          <div style="min-width:0;flex:1;">
+            <div style="font-weight:700;color:var(--text);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.fullName || 'Unnamed')}</div>
+            <div style="font-size:11px;color:var(--text4);">ID: <span style="color:var(--success);font-weight:600;">${c.id}</span></div>
+          </div>
+          <button class="ss-var-btn ss-copy-btn" data-copy="${c.id}" title="Copy ID">${iCopy}</button>
+        </div>
+        ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:10px;">✉</span> ${esc(c.email)}</div>` : ''}
+        ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:10px;">📞</span> ${esc(c.phone)}</div>` : ''}
+      `;
+      
+      card.querySelector('.ss-copy-btn').onclick = (e) => {
+        const btn = e.currentTarget; e.stopPropagation();
+        navigator.clipboard.writeText(btn.dataset.copy);
+        btn.innerHTML = iDone;
+        setTimeout(() => btn.innerHTML = iCopy, 1500);
+      };
+
+      list.appendChild(card);
+    });
+  }
+
+
+  // ─── VARS TAB ─────────────────────────────────────────────────────────────
 
   function renderVarsTab() {
     const body = document.getElementById('ss-body');
@@ -726,6 +1024,7 @@
 
     btn.addEventListener('click', doSearch);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+    
     document.getElementById('ss-var-hist-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleSearchHist(); });
     document.getElementById('ss-var-preset-btn').addEventListener('click', (e) => { e.stopPropagation(); renderPresetsPanel(); });
     document.getElementById('ss-var-reset-btn').addEventListener('click', () => {
@@ -964,9 +1263,14 @@
 
   function switchTab(tab) {
     state.activeTab = tab; saveLastTab(state.projectId, tab);
-    document.getElementById('ss-current-tab-label').textContent = tab === 'tags' ? '🏷 Tags' : '⚡ Variables';
+    let label = 'Variables';
+    if (tab === 'tags') label = 'Tags';
+    if (tab === 'contacts') label = 'Contacts';
+    document.getElementById('ss-current-tab-label').textContent = label;
     renderNav();
-    tab === 'tags' ? renderMain() : renderVarsTab();
+    if (tab === 'tags') renderMain();
+    else if (tab === 'contacts') renderContactsTab();
+    else renderVarsTab();
   }
 
   // ─── BUILD SIDEBAR ────────────────────────────────────────────────────────
@@ -978,7 +1282,7 @@
         <div class="ss-header-top" style="align-items:center;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <button class="ss-icon-btn" id="ss-burger" style="font-size:1.14em;">☰</button>
-            <span id="ss-current-tab-label" style="font-size:14px;font-weight:600;color:var(--text2);">⚡ Variables</span>
+            <span id="ss-current-tab-label" style="font-size:14px;font-weight:600;color:var(--text2);">Variables</span>
           </div>
           <div style="display:flex;gap:6px;align-items:center;">
             <button class="ss-icon-btn" id="ss-back-btn" style="display:none;">←</button>
@@ -989,6 +1293,7 @@
         <div class="ss-project-badge"><span class="dot"></span>Project ID: <span id="ss-project-display">—</span></div>
       </div>
       <div id="ss-nav" class="ss-nav"></div>
+      <div id="ss-info-panel" class="ss-info-panel"></div>
       <div class="ss-body" id="ss-body"></div>
       <div class="ss-footer">
         <div class="ss-title">my<span>Sender</span></div>
@@ -1010,8 +1315,8 @@
     listenForProjectId((id) => {
       if (id === state.projectId) return;
       state.projectId = id; state.activePreset = getPreset(id);
-      const lastTab = loadLastTab(id); state.activeTab = lastTab;
-      document.getElementById('ss-current-tab-label').textContent = lastTab === 'tags' ? '🏷 Tags' : '⚡ Variables';
+      const lastTab = loadLastTab(id);
+      switchTab(lastTab);
       renderHeader();
     });
 
@@ -1034,6 +1339,10 @@
       if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) closeDropdown();
       const nav = document.getElementById('ss-nav');
       if (nav && nav.classList.contains('open') && !nav.contains(e.target) && e.target.id !== 'ss-burger') nav.classList.remove('open');
+      const info = document.getElementById('ss-info-panel');
+      if (info && info.classList.contains('open') && !info.contains(e.target) && !e.target.closest('.ss-var-card')) {
+        state.contactInfoOpen = false; info.classList.remove('open');
+      }
       // Close var edit if click outside any var card
       if (state.varEditingId !== null) {
         const clickedCard = e.target.closest('.ss-var-card');
@@ -1045,7 +1354,7 @@
       }
     });
 
-    state.activeTab === 'tags' ? renderMain() : renderVarsTab();
+    switchTab(state.activeTab);
   }
 
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }

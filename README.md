@@ -6,12 +6,16 @@
 
 ### 🎨 Seamless UI & Design
 *   **Intuitive Sidebar**: A draggable, resizable custom overlay living right alongside your workspace.
-*   **Dark & Light Modes**: Beautiful CSS variables support smooth transitions between UI themes perfectly matching your eyes' needs.
+*   **Fluid Glassmorphism UI**: Beautiful semi-transparent CSS themes dynamically blur the website underneath, easily switched via a sleek new interactive mode slider.
 *   **Adjustable Typography**: Quickly switch the sidebar font scale (Small, Regular, Large).
 
-### 🏷 Tags & Contacts Manager
+### 🏷 Tags Manager
 *   **Dynamic Tag Search**: Quickly lookup tags by exact or partial names across your SmartSender project.
-*   **Contact Counter Engine**: Select multiple tags and apply logical date operators (e.g., `=`, `>`, `<=`) to instantly query the exact number of subscribers matching your criteria.
+*   **1-Click Copy**: Identify the exact Tag ID from the search results and hit the copy icon to instantly send it to your clipboard.
+
+### 👤 Contacts Workspace
+*   **Multi-Criteria Search**: Find users instantly by their unique **User ID** or **Email address**.
+*   **Copy & Manage**: Quick-copy Contact IDs for use in external automations or for deep-linking.
 
 ### ⚡ Variables Workspace
 *   **Lightning Fast Search**: Find variables through single or comma-separated bulk searches.
@@ -65,9 +69,15 @@ Make sure to open the **Settings** (⚙) menu within the sidebar to provide your
 5. **Configuring a Preset**: Click the **Gear (⚙)** icon next to a preset to open the inline configurator. Here, you can click the **Trash** icon to remove specific variables, or use the bottom fields (typing an explicit `ID` and `Name`) to forcibly inject unlisted variables straight into the preset pool.
 6. **Duplication**: Click the copy icon (`iCopy`) to safely clone an entire preset to experiment with variations.
 
-### 4. Using the Tags Manager (🏷)
-1. Click the top-left burger menu `☰` and switch to the **🏷 Tags** workspace.
+### 4. Using the Tags Manager
+1. Click the top-left burger menu `☰` and switch to the **Tags** workspace.
 2. Search for tags by partial or exact names.
-3. Check the boxes next to the target tags you want to analyze.
-4. Select a logical operator from the dropdown (for example, `=` means 'subscribed exactly on this date'). 
-5. Click **Count** to instruct the extension to calculate the precise subscriber count matching your custom tag criteria.
+3. Search results will automatically list matching tags alongside their **IDs**.
+4. Click the **Copy** (clipboard) icon next to a tag to instantly copy its ID for external use!
+
+### 5. Using the Contacts Manager
+1. Use the burger menu `☰` to navigate to the **Contacts** tab.
+2. Enter a **User ID** (e.g. `1234567`) or a full **Email address** into the search field.
+3. Click **Find** to retrieve matching contact details.
+4. View the contact's full name, email, phone, and **ID**.
+5. Click the **Copy** icon next to the ID to grab it instantly.
