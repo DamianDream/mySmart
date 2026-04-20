@@ -40,7 +40,7 @@
 /* ─── HEADER ───────────────────────────────────────────── */
 .ss-header {
   padding: 16px 16px 0;
-  background: var(--bg2);
+  background: var(--bg-solid);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -76,14 +76,14 @@
   border-left: 1px solid var(--border);
   border-right: 1px solid var(--border);
   z-index: -1;
-  opacity: 0; pointer-events: none;
+  pointer-events: none;
   display: flex; flex-direction: column;
   padding: 16px 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: -8px 0 24px rgba(0,0,0,0.15);
 }
-.ss-nav.open { left: -180px; opacity: 1; pointer-events: auto; }
-.ss-info-panel.open { left: -75ch; opacity: 1; pointer-events: auto; }
+.ss-nav.open { left: -180px; pointer-events: auto; }
+.ss-info-panel.open { left: -75ch; pointer-events: auto; }
 @media (max-width: 1000px) { .ss-info-panel.open { left: -85vw; } }
 .ss-info-panel {
   position: absolute;
@@ -93,7 +93,7 @@
   border-left: 1px solid var(--border);
   border-right: 1px solid var(--border);
   z-index: -1;
-  opacity: 0; pointer-events: none;
+  pointer-events: none;
   display: flex; flex-direction: column;
   padding: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -186,7 +186,7 @@
 .ss-body {
   flex: 1; overflow-y: auto; padding: 14px;
   scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-  background: var(--bg);
+  background: var(--bg-solid);
 }
 .ss-body::-webkit-scrollbar { width: 4px; }
 .ss-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
@@ -419,12 +419,34 @@
   align-items: center;
 }
 
-#ss-sidebar .ss-input {
-  height: 36px;
-  box-sizing: border-box;
-}
+.ss-btn, .ss-btn-search, .ss-action-btn, .ss-var-btn, .ss-tab, .ss-select, .ss-input { box-sizing: border-box; }
 
-/* Appearance row — theme toggle and font select same height */
+.ss-action-btn {
+  background: var(--bg3);
+  color: var(--text4);
+  border: none;
+  border-radius: 9px;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 36px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ss-action-btn:hover {
+  background: var(--border2);
+  color: var(--text);
+}
+.ss-action-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
 
 
 #ss-sidebar .ss-font-select {
@@ -435,7 +457,7 @@
 /* ─── FOOTER ───────────────────────────────────────────── */
 .ss-footer {
   padding: 12px 16px;
-  background: var(--bg2);
+  background: var(--bg-solid);
   border-top: 1px solid var(--border);
   flex-shrink: 0;
 }

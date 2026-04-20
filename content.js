@@ -8,9 +8,12 @@
   const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
   const iReset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>`;
   const iHistory = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+  const iExternal = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
   const iSearch = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
   const iClock = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
   const iPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>`;
+  const iStar = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  const iStarFill = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
   const iSave = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
   const iTrash = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
   const iPen = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
@@ -40,9 +43,13 @@
 
   // ─── STORAGE KEYS ─────────────────────────────────────────────────────────
   const K_FONT = 'ms_font_size';
+  const K_CONTACT_FAVORITES = 'ss_contacts_favorites';
   const loadFont = () => localStorage.getItem(K_FONT) || 'small';
   const saveFont = (f) => localStorage.setItem(K_FONT, f);
   const FONT_SCALES = { small: 0.9, regular: 1, large: 1.1 };
+  const K_SIDEBAR_WIDTH = 'ms_sidebar_width';
+  const loadSidebarWidth = () => localStorage.getItem(K_SIDEBAR_WIDTH) || '500';
+  const saveSidebarWidth = (w) => localStorage.setItem(K_SIDEBAR_WIDTH, w);
   const K_PRESETS = 'ms_presets';
   const K_THEME = 'ms_theme';
   const K_VAR_HISTORY = 'ms_var_history';     // edit history per variable
@@ -100,6 +107,8 @@
 
   const loadContactSettings = () => { try { return JSON.parse(localStorage.getItem(K_CONTACT_SETTINGS)) || { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } catch { return { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } };
   const saveContactSettings = (s) => localStorage.setItem(K_CONTACT_SETTINGS, JSON.stringify(s));
+  const loadContactFavorites = () => { try { return JSON.parse(localStorage.getItem(K_CONTACT_FAVORITES) || '[]'); } catch { return []; } };
+  const saveContactFavorites = (f) => localStorage.setItem(K_CONTACT_FAVORITES, JSON.stringify(f));
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const state = {
@@ -122,7 +131,9 @@
     contactShowSearchHist: false,
     contactSettingsOpen: false,
     contactSettings: loadContactSettings(),
-    contactInfoOpen: false, contactInfoId: null, contactInfo: null, isFetchingContactInfo: false
+    contactFavorites: loadContactFavorites(),
+    contactInfoOpen: false, contactInfoId: null, contactInfo: null, isFetchingContactInfo: false,
+    contactShowFavorites: false
   };
 
   // ─── THEME ────────────────────────────────────────────────────────────────
@@ -141,6 +152,7 @@
   const getXsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
   const getXsrfCookie = () => decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
   const getProjectFromUrl = () => { const p = new URLSearchParams(location.search).get('project'); return p ? p.replace(/-\d+$/, '') : null; };
+  const getFullProjectFromUrl = () => new URLSearchParams(location.search).get('project');
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const copyToClipboard = (text) => navigator.clipboard.writeText(text).catch(() => {
     const ta = document.createElement('textarea'); ta.value = text;
@@ -239,13 +251,18 @@
 
   // ─── HEADER ───────────────────────────────────────────────────────────────
   function renderHeader() {
-    const el = document.getElementById('ss-project-display'); if (!el) return;
+    const disp = document.getElementById('ss-project-display');
+    const status = document.getElementById('ss-api-status');
     if (state.projectId) {
-      const name = state.projectName ? ` (${state.projectName})` : '';
-      const check = state.activePreset ? ' <span style="color:var(--success);font-size:10px;">✓</span>' : '';
-      el.innerHTML = `<span style="color:var(--success);">${state.projectId}</span><span style="color:var(--text4);font-size:11px;">${name}</span>${check}`;
+      const name = state.projectName || '—';
+      if (disp) disp.innerHTML = `<span style="color:var(--text4);font-size:13px;">Project:</span> <span style="color:var(--success);font-weight:700;font-size:13px;">${name}</span> <span style="color:var(--text5);font-size:13px;">(id: ${state.projectId})</span>`;
+      if (status) {
+        const hasToken = getPreset(state.projectId)?.apiToken;
+        status.style.display = hasToken ? 'none' : 'block';
+      }
     } else {
-      el.innerHTML = `<span style="color:var(--text5);">waiting...</span>`;
+      if (disp) disp.innerHTML = `<span style="color:var(--text5);">waiting...</span>`;
+      if (status) status.style.display = 'none';
     }
   }
 
@@ -527,7 +544,10 @@
         <div class="ss-info-section" style="display:flex;align-items:center;gap:12px;background:var(--bg2);padding:12px;border-radius:12px;margin-bottom:16px;">
           ${data.photo ? `<img src="${data.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>`}
           <div style="flex:1;overflow:hidden;">
-            <div style="font-weight:800;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</div>
+            <div style="font-weight:800;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
+              <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
+              ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
+            </div>
             <div style="font-size:11px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
           </div>
         </div>
@@ -593,21 +613,24 @@
   function renderContactsTab() {
     const body = document.getElementById('ss-body');
     body.innerHTML = `
-      <div style="margin-bottom:10px;">
+      <div style="margin-bottom:12px;">
         <div class="ss-section-label">Contact search</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-          <div style="position:relative;flex:1;">
-            <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" />
-          </div>
-          <button class="ss-var-btn ss-var-btn-hist-search" id="ss-contact-hist-btn" title="Search history">${iClock}</button>
-          <div style="position:relative;">
-            <button class="ss-var-btn" id="ss-contact-settings-btn" title="Filter contact info">${iTune}</button>
-            <div id="ss-contact-settings-panel" class="ss-settings-panel" style="display:none;"></div>
-          </div>
-          <button class="ss-btn-search" id="ss-contact-btn">Find</button>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+          <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" style="flex:1;" />
+          <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
         </div>
-        <!-- Search history dropdown -->
-        <div id="ss-contact-search-hist" class="ss-search-hist-panel" style="display:none;"></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="ss-action-btn" id="ss-contact-hist-btn">History</button>
+          <button class="ss-action-btn" id="ss-contact-settings-btn">Options</button>
+          <button class="ss-action-btn" id="ss-contact-fav-btn">Favorite</button>
+        </div>
+        
+        <!-- Panels -->
+        <div style="position:relative;margin-top:8px;">
+          <div id="ss-contact-search-hist" class="ss-search-hist-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:100;"></div>
+          <div id="ss-contact-fav-panel" class="ss-search-hist-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:100;"></div>
+          <div id="ss-contact-settings-panel" class="ss-settings-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:101;margin:0;"></div>
+        </div>
       </div>
       <div id="ss-contact-list" style="display:flex;flex-direction:column;gap:6px;"></div>
       <div class="ss-error" id="ss-contact-error"></div>
@@ -624,12 +647,19 @@
     const errEl = document.getElementById('ss-contact-error');
     const histBtn = document.getElementById('ss-contact-hist-btn');
     const histPanel = document.getElementById('ss-contact-search-hist');
+    const favBtn = document.getElementById('ss-contact-fav-btn');
+    const favPanel = document.getElementById('ss-contact-fav-panel');
     const setBtn = document.getElementById('ss-contact-settings-btn');
     const setPanel = document.getElementById('ss-contact-settings-panel');
 
     const toggleHist = () => {
       state.contactShowSearchHist = !state.contactShowSearchHist;
-      if (!state.contactShowSearchHist) { histPanel.style.display = 'none'; return; }
+      state.contactShowFavorites = false; state.contactSettingsOpen = false;
+      favPanel.style.display = 'none'; favBtn.classList.remove('active');
+      setPanel.style.display = 'none'; setBtn.classList.remove('active');
+      
+      if (!state.contactShowSearchHist) { histPanel.style.display = 'none'; histBtn.classList.remove('active'); return; }
+      histBtn.classList.add('active');
       const hist = loadContactSearchHist(state.projectId);
       if (!hist.length) { histPanel.innerHTML = '<div class="ss-hist-term" style="opacity:0.5;cursor:default;">No history</div>'; }
       else {
@@ -645,10 +675,38 @@
       histPanel.style.display = 'block';
     };
 
-    const doSearch = async () => {
-      const term = input.value.trim(); if (!term) return;
-      saveContactSearchHist(state.projectId, term);
+    const toggleFav = () => {
+      state.contactShowFavorites = !state.contactShowFavorites;
+      state.contactShowSearchHist = false; state.contactSettingsOpen = false;
+      histPanel.style.display = 'none'; histBtn.classList.remove('active');
+      setPanel.style.display = 'none'; setBtn.classList.remove('active');
+      
+      if (!state.contactShowFavorites) { favPanel.style.display = 'none'; favBtn.classList.remove('active'); return; }
+      favBtn.classList.add('active');
+      renderContactFavoritesPanel();
+      favPanel.style.display = 'block';
+    };
+
+    const toggleSet = () => {
+      state.contactSettingsOpen = !state.contactSettingsOpen;
+      state.contactShowSearchHist = false; state.contactShowFavorites = false;
+      histPanel.style.display = 'none'; histBtn.classList.remove('active');
+      favPanel.style.display = 'none'; favBtn.classList.remove('active');
+      
+      if (!state.contactSettingsOpen) { setPanel.style.display = 'none'; setBtn.classList.remove('active'); return; }
+      setBtn.classList.add('active');
+      renderContactSettingsPanel();
+      setPanel.style.display = 'flex';
+    };
+
+    const doSearch = async (termOverride = null) => {
+      const term = termOverride || input.value.trim(); if (!term) return;
+      if (!termOverride) saveContactSearchHist(state.projectId, term);
+      
       state.contactShowSearchHist = false; if (histPanel) histPanel.style.display = 'none';
+      state.contactShowFavorites = false; if (favPanel) favPanel.style.display = 'none';
+      histBtn.classList.remove('active'); favBtn.classList.remove('active');
+      
       state.isSearchingContact = true; state.contactSearchPerformed = true;
       btn.disabled = true; load.style.display = 'flex'; errEl.classList.remove('visible');
       try {
@@ -659,23 +717,49 @@
     };
 
     if (histBtn) histBtn.onclick = (e) => { e.stopPropagation(); toggleHist(); };
-    if (setBtn) setBtn.onclick = (e) => {
-      e.stopPropagation();
-      state.contactSettingsOpen = !state.contactSettingsOpen;
-      setPanel.style.display = state.contactSettingsOpen ? 'flex' : 'none';
-      if (state.contactSettingsOpen) renderContactSettingsPanel();
-    };
-    if (btn) btn.onclick = doSearch;
+    if (favBtn) favBtn.onclick = (e) => { e.stopPropagation(); toggleFav(); };
+    if (setBtn) setBtn.onclick = (e) => { e.stopPropagation(); toggleSet(); };
+    if (btn) btn.onclick = () => doSearch();
     if (input) input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(); };
 
     document.addEventListener('click', (e) => {
-      if (state.contactShowSearchHist && histPanel && !histPanel.contains(e.target) && e.target !== histBtn) {
-        state.contactShowSearchHist = false; histPanel.style.display = 'none';
+      const target = e.target;
+      if (state.contactShowSearchHist && !histPanel.contains(target) && target !== histBtn) {
+        state.contactShowSearchHist = false; histPanel.style.display = 'none'; histBtn.classList.remove('active');
       }
-      if (state.contactSettingsOpen && setPanel && !setPanel.contains(e.target) && e.target !== setBtn) {
-        state.contactSettingsOpen = false; setPanel.style.display = 'none';
+      if (state.contactShowFavorites && !favPanel.contains(target) && target !== favBtn) {
+        state.contactShowFavorites = false; favPanel.style.display = 'none'; favBtn.classList.remove('active');
+      }
+      if (state.contactSettingsOpen && !setPanel.contains(target) && target !== setBtn) {
+        state.contactSettingsOpen = false; setPanel.style.display = 'none'; setBtn.classList.remove('active');
       }
     });
+  }
+
+  function renderContactFavoritesPanel() {
+    const p = document.getElementById('ss-contact-fav-panel'); if (!p) return;
+    const favs = state.contactFavorites;
+    if (!favs.length) { p.innerHTML = '<div class="ss-hist-term" style="opacity:0.5;cursor:default;">No favorites yet</div>'; }
+    else {
+      p.innerHTML = favs.map(f => `
+        <div class="ss-hist-term" data-id="${f.id}" style="display:flex;align-items:center;gap:8px;">
+          ${f.photo ? `<img src="${f.photo}" style="width:20px;height:20px;border-radius:50%;">` : '👤'}
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(f.name)}</span>
+          <span style="font-size:10px;color:var(--text4);">${f.id}</span>
+        </div>
+      `).join('');
+      p.querySelectorAll('.ss-hist-term').forEach(el => {
+        el.onclick = () => {
+          document.getElementById('ss-contact-input').value = el.dataset.id;
+          state.contactShowFavorites = false;
+          p.style.display = 'none';
+          document.getElementById('ss-contact-fav-btn').classList.remove('active');
+          // Trigger search by ID
+          const btn = document.getElementById('ss-contact-btn');
+          if (btn) btn.click();
+        };
+      });
+    }
   }
 
   function renderContactSettingsPanel() {
@@ -744,7 +828,20 @@
             <div style="font-weight:700;color:var(--text);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.fullName || 'Unnamed')}</div>
             <div style="font-size:11px;color:var(--text4);">ID: <span style="color:var(--success);font-weight:600;">${c.id}</span></div>
           </div>
-          <button class="ss-var-btn ss-copy-btn" data-copy="${c.id}" title="Copy ID">${iCopy}</button>
+          <div style="display:flex;gap:4px;align-items:center;">
+            <button class="ss-var-btn ss-fav-btn" data-id="${c.id}" title="${state.contactFavorites.some(f => f.id == c.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.contactFavorites.some(f => f.id == c.id) ? 'var(--accent)' : 'var(--text4)'};">
+              ${state.contactFavorites.some(f => f.id == c.id) ? iStarFill : iStar}
+            </button>
+            ${getFullProjectFromUrl() ? `
+              <a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${c.id}" 
+                 target="_blank" title="Open chat" class="ss-var-btn" 
+                 onclick="event.stopPropagation();"
+                 style="color:var(--text4);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:0;width:28px;height:28px;">
+                 ${iExternal.replace('width="16" height="16"', 'width="12" height="12"')}
+              </a>
+            ` : ''}
+            <button class="ss-var-btn ss-copy-btn" data-copy="${c.id}" title="Copy ID">${iCopy}</button>
+          </div>
         </div>
         ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:10px;">✉</span> ${esc(c.email)}</div>` : ''}
         ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:10px;">📞</span> ${esc(c.phone)}</div>` : ''}
@@ -755,6 +852,19 @@
         navigator.clipboard.writeText(btn.dataset.copy);
         btn.innerHTML = iDone;
         setTimeout(() => btn.innerHTML = iCopy, 1500);
+      };
+
+      card.querySelector('.ss-fav-btn').onclick = (e) => {
+        const btn = e.currentTarget; e.stopPropagation();
+        const id = btn.dataset.id;
+        const exists = state.contactFavorites.findIndex(f => f.id == id);
+        if (exists > -1) {
+          state.contactFavorites.splice(exists, 1);
+        } else {
+          state.contactFavorites.push({ id: c.id, name: c.fullName || 'Unnamed', photo: c.photo });
+        }
+        saveContactFavorites(state.contactFavorites);
+        renderContacts();
       };
 
       list.appendChild(card);
@@ -1292,9 +1402,25 @@
     if (tab === 'contacts') label = 'Contacts';
     document.getElementById('ss-current-tab-label').textContent = label;
     renderNav();
+    updateExternalLink(tab);
     if (tab === 'tags') renderMain();
     else if (tab === 'contacts') renderContactsTab();
     else renderVarsTab();
+  }
+
+  function updateExternalLink(tab) {
+    const link = document.getElementById('ss-tab-external-link');
+    const fullProject = getFullProjectFromUrl();
+    if (link && fullProject) {
+      let path = 'home';
+      if (tab === 'tags') path = 'tags';
+      if (tab === 'contacts') path = 'contacts';
+      if (tab === 'vars') path = 'definitions';
+      link.href = `https://console.smartsender.com/${path}?project=${fullProject}`;
+      link.style.display = 'inline-flex';
+    } else if (link) {
+      link.style.display = 'none';
+    }
   }
 
   // ─── BUILD SIDEBAR ────────────────────────────────────────────────────────
@@ -1304,9 +1430,14 @@
       <div id="ss-resize-handle"></div>
       <div class="ss-header">
         <div class="ss-header-top" style="align-items:center;margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <button class="ss-icon-btn" id="ss-burger" style="font-size:1.14em;">☰</button>
-            <span id="ss-current-tab-label" style="font-size:14px;font-weight:600;color:var(--text2);">Variables</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="ss-icon-btn" id="ss-burger" style="font-size:2.2em;width:44px;height:44px;background:none;">☰</button>
+            <div style="display:flex;align-items:center;">
+              <span id="ss-current-tab-label" style="font-size:28px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
+              <a id="ss-tab-external-link" target="_blank" style="display:none;color:var(--text4);margin-left:10px;text-decoration:none;transition:color 0.2s;">
+                ${iExternal.replace('width="16" height="16"', 'width="22" height="22"')}
+              </a>
+            </div>
           </div>
           <div style="display:flex;gap:6px;align-items:center;">
             <button class="ss-icon-btn" id="ss-back-btn" style="display:none;">←</button>
@@ -1314,14 +1445,18 @@
             <button class="ss-close" id="ss-close">✕</button>
           </div>
         </div>
-        <div class="ss-project-badge"><span class="dot"></span>Project ID: <span id="ss-project-display">—</span></div>
       </div>
       <div id="ss-nav" class="ss-nav"></div>
       <div id="ss-info-panel" class="ss-info-panel"></div>
       <div class="ss-body" id="ss-body"></div>
-      <div class="ss-footer">
-        <div class="ss-title">my<span>Sender</span></div>
-        <div class="ss-subtitle">Tools · v2.0</div>
+      <div class="ss-footer" style="padding:10px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+           <div style="display:flex;align-items:center;gap:8px;">
+             <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
+             <div id="ss-api-status" style="display:none;font-size:10px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;">api key</div>
+           </div>
+           <div class="ss-project-badge" id="ss-project-container" style="margin:0;flex-shrink:0;"><span id="ss-project-display">—</span></div>
+        </div>
       </div>
     `;
     return s;
@@ -1332,8 +1467,18 @@
     if (document.getElementById('ss-sidebar')) return;
     const sidebar = buildSidebar();
     document.body.appendChild(sidebar);
+    sidebar.style.width = loadSidebarWidth() + 'px';
     applyTheme(state.theme);
     applyFontSize(state.fontSize);
+    
+    function refreshProjectContext() {
+      const name = getProjectFromUrl();
+      if (name !== state.projectName) {
+        state.projectName = name;
+        renderHeader();
+        updateExternalLink(state.activeTab);
+      }
+    }
     state.projectName = getProjectFromUrl();
 
     listenForProjectId((id) => {
@@ -1346,18 +1491,35 @@
 
     renderHeader(); renderNav();
 
-    chrome.runtime.onMessage.addListener((msg) => { if (msg.type === 'TOGGLE_SIDEBAR') sidebar.classList.toggle('open'); });
+    chrome.runtime.onMessage.addListener((msg) => { 
+      if (msg.type === 'TOGGLE_SIDEBAR') {
+        sidebar.classList.toggle('open');
+        if (sidebar.classList.contains('open')) {
+          refreshProjectContext();
+          renderHeader();
+        }
+      }
+    });
 
     const handle = document.getElementById('ss-resize-handle');
     let isResizing = false, startX = 0, startWidth = 0;
     handle.addEventListener('mousedown', (e) => { isResizing = true; startX = e.clientX; startWidth = sidebar.offsetWidth; handle.classList.add('dragging'); document.body.style.userSelect = 'none'; document.body.style.cursor = 'ew-resize'; });
-    document.addEventListener('mousemove', (e) => { if (!isResizing) return; sidebar.style.width = Math.min(800, Math.max(320, startWidth + (startX - e.clientX))) + 'px'; });
-    document.addEventListener('mouseup', () => { if (!isResizing) return; isResizing = false; handle.classList.remove('dragging'); document.body.style.userSelect = ''; document.body.style.cursor = ''; });
+    document.addEventListener('mousemove', (e) => { if (!isResizing) return; sidebar.style.width = Math.min(1200, Math.max(320, startWidth + (startX - e.clientX))) + 'px'; });
+    document.addEventListener('mouseup', () => { if (!isResizing) return; isResizing = false; handle.classList.remove('dragging'); document.body.style.userSelect = ''; document.body.style.cursor = ''; saveSidebarWidth(sidebar.offsetWidth); });
 
     document.getElementById('ss-close').onclick = () => sidebar.classList.remove('open');
     document.getElementById('ss-settings-btn').onclick = () => switchView('settings');
     document.getElementById('ss-back-btn').onclick = () => switchView('main');
-    document.getElementById('ss-burger').onclick = (e) => { e.stopPropagation(); document.getElementById('ss-nav').classList.toggle('open'); };
+    document.getElementById('ss-burger').onclick = (e) => { 
+      e.stopPropagation(); 
+      const nav = document.getElementById('ss-nav');
+      nav.classList.toggle('open'); 
+      if (nav.classList.contains('open')) {
+        const info = document.getElementById('ss-info-panel');
+        if (info) info.classList.remove('open');
+        state.contactInfoOpen = false;
+      }
+    };
 
     document.addEventListener('click', (e) => {
       if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) closeDropdown();
