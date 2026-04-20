@@ -194,7 +194,8 @@
 
   async function countContacts(pid, tags, dv, dop) {
     const scopes = tags.map(tag => ({ resource: { name: tag.name, referable: tag.id, operator: dv ? dop : '=', value: dv || tag.createdAt.split('T')[0] }, type: 'tags', condition: 'includes' }));
-    const res = await fetch(`https://console.smartsender.com/api/i/projects/${pid}/contacts`, {
+    const apiOrigin = location.origin;
+    const res = await fetch(`${apiOrigin}/api/i/projects/${pid}/contacts`, {
       method: 'POST', credentials: 'include',
       headers: buildHeaders({ 'Content-Type': 'application/json;charset=UTF-8', 'Accept': 'application/json, text/plain, */*' }),
       body: JSON.stringify({ scopes, page: 1, sort: 'ASC', limitation: 1 }),
@@ -506,9 +507,15 @@
           return terms.some(t => vn.includes(t) || vv.includes(t));
         });
         return filtered.map(v => `
-          <div class="ss-info-var">
-            <div class="ss-info-var-name">${esc(v.name)}</div>
-            <div class="ss-info-var-val">${esc(String(v.value))}</div>
+          <div class="ss-info-var" title="${esc(v.name)}: ${esc(String(v.value))}">
+            <div class="ss-info-var-name">
+              <span>${esc(v.name)}</span>
+              <button class="ss-info-copy-btn" data-copy="${esc(v.name)}" title="Copy key">${iCopy}</button>
+            </div>
+            <div class="ss-info-var-val">
+              <span>${esc(String(v.value))}</span>
+              <button class="ss-info-copy-btn" data-copy="${esc(String(v.value))}" title="Copy value">${iCopy}</button>
+            </div>
           </div>
         `).join('') || '<div class="ss-hint">No matching variables</div>';
       };
@@ -529,9 +536,9 @@
         ${state.contactSettings.showDetails ? `
         <div class="ss-info-section">
           <div class="ss-info-label">Basic Data</div>
-          ${data.email ? `<div class="ss-info-detail-row"><span class="ss-info-detail-label">Email</span><span class="ss-info-detail-value">${esc(data.email)}</span></div>` : ''}
-          ${data.phone ? `<div class="ss-info-detail-row"><span class="ss-info-detail-label">Phone</span><span class="ss-info-detail-value">${esc(data.phone)}</span></div>` : ''}
-          <div class="ss-info-detail-row"><span class="ss-info-detail-label">Created</span><span class="ss-info-detail-value">${new Date(data.createdAt).toLocaleDateString()}</span></div>
+          ${data.email ? `<div class="ss-info-detail-row" title="Email: ${esc(data.email)}"><span class="ss-info-detail-label">Email</span><div class="ss-info-detail-value"><span>${esc(data.email)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.email)}" title="Copy email">${iCopy}</button></div></div>` : ''}
+          ${data.phone ? `<div class="ss-info-detail-row" title="Phone: ${esc(data.phone)}"><span class="ss-info-detail-label">Phone</span><div class="ss-info-detail-value"><span>${esc(data.phone)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.phone)}" title="Copy phone">${iCopy}</button></div></div>` : ''}
+          <div class="ss-info-detail-row" title="Created: ${new Date(data.createdAt).toLocaleString()}"><span class="ss-info-detail-label">Created</span><div class="ss-info-detail-value"><span>${new Date(data.createdAt).toLocaleDateString()}</span><button class="ss-info-copy-btn" data-copy="${new Date(data.createdAt).toLocaleDateString()}" title="Copy date">${iCopy}</button></div></div>
         </div>
         ` : ''}
         
@@ -555,11 +562,28 @@
 
       const vSearch = document.getElementById('ss-info-var-search');
       if (vSearch) {
-        vSearch.onclick = (e) => e.stopPropagation();
         vSearch.oninput = (e) => {
           document.getElementById('ss-info-vars-list').innerHTML = renderVars(e.target.value);
+          bindExpand();
         };
       }
+
+      const bindExpand = () => {
+        body.querySelectorAll('.ss-info-detail-row, .ss-info-var').forEach(el => {
+          el.onclick = (e) => { e.stopPropagation(); el.classList.toggle('expanded'); };
+          el.querySelectorAll('.ss-info-copy-btn').forEach(btn => {
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              const text = btn.dataset.copy;
+              navigator.clipboard.writeText(text);
+              const old = btn.innerHTML;
+              btn.innerHTML = iDone;
+              setTimeout(() => btn.innerHTML = old, 1500);
+            };
+          });
+        });
+      };
+      bindExpand();
     }).catch(err => {
       const body = document.getElementById('ss-info-body');
       if (body) body.innerHTML = `<div class="ss-error visible">⚠ ${err.message}</div>`;

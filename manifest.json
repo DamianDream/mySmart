@@ -5,7 +5,7 @@
   "description": "Tag search & variables manager for mySender",
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": [
-    "https://console.smartsender.com/*",
+    "https://*.smartsender.com/*",
     "https://api.smartsender.com/*"
   ],
   "background": {
@@ -21,13 +21,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://console.smartsender.com/*"],
+      "matches": ["https://*.smartsender.com/*"],
       "js": ["interceptor.js"],
       "run_at": "document_start",
       "world": "MAIN"
     },
     {
-      "matches": ["https://console.smartsender.com/*"],
+      "matches": ["https://*.smartsender.com/*"],
       "js": ["content.js"],
       "css": ["sidebar.css"],
       "run_at": "document_end"

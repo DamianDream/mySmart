@@ -83,11 +83,12 @@
   box-shadow: -8px 0 24px rgba(0,0,0,0.15);
 }
 .ss-nav.open { left: -180px; opacity: 1; pointer-events: auto; }
-.ss-info-panel.open { left: -320px; opacity: 1; pointer-events: auto; }
+.ss-info-panel.open { left: -75ch; opacity: 1; pointer-events: auto; }
+@media (max-width: 1000px) { .ss-info-panel.open { left: -85vw; } }
 .ss-info-panel {
   position: absolute;
   top: 0; left: 0;
-  width: 320px; height: 100%;
+  width: 75ch; max-width: 85vw; height: 100%;
   background: var(--bg-solid);
   border-left: 1px solid var(--border);
   border-right: 1px solid var(--border);
@@ -104,12 +105,44 @@
 .ss-info-body::-webkit-scrollbar { width: 4px; }
 .ss-info-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ss-info-section { margin-bottom: 20px; }
-.ss-info-label { font-size: 10px; font-weight: 700; color: var(--text5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.ss-info-label { font-size: 11px; font-weight: 700; color: var(--text4); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+.ss-info-detail-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; cursor: pointer; min-width: 0; }
+.ss-info-detail-label { font-size: 12px; color: var(--text3); flex-shrink: 0; }
+.ss-info-detail-value { font-size: 12px; color: var(--text); font-weight: 600; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+
+.ss-info-vars-list { display: flex; flex-direction: column; gap: 4px; }
+.ss-info-var { 
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; 
+  padding: 6px 8px; background: var(--bg3); border-radius: 6px; border: 1px solid transparent; 
+  transition: all 0.2s; cursor: pointer; min-width: 0;
+}
+.ss-info-var:hover { border-color: var(--border); background: var(--bg2); }
+.ss-info-var-name { font-size: 11px; color: var(--text4); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.ss-info-var-val { font-size: 12px; font-weight: 600; color: var(--text); text-align: right; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+
+.ss-info-copy-btn {
+  display: none; width: 18px; height: 18px;
+  background: none; border: none; padding: 3px;
+  color: var(--text4); cursor: pointer; border-radius: 4px;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.ss-info-copy-btn:hover { color: var(--accent); background: var(--bg3); }
+.ss-info-copy-btn svg { width: 10px; height: 10px; pointer-events: none; }
+
+/* Expanded state for details and variables */
+.ss-info-detail-row.expanded, .ss-info-var.expanded { flex-wrap: wrap; }
+.ss-info-detail-row.expanded .ss-info-detail-value,
+.ss-info-var.expanded .ss-info-var-name,
+.ss-info-var.expanded .ss-info-var-val { white-space: normal; overflow: visible; word-break: break-all; text-align: left; max-width: 100%; display: flex; align-items: center; gap: 6px; }
+
+.ss-info-detail-row.expanded .ss-info-copy-btn,
+.ss-info-var.expanded .ss-info-copy-btn {
+  display: inline-flex;
+}
+
 .ss-info-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .ss-info-tag { font-size: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text3); padding: 3px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; }
 .ss-info-vars { display: flex; flex-direction: column; gap: 4px; }
-.ss-info-var { display: flex; justify-content: space-between; gap: 10px; padding: 6px 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; }
-.ss-info-var-name { font-weight: 600; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
 .ss-info-var-val { color: var(--success); font-family: 'JetBrains Mono', monospace; text-align: right; word-break: break-all; }
 .ss-info-detail-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; }
 .ss-info-detail-label { color: var(--text4); }

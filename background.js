@@ -1,6 +1,6 @@
 // Toggle sidebar on icon click
 chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.url?.includes('console.smartsender.com')) return;
+  if (!tab.url?.includes('smartsender.com')) return;
   chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' });
 });
 
