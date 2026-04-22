@@ -17,9 +17,21 @@
   const iSave = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
   const iTrash = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
   const iPen = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
-   const iAddToPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>`;
+  const iAddToPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>`;
   const iTune = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>`;
   const iFilter = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>`;
+  const iBack = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`;
+  const iX = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const iMenu = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
+  const iKey = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`;
+
+  const iVariable = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`;
+  const iTag = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>`;
+  const iUsers = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
+  const iFunnel = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2V12.46L22 3z"></path></svg>`;
+  const iChat = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+  const iMonitor = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+  const iLog = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`;
 
   // ─── COLORS ───────────────────────────────────────────────────────────────
   const THEMES = {
@@ -42,14 +54,8 @@
   };
 
   // ─── STORAGE KEYS ─────────────────────────────────────────────────────────
-  const K_FONT = 'ms_font_size';
   const K_CONTACT_FAVORITES = 'ss_contacts_favorites';
-  const loadFont = () => localStorage.getItem(K_FONT) || 'small';
-  const saveFont = (f) => localStorage.setItem(K_FONT, f);
-  const FONT_SCALES = { small: 0.9, regular: 1, large: 1.1 };
   const K_SIDEBAR_WIDTH = 'ms_sidebar_width';
-  const loadSidebarWidth = () => localStorage.getItem(K_SIDEBAR_WIDTH) || '500';
-  const saveSidebarWidth = (w) => localStorage.setItem(K_SIDEBAR_WIDTH, w);
   const K_PRESETS = 'ms_presets';
   const K_THEME = 'ms_theme';
   const K_VAR_HISTORY = 'ms_var_history';     // edit history per variable
@@ -57,71 +63,151 @@
   const K_CONTACT_SEARCH_HIST = (pid) => `ss_contact_search_hist_${pid}`;
   const K_VAR_PRESETS = (pid) => `ms_var_presets_${pid}`;  // var presets per project
   const K_CONTACT_SETTINGS = 'ss_contacts_display_settings';
-  const K_TAB_STATE = (pid) => `ss_active_tab_${pid}`;  // var presets per project
   const K_LAST_TAB = (pid) => `ms_last_tab_${pid}`;
 
+  let __localCache = {};
+
   // ─── STORAGE HELPERS ──────────────────────────────────────────────────────
-  const loadPresets = () => { try { return JSON.parse(localStorage.getItem(K_PRESETS) || '[]'); } catch { return []; } };
-  const savePresets = (p) => localStorage.setItem(K_PRESETS, JSON.stringify(p));
+  const loadFromCache = (key, defaultVal) => { try { const v = __localCache[key]; return v !== undefined ? (typeof v === 'string' && (v.startsWith('{') || v.startsWith('[')) ? JSON.parse(v) : v) : defaultVal; } catch { return defaultVal; } };
+  const saveToStorage = (key, val) => { const str = typeof val === 'object' ? JSON.stringify(val) : String(val); __localCache[key] = str; chrome.storage.local.set({ [key]: str }); };
+
+  const loadSidebarWidth = () => loadFromCache(K_SIDEBAR_WIDTH, '500');
+  const saveSidebarWidth = (w) => saveToStorage(K_SIDEBAR_WIDTH, w);
+
+  const loadPresets = () => loadFromCache(K_PRESETS, []);
+  const savePresets = (p) => saveToStorage(K_PRESETS, p);
   const getPreset = (id) => loadPresets().find(p => p.projectId === id) || null;
-  const loadTheme = () => localStorage.getItem(K_THEME) || 'dark';
-  const saveTheme = (t) => localStorage.setItem(K_THEME, t);
-  const loadLastTab = (pid) => { try { return localStorage.getItem(K_LAST_TAB(pid)) || 'vars'; } catch { return 'vars'; } };
-  const saveLastTab = (pid, tab) => { if (pid) localStorage.setItem(K_LAST_TAB(pid), tab); };
+  
+  const loadTheme = () => loadFromCache(K_THEME, 'dark');
+  const saveTheme = (t) => saveToStorage(K_THEME, t);
+  
+  const loadLastTab = (pid) => loadFromCache(K_LAST_TAB(pid), 'vars');
+  const saveLastTab = (pid, tab) => { if (pid) saveToStorage(K_LAST_TAB(pid), tab); };
 
   // Edit history (up to 5 per variable)
-  const loadVarHistory = (pid, vid) => { try { return JSON.parse(localStorage.getItem(K_VAR_HISTORY) || '{}')[`${pid}_${vid}`] || []; } catch { return []; } };
+  const loadVarHistory = (pid, vid) => loadFromCache(K_VAR_HISTORY, {})[`${pid}_${vid}`] || [];
   const saveVarHistory = (pid, vid, oldVal) => {
     try {
-      const all = JSON.parse(localStorage.getItem(K_VAR_HISTORY) || '{}');
+      const all = loadFromCache(K_VAR_HISTORY, {});
       const key = `${pid}_${vid}`;
       const arr = all[key] || [];
       arr.unshift({ value: oldVal, ts: new Date().toISOString() });
       all[key] = arr.slice(0, 5);
-      localStorage.setItem(K_VAR_HISTORY, JSON.stringify(all));
+      saveToStorage(K_VAR_HISTORY, all);
     } catch { }
   };
 
-  // Search term history (up to 20 per project)
-  const loadSearchHist = (pid) => { try { return JSON.parse(localStorage.getItem(K_SEARCH_HIST(pid)) || '[]'); } catch { return []; } };
+  // Search term history (up to 100 per project)
+  const loadSearchHist = (pid) => loadFromCache(K_SEARCH_HIST(pid), []);
   const saveSearchHist = (pid, term) => {
     try {
       const arr = loadSearchHist(pid).filter(t => t !== term);
       arr.unshift(term);
-      localStorage.setItem(K_SEARCH_HIST(pid), JSON.stringify(arr.slice(0, 20)));
+      saveToStorage(K_SEARCH_HIST(pid), arr.slice(0, 100));
     } catch { }
   };
 
-  const loadContactSearchHist = (pid) => { try { return JSON.parse(localStorage.getItem(K_CONTACT_SEARCH_HIST(pid)) || '[]'); } catch { return []; } };
+  const loadContactSearchHist = (pid) => loadFromCache(K_CONTACT_SEARCH_HIST(pid), []);
   const saveContactSearchHist = (pid, term) => {
     try {
       const arr = loadContactSearchHist(pid).filter(t => t !== term);
       arr.unshift(term);
-      localStorage.setItem(K_CONTACT_SEARCH_HIST(pid), JSON.stringify(arr.slice(0, 10)));
+      saveToStorage(K_CONTACT_SEARCH_HIST(pid), arr.slice(0, 100));
     } catch { }
   };
 
   // Var presets per project
-  const loadVarPresets = (pid) => { try { return JSON.parse(localStorage.getItem(K_VAR_PRESETS(pid)) || '[]'); } catch { return []; } };
-  const saveVarPresets = (pid, p) => localStorage.setItem(K_VAR_PRESETS(pid), JSON.stringify(p));
+  const loadVarPresets = (pid) => loadFromCache(K_VAR_PRESETS(pid), []);
+  const saveVarPresets = (pid, p) => saveToStorage(K_VAR_PRESETS(pid), p);
 
-  const loadContactSettings = () => { try { return JSON.parse(localStorage.getItem(K_CONTACT_SETTINGS)) || { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } catch { return { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false }; } };
-  const saveContactSettings = (s) => localStorage.setItem(K_CONTACT_SETTINGS, JSON.stringify(s));
-  const loadContactFavorites = () => { try { return JSON.parse(localStorage.getItem(K_CONTACT_FAVORITES) || '[]'); } catch { return []; } };
-  const saveContactFavorites = (f) => localStorage.setItem(K_CONTACT_FAVORITES, JSON.stringify(f));
+  const loadContactSettings = () => loadFromCache(K_CONTACT_SETTINGS, { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false });
+  const saveContactSettings = (s) => saveToStorage(K_CONTACT_SETTINGS, s);
+  
+  const loadContactFavorites = () => loadFromCache(K_CONTACT_FAVORITES, []);
+  const saveContactFavorites = (f) => saveToStorage(K_CONTACT_FAVORITES, f.slice(0, 100));
+  
+  const K_VAR_FAVORITES = 'ms_var_favorites';
+  const loadVarFavorites = () => loadFromCache(K_VAR_FAVORITES, []);
+  const saveVarFavorites = (f) => saveToStorage(K_VAR_FAVORITES, f.slice(0, 100));
+
+  // --- PANEL MANAGER ---
+  const toggleSidePanel = (id) => {
+    const panels = [
+      'ss-nav', 'ss-info-panel', 
+      'ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel',
+      'ss-var-search-hist', 'ss-var-presets-panel', 'ss-var-fav-panel', 'ss-extra-panel'
+    ];
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const alreadyOpenId = panels.find(pId => {
+      const p = document.getElementById(pId);
+      return p && p.classList.contains('open');
+    });
+
+    if (id === 'ss-nav') {
+      // Burger menu: close everything else WITH animation, then toggle nav
+      panels.forEach(pId => {
+        if (pId !== 'ss-nav') {
+          const p = document.getElementById(pId);
+          if (p && p.classList.contains('open')) {
+            p.classList.remove('open');
+            // Sync state
+            if (pId === 'ss-info-panel') state.contactInfoOpen = false;
+            if (pId === 'ss-contact-search-hist') state.contactShowSearchHist = false;
+            if (pId === 'ss-contact-fav-panel') state.contactShowFavorites = false;
+            if (pId === 'ss-contact-settings-panel') state.contactSettingsOpen = false;
+          }
+        }
+      });
+      // Clean up all active buttons in sidebar
+      document.querySelectorAll('.ss-action-btn.active, .ss-var-btn.active').forEach(b => b.classList.remove('active'));
+      
+      target.classList.toggle('open');
+      state.navOpen = target.classList.contains('open');
+      return;
+    }
+
+    // Tab-specific logic (Instant Swap)
+    if (alreadyOpenId && alreadyOpenId !== 'ss-nav') {
+      const old = document.getElementById(alreadyOpenId);
+      old.classList.add('ss-no-transition');
+      target.classList.add('ss-no-transition');
+      
+      old.classList.remove('open');
+      target.classList.add('open');
+      
+      // Delay removal to ensure reflow
+      setTimeout(() => {
+        old.classList.remove('ss-no-transition');
+        target.classList.remove('ss-no-transition');
+      }, 50);
+    } else {
+      // Normal slide-out
+      panels.forEach(pId => {
+        if (pId !== id) {
+          const p = document.getElementById(pId);
+          if (p) p.classList.remove('open');
+        }
+      });
+      target.classList.add('open');
+    }
+  };
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const state = {
     projectId: null, projectName: null,
     xsrfToken: null, activePreset: null,
     theme: loadTheme(),
-    fontSize: loadFont(),
+    fontSize: 'regular',
     activeTab: 'vars',
     view: 'main',
     navOpen: false,
     selectedTags: [], isSearching: false, isCounting: false,
     varResults: [], varEditingId: null, varShowHistoryId: null,
     varShowSearchHist: false,
+    varShowFavorites: false,
+    varFavorites: loadVarFavorites(),
     varPresetsOpen: false,
     varPresetEditing: null,
     varPresetPanelId: null,
@@ -133,7 +219,8 @@
     contactSettings: loadContactSettings(),
     contactFavorites: loadContactFavorites(),
     contactInfoOpen: false, contactInfoId: null, contactInfo: null, isFetchingContactInfo: false,
-    contactShowFavorites: false
+    contactShowFavorites: false,
+    contactVarEditingKey: null
   };
 
   // ─── THEME ────────────────────────────────────────────────────────────────
@@ -144,16 +231,23 @@
     s.dataset.theme = t;
   }
 
-  function applyFontSize(f) {
-    state.fontSize = f; saveFont(f);
-    const s = document.getElementById('ss-sidebar'); if (!s) return;
-    s.style.setProperty('--font-scale', FONT_SCALES[f] || 1);
-  }
   const getXsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
   const getXsrfCookie = () => decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
   const getProjectFromUrl = () => { const p = new URLSearchParams(location.search).get('project'); return p ? p.replace(/-\d+$/, '') : null; };
   const getFullProjectFromUrl = () => new URLSearchParams(location.search).get('project');
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  const showNotice = (msg, type = 'error') => {
+    let n = document.getElementById('ss-global-notice');
+    if (!n) {
+      n = document.createElement('div'); n.id = 'ss-global-notice';
+      document.body.appendChild(n);
+    }
+    n.textContent = msg;
+    n.style.background = type === 'error' ? 'var(--error)' : 'var(--accent)';
+    n.classList.add('visible');
+    setTimeout(() => n.classList.remove('visible'), 3000);
+  };
   const copyToClipboard = (text) => navigator.clipboard.writeText(text).catch(() => {
     const ta = document.createElement('textarea'); ta.value = text;
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
@@ -171,11 +265,25 @@
   // ─── API ──────────────────────────────────────────────────────────────────
   function bgFetch(url, method = 'GET', headers = {}, body = null) {
     return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({ type: 'API_REQUEST', url, method, headers, body }, (res) => {
-        if (chrome.runtime.lastError) return reject(new Error(chrome.runtime.lastError.message));
-        if (!res?.ok) return reject(new Error(res?.error || `HTTP ${res?.status}`));
-        resolve(res.data);
-      });
+      try {
+        chrome.runtime.sendMessage({ type: 'API_REQUEST', url, method, headers, body }, (res) => {
+          if (chrome.runtime.lastError) {
+            const m = chrome.runtime.lastError.message;
+            if (m.includes('context invalidated')) {
+              return reject(new Error('Extension was updated 🔄 Please refresh this page to continue.'));
+            }
+            return reject(new Error(m));
+          }
+          if (!res?.ok) return reject(new Error(res?.error || `HTTP ${res?.status}`));
+          resolve(res.data);
+        });
+      } catch (e) {
+        if (e.message.includes('context invalidated')) {
+          reject(new Error('Extension was updated 🔄 Please refresh this page to continue.'));
+        } else {
+          reject(e);
+        }
+      }
     });
   }
 
@@ -270,11 +378,45 @@
   function renderNav() {
     const nav = document.getElementById('ss-nav'); if (!nav) return;
     nav.innerHTML = `
-      <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars"><span>Variables</span></button>
-      <button class="ss-nav-item ${state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags"><span>Tags</span></button>
-      <button class="ss-nav-item ${state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts"><span>Contacts</span></button>
+      <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Workspace</div>
+      <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
+        <span class="ss-nav-icon">${iVariable}</span>
+        <span>Variables</span>
+      </button>
+      <button class="ss-nav-item ${state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags">
+        <span class="ss-nav-icon">${iTag}</span>
+        <span>Tags</span>
+      </button>
+      <button class="ss-nav-item ${state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts">
+        <span class="ss-nav-icon">${iUsers}</span>
+        <span>Contacts</span>
+      </button>
+
+      <div class="ss-divider" style="margin: 8px 0;"></div>
+      <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Coming Soon</div>
+      
+      <div class="ss-nav-item disabled">
+        <span class="ss-nav-icon">${iFunnel}</span>
+        <span>Funnels</span>
+        <span class="ss-nav-soon">Soon</span>
+      </div>
+      <div class="ss-nav-item disabled">
+        <span class="ss-nav-icon">${iChat}</span>
+        <span>Chat</span>
+        <span class="ss-nav-soon">Soon</span>
+      </div>
+      <div class="ss-nav-item disabled">
+        <span class="ss-nav-icon">${iMonitor}</span>
+        <span>Monitoring</span>
+        <span class="ss-nav-soon">Soon</span>
+      </div>
+      <div class="ss-nav-item disabled">
+        <span class="ss-nav-icon">${iLog}</span>
+        <span>Log</span>
+        <span class="ss-nav-soon">Soon</span>
+      </div>
     `;
-    nav.querySelectorAll('.ss-nav-item').forEach(btn => {
+    nav.querySelectorAll('.ss-nav-item:not(.disabled)').forEach(btn => {
       btn.addEventListener('click', () => {
         state.navOpen = false;
         nav.classList.remove('open');
@@ -294,19 +436,11 @@
         <div class="ss-section-label" style="margin-bottom:12px;">Appearance</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
           <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-            <span style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
+            <span style="font-size:11px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
             <label class="ss-theme-switch" title="Toggle Theme" style="flex-shrink:0;">
               <input type="checkbox" id="ss-theme-toggle-input"${state.theme === 'dark' ? ' checked' : ''}>
               <span class="ss-slider"></span>
             </label>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex:1;">
-            <span style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;margin-right:2px;">Font Size</span>
-            <select class="ss-input ss-font-select" id="ss-font-select" style="max-width:110px;padding:5px 8px;font-size:11px;">
-              <option value="small"${state.fontSize === 'small' ? ' selected' : ''}>Small</option>
-              <option value="regular"${state.fontSize === 'regular' ? ' selected' : ''}>Regular</option>
-              <option value="large"${state.fontSize === 'large' ? ' selected' : ''}>Large</option>
-            </select>
           </div>
         </div>
       </div>
@@ -334,13 +468,12 @@
         <input class="ss-input" id="ss-preset-pid" type="text" placeholder="86866" style="margin-bottom:8px;" value="${state.projectId || ''}" />
         <label class="ss-field-label">API Token</label>
         <input class="ss-input" id="ss-preset-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:12px;" />
-        <div id="ss-preset-msg" style="display:none;font-size:11px;margin-bottom:8px;font-family:monospace;"></div>
+        <div id="ss-preset-msg" style="display:none;font-size:13px;margin-bottom:8px;font-family:monospace;"></div>
         <button class="ss-btn-primary" id="ss-preset-save">Save Preset</button>
       </div>
     `;
 
     document.getElementById('ss-theme-toggle-input').onchange = (e) => { applyTheme(e.target.checked ? 'dark' : 'light'); renderSettings(); };
-    document.getElementById('ss-font-select').onchange = (e) => { applyFontSize(e.target.value); };
 
     body.querySelectorAll('.ss-preset-delete').forEach(btn => {
       btn.onclick = (e) => {
@@ -356,7 +489,7 @@
       const pid = document.getElementById('ss-preset-pid').value.trim();
       const token = document.getElementById('ss-preset-token').value.trim();
       const msg = document.getElementById('ss-preset-msg');
-      if (!pid) { msg.textContent = '⚠ Project ID required'; msg.style.cssText = 'display:block;color:var(--error);font-size:11px;margin-bottom:8px;font-family:monospace;'; return; }
+      if (!pid) { msg.textContent = '⚠ Project ID required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:monospace;'; return; }
       const presets = loadPresets(); const idx = presets.findIndex(p => p.projectId === pid);
       // If updating existing preset and token is empty — keep old token
       const existingToken = idx >= 0 ? presets[idx].apiToken : '';
@@ -364,7 +497,7 @@
       if (idx >= 0) presets[idx] = preset; else presets.push(preset);
       savePresets(presets);
       if (pid === state.projectId) { state.activePreset = preset; renderHeader(); }
-      msg.textContent = '✅ Saved!'; msg.style.cssText = 'display:block;color:var(--success);font-size:11px;margin-bottom:8px;font-family:monospace;';
+      msg.textContent = '✅ Saved!'; msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:monospace;';
       setTimeout(() => { msg.style.display = 'none'; }, 2000);
       // Re-render but DON'T wipe the fields — just update preset list
       body.querySelectorAll('.ss-preset-card').forEach(c => c.remove());
@@ -380,9 +513,9 @@
     body.innerHTML = `
       <div style="margin-bottom:14px;">
         <div class="ss-section-label">Tag search</div>
-        <div class="ss-search-row">
-          <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" />
-          <button class="ss-btn-search" id="ss-btn-search">Find</button>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" style="flex:1;" />
+          <button class="ss-btn-search" id="ss-btn-search" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
         </div>
         <div class="ss-dropdown" id="ss-dropdown" style="margin-top:8px;"></div>
       </div>
@@ -405,7 +538,7 @@
       let name = esc(tag.name);
       if (term) { const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi'); name = tag.name.replace(re, `<mark style="background:var(--mark-bg);color:var(--mark-text);border-radius:2px;padding:0 2px;">$1</mark>`); }
       const item = document.createElement('div'); item.className = 'ss-dropdown-item'; item.style.cursor = 'default';
-      item.innerHTML = `<div style="min-width:0;flex:1;"><div class="ss-dropdown-item-name">${name}</div><div class="ss-dropdown-item-id" style="font-size:11px;color:var(--success);margin-top:4px;">ID: <b style="font-size:12px;">${tag.id}</b></div></div><button class="ss-var-btn ss-tag-copy-btn" title="Copy ID">${iCopy}</button>`;
+      item.innerHTML = `<div style="min-width:0;flex:1;"><div class="ss-dropdown-item-name">${name}</div><div class="ss-dropdown-item-id" style="font-size:13px;color:var(--success);margin-top:4px;">ID: <b style="font-size:14px;">${tag.id}</b></div></div><button class="ss-var-btn ss-tag-copy-btn" title="Copy ID">${iCopy}</button>`;
       const copyBtn = item.querySelector('.ss-tag-copy-btn');
       copyBtn.onclick = (e) => {
         e.stopPropagation();
@@ -431,14 +564,14 @@
       if (!state.projectId) { showTagError('Project ID not determined'); return; }
       if (state.isSearching) return;
       state.isSearching = true;
-      if (searchBtn) { searchBtn.disabled = true; searchBtn.textContent = '...'; }
+      if (searchBtn) { searchBtn.disabled = true; searchBtn.innerHTML = '...'; }
       setLoading(true);
       closeDropdown();
       try {
         const data = await searchTags(state.projectId, term); const col = data.collection || [];
         showDropdown(col, term, data.isExact);
       } catch (err) { showTagError(err.message); }
-      finally { state.isSearching = false; setLoading(false); if (searchBtn) { searchBtn.disabled = false; searchBtn.textContent = 'Find'; } }
+      finally { state.isSearching = false; setLoading(false); if (searchBtn) { searchBtn.disabled = false; searchBtn.innerHTML = iSearch; } }
     }
     searchBtn?.addEventListener('click', doSearch);
     tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); if (e.key === 'Escape') closeDropdown(); });
@@ -476,37 +609,47 @@
     return bgFetch(`https://api.smartsender.com/v1/contacts/${id}/info`, 'GET', h);
   }
 
+  async function updateContactVar(contactId, key, value) {
+    const h = authHeaders(); if (!h) throw new Error('No API token.');
+    return bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}`, 'PUT', h, {
+      values: { [key]: value }
+    });
+  }
+
   function renderContactInfoPanel(id) {
     const panel = document.getElementById('ss-info-panel');
     if (!panel) return;
-    
+
     state.contactInfoOpen = true;
     state.contactInfoId = id;
     panel.classList.add('open');
-    
+
     panel.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Contact Info</div>
         <button class="ss-close" id="ss-info-close">✕</button>
       </div>
+      <div id="ss-info-search-sticky" style="padding:10px 16px;background:var(--bg-solid);border-bottom:1px solid var(--border);display:none;">
+        <input class="ss-input" id="ss-info-var-search" type="text" placeholder="Filter variables..." style="font-size:13px;padding:6px 10px;height:28px;" />
+      </div>
       <div class="ss-info-body" id="ss-info-body">
         <div class="ss-loading" style="display:flex;"><div class="ss-spinner"></div><span class="ss-loading-text">Loading details...</span></div>
       </div>
     `;
-    
+
     document.getElementById('ss-info-close').onclick = () => {
       state.contactInfoOpen = false;
       panel.classList.remove('open');
     };
-    
+
     fetchContactInfo(id).then(data => {
       if (state.contactInfoId !== id) return;
       state.contactInfo = data;
       const body = document.getElementById('ss-info-body');
       if (!body) return;
-      
+
       const standardKeys = ['id', 'name', 'firstName', 'lastName', 'fullName', 'email', 'phone', 'photo', 'createdAt', 'notes', 'tags', 'values', 'thumb', 'updatedAt', 'system_city', 'system_country', 'system_continent', 'system_timezone', 'system_os', 'system_browser', 'is_active', 'userId', 'projectId'];
-      
+
       let vars = (data.values || []).map(v => ({ name: v.name, value: v.value }));
       // Extract root level keys as fallback/addition
       Object.keys(data).forEach(k => {
@@ -523,32 +666,42 @@
           const vv = String(v.value).toLowerCase();
           return terms.some(t => vn.includes(t) || vv.includes(t));
         });
-        return filtered.map(v => `
-          <div class="ss-info-var" title="${esc(v.name)}: ${esc(String(v.value))}">
-            <div class="ss-info-var-name">
-              <span>${esc(v.name)}</span>
-              <button class="ss-info-copy-btn" data-copy="${esc(v.name)}" title="Copy key">${iCopy}</button>
+        return filtered.map(v => {
+          const isEditing = state.contactVarEditingKey === v.name;
+          return `
+            <div class="ss-info-var${isEditing ? ' editing' : ''}" title="${esc(v.name)}: ${esc(String(v.value))}">
+              <div class="ss-info-var-name">
+                <span>${esc(v.name)}</span>
+                <button class="ss-info-copy-btn" data-copy="${esc(v.name)}" title="Copy key">${iCopy}</button>
+              </div>
+              <div class="ss-info-var-val">
+                ${isEditing ? `
+                  <input class="ss-input ss-cvar-input" value="${esc(String(v.value))}" style="flex:1;height:22px;font-size:13px;padding:2px 6px;margin-right:4px;" />
+                  <button class="ss-var-btn ss-cvar-save" data-key="${esc(v.name)}" title="Save">${iDone}</button>
+                  <button class="ss-var-btn ss-cvar-cancel" title="Cancel">${iX}</button>
+                ` : `
+                  <span>${esc(String(v.value))}</span>
+                  <button class="ss-info-copy-btn ss-cvar-edit" data-key="${esc(v.name)}" title="Edit value">${iEdit}</button>
+                  <button class="ss-info-copy-btn" data-copy="${esc(String(v.value))}" title="Copy value">${iCopy}</button>
+                `}
+              </div>
             </div>
-            <div class="ss-info-var-val">
-              <span>${esc(String(v.value))}</span>
-              <button class="ss-info-copy-btn" data-copy="${esc(String(v.value))}" title="Copy value">${iCopy}</button>
-            </div>
-          </div>
-        `).join('') || '<div class="ss-hint">No matching variables</div>';
+          `;
+        }).join('') || '<div class="ss-hint">No matching variables</div>';
       };
 
       const tagsHtml = (data.tags || []).map(t => `<span class="ss-info-tag" title="Created: ${t.createdAt}">${esc(t.name)}</span>`).join('');
-      
+
       body.innerHTML = `
         ${state.contactSettings.showProfile ? `
         <div class="ss-info-section" style="display:flex;align-items:center;gap:12px;background:var(--bg2);padding:12px;border-radius:12px;margin-bottom:16px;">
           ${data.photo ? `<img src="${data.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>`}
           <div style="flex:1;overflow:hidden;">
-            <div style="font-weight:800;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
+            <div style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
               <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
               ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
             </div>
-            <div style="font-size:11px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
+            <div style="font-size:13px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
           </div>
         </div>
         ` : ''}
@@ -572,16 +725,17 @@
         ${state.contactSettings.showVars ? `
         <div class="ss-info-section">
           <div class="ss-info-label">Variables (${vars.length})</div>
-          <div style="margin-bottom:8px;">
-            <input class="ss-input" id="ss-info-var-search" type="text" placeholder="Filter variables..." style="font-size:11px;padding:6px 10px;height:28px;" />
-          </div>
           <div class="ss-info-vars" id="ss-info-vars-list">${renderVars()}</div>
         </div>
         ` : ''}
       `;
 
       const vSearch = document.getElementById('ss-info-var-search');
+      const vSearchSticky = document.getElementById('ss-info-search-sticky');
+      if (vSearchSticky) vSearchSticky.style.display = state.contactSettings.showVars ? 'block' : 'none';
+
       if (vSearch) {
+        vSearch.value = ''; // Reset on open
         vSearch.oninput = (e) => {
           document.getElementById('ss-info-vars-list').innerHTML = renderVars(e.target.value);
           bindExpand();
@@ -590,16 +744,56 @@
 
       const bindExpand = () => {
         body.querySelectorAll('.ss-info-detail-row, .ss-info-var').forEach(el => {
-          el.onclick = (e) => { e.stopPropagation(); el.classList.toggle('expanded'); };
-          el.querySelectorAll('.ss-info-copy-btn').forEach(btn => {
+          el.onclick = (e) => {
+            if (e.target.closest('input') || e.target.closest('button')) return;
+            e.stopPropagation(); el.classList.toggle('expanded');
+          };
+          el.querySelectorAll('.ss-info-copy-btn[data-copy]').forEach(btn => {
             btn.onclick = (e) => {
               e.stopPropagation();
               const text = btn.dataset.copy;
               navigator.clipboard.writeText(text);
-              const old = btn.innerHTML;
-              btn.innerHTML = iDone;
+              const old = btn.innerHTML; btn.innerHTML = iDone;
               setTimeout(() => btn.innerHTML = old, 1500);
             };
+          });
+
+          el.querySelector('.ss-cvar-edit')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.contactVarEditingKey = e.currentTarget.dataset.key;
+            document.getElementById('ss-info-vars-list').innerHTML = renderVars(vSearch?.value || '');
+            bindExpand();
+            setTimeout(() => body.querySelector('.ss-cvar-input')?.focus(), 30);
+          });
+
+          el.querySelector('.ss-cvar-cancel')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.contactVarEditingKey = null;
+            document.getElementById('ss-info-vars-list').innerHTML = renderVars(vSearch?.value || '');
+            bindExpand();
+          });
+
+          el.querySelector('.ss-cvar-save')?.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const key = e.currentTarget.dataset.key;
+            const input = el.querySelector('.ss-cvar-input');
+            const newVal = input.value;
+            const b = e.currentTarget;
+            b.disabled = true; b.innerHTML = '<span class="ss-spinner" style="width:10px;height:10px;border-width:1px;"></span>';
+            try {
+              await updateContactVar(id, key, newVal);
+              state.contactVarEditingKey = null;
+              renderContactInfoPanel(id);
+            } catch (err) {
+              alert('Update failed: ' + err.message);
+              b.disabled = false; b.innerHTML = iDone;
+            }
+          });
+
+          // Handle Enter key for save
+          el.querySelector('.ss-cvar-input')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') el.querySelector('.ss-cvar-save')?.click();
+            if (e.key === 'Escape') el.querySelector('.ss-cvar-cancel')?.click();
           });
         });
       };
@@ -618,18 +812,12 @@
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
           <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" style="flex:1;" />
           <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
+          <button class="ss-btn-search" id="ss-contact-reset-btn" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text4);">${iReset}</button>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn" id="ss-contact-hist-btn">History</button>
           <button class="ss-action-btn" id="ss-contact-settings-btn">Options</button>
           <button class="ss-action-btn" id="ss-contact-fav-btn">Favorite</button>
-        </div>
-        
-        <!-- Panels -->
-        <div style="position:relative;margin-top:8px;">
-          <div id="ss-contact-search-hist" class="ss-search-hist-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:100;"></div>
-          <div id="ss-contact-fav-panel" class="ss-search-hist-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:100;"></div>
-          <div id="ss-contact-settings-panel" class="ss-settings-panel" style="display:none;position:absolute;top:0;left:0;right:0;z-index:101;margin:0;"></div>
         </div>
       </div>
       <div id="ss-contact-list" style="display:flex;flex-direction:column;gap:6px;"></div>
@@ -654,59 +842,101 @@
 
     const toggleHist = () => {
       state.contactShowSearchHist = !state.contactShowSearchHist;
-      state.contactShowFavorites = false; state.contactSettingsOpen = false;
-      favPanel.style.display = 'none'; favBtn.classList.remove('active');
-      setPanel.style.display = 'none'; setBtn.classList.remove('active');
+      if (!state.contactShowSearchHist) {
+        document.getElementById('ss-contact-search-hist').classList.remove('open');
+        histBtn.classList.remove('active');
+        return;
+      }
       
-      if (!state.contactShowSearchHist) { histPanel.style.display = 'none'; histBtn.classList.remove('active'); return; }
+      state.contactShowFavorites = false; state.contactSettingsOpen = false;
+      favBtn.classList.remove('active'); setBtn.classList.remove('active');
+
       histBtn.classList.add('active');
       const hist = loadContactSearchHist(state.projectId);
-      if (!hist.length) { histPanel.innerHTML = '<div class="ss-hist-term" style="opacity:0.5;cursor:default;">No history</div>'; }
-      else {
-        histPanel.innerHTML = hist.map((t, i) => `<div class="ss-hist-term" data-index="${i}">${esc(t)}</div>`).join('');
-        histPanel.querySelectorAll('.ss-hist-term').forEach(el => {
+      
+      const renderHistList = (filter = '') => {
+        const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
+        const listHtml = filtered.length 
+          ? filtered.map((t, i) => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
+          : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
+        
+        histPanel.innerHTML = `
+          <div class="ss-info-header">
+            <div class="ss-info-title">Search History</div>
+            <button class="ss-close" id="ss-close-hist-btn">✕</button>
+          </div>
+          <div class="ss-panel-search-wrapper">
+            <input type="text" class="ss-panel-search-input" id="ss-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
+          </div>
+          <div class="ss-panel-list-content">
+            ${listHtml}
+          </div>
+        `;
+        
+        histPanel.querySelector('#ss-close-hist-btn').onclick = () => toggleHist();
+        const filterInput = histPanel.querySelector('#ss-hist-filter');
+        filterInput.focus();
+        filterInput.oninput = (e) => renderHistList(e.target.value);
+        
+        histPanel.querySelectorAll('.ss-hist-term[data-term]').forEach(el => {
           el.onclick = () => {
-            input.value = loadContactSearchHist(state.projectId)[parseInt(el.dataset.index)];
+            input.value = el.dataset.term;
             toggleHist();
             doSearch();
           };
         });
-      }
-      histPanel.style.display = 'block';
+      };
+      
+      renderHistList();
+      toggleSidePanel('ss-contact-search-hist');
     };
 
     const toggleFav = () => {
       state.contactShowFavorites = !state.contactShowFavorites;
-      state.contactShowSearchHist = false; state.contactSettingsOpen = false;
-      histPanel.style.display = 'none'; histBtn.classList.remove('active');
-      setPanel.style.display = 'none'; setBtn.classList.remove('active');
+      if (!state.contactShowFavorites) {
+        favPanel.classList.remove('open'); favBtn.classList.remove('active');
+        return;
+      }
       
-      if (!state.contactShowFavorites) { favPanel.style.display = 'none'; favBtn.classList.remove('active'); return; }
+      state.contactShowSearchHist = false; state.contactSettingsOpen = false;
+      histBtn.classList.remove('active'); setBtn.classList.remove('active');
+
       favBtn.classList.add('active');
       renderContactFavoritesPanel();
-      favPanel.style.display = 'block';
+      toggleSidePanel('ss-contact-fav-panel');
     };
 
     const toggleSet = () => {
       state.contactSettingsOpen = !state.contactSettingsOpen;
-      state.contactShowSearchHist = false; state.contactShowFavorites = false;
-      histPanel.style.display = 'none'; histBtn.classList.remove('active');
-      favPanel.style.display = 'none'; favBtn.classList.remove('active');
+      if (!state.contactSettingsOpen) {
+        setPanel.classList.remove('open'); setBtn.classList.remove('active');
+        return;
+      }
       
-      if (!state.contactSettingsOpen) { setPanel.style.display = 'none'; setBtn.classList.remove('active'); return; }
+      state.contactShowSearchHist = false; state.contactShowFavorites = false;
+      histBtn.classList.remove('active'); favBtn.classList.remove('active');
+
       setBtn.classList.add('active');
       renderContactSettingsPanel();
-      setPanel.style.display = 'flex';
+      toggleSidePanel('ss-contact-settings-panel');
+    };
+
+    const doReset = () => {
+      input.value = '';
+      state.contactResults = [];
+      state.contactSearchPerformed = false;
+      renderContacts();
+      errEl.classList.remove('visible');
     };
 
     const doSearch = async (termOverride = null) => {
       const term = termOverride || input.value.trim(); if (!term) return;
       if (!termOverride) saveContactSearchHist(state.projectId, term);
-      
-      state.contactShowSearchHist = false; if (histPanel) histPanel.style.display = 'none';
-      state.contactShowFavorites = false; if (favPanel) favPanel.style.display = 'none';
+
+      state.contactShowSearchHist = false; if (histPanel) histPanel.classList.remove('open');
+      state.contactShowFavorites = false; if (favPanel) favPanel.classList.remove('open');
       histBtn.classList.remove('active'); favBtn.classList.remove('active');
-      
+
       state.isSearchingContact = true; state.contactSearchPerformed = true;
       btn.disabled = true; load.style.display = 'flex'; errEl.classList.remove('visible');
       try {
@@ -720,18 +950,20 @@
     if (favBtn) favBtn.onclick = (e) => { e.stopPropagation(); toggleFav(); };
     if (setBtn) setBtn.onclick = (e) => { e.stopPropagation(); toggleSet(); };
     if (btn) btn.onclick = () => doSearch();
+    const resetBtn = document.getElementById('ss-contact-reset-btn');
+    if (resetBtn) resetBtn.onclick = doReset;
     if (input) input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(); };
 
     document.addEventListener('click', (e) => {
       const target = e.target;
       if (state.contactShowSearchHist && !histPanel.contains(target) && target !== histBtn) {
-        state.contactShowSearchHist = false; histPanel.style.display = 'none'; histBtn.classList.remove('active');
+        state.contactShowSearchHist = false; histPanel.classList.remove('open'); histBtn.classList.remove('active');
       }
       if (state.contactShowFavorites && !favPanel.contains(target) && target !== favBtn) {
-        state.contactShowFavorites = false; favPanel.style.display = 'none'; favBtn.classList.remove('active');
+        state.contactShowFavorites = false; favPanel.classList.remove('open'); favBtn.classList.remove('active');
       }
       if (state.contactSettingsOpen && !setPanel.contains(target) && target !== setBtn) {
-        state.contactSettingsOpen = false; setPanel.style.display = 'none'; setBtn.classList.remove('active');
+        state.contactSettingsOpen = false; setPanel.classList.remove('open'); setBtn.classList.remove('active');
       }
     });
   }
@@ -739,52 +971,85 @@
   function renderContactFavoritesPanel() {
     const p = document.getElementById('ss-contact-fav-panel'); if (!p) return;
     const favs = state.contactFavorites;
-    if (!favs.length) { p.innerHTML = '<div class="ss-hist-term" style="opacity:0.5;cursor:default;">No favorites yet</div>'; }
-    else {
-      p.innerHTML = favs.map(f => `
-        <div class="ss-hist-term" data-id="${f.id}" style="display:flex;align-items:center;gap:8px;">
-          ${f.photo ? `<img src="${f.photo}" style="width:20px;height:20px;border-radius:50%;">` : '👤'}
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(f.name)}</span>
-          <span style="font-size:10px;color:var(--text4);">${f.id}</span>
+
+    const renderFavList = (filter = '') => {
+      const filtered = favs.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()) || f.id.toString().includes(filter));
+      const listHtml = filtered.length 
+        ? filtered.map(f => `
+          <div class="ss-hist-term" data-id="${f.id}" style="display:flex;align-items:center;gap:8px;">
+            ${f.photo ? `<img src="${f.photo}" style="width:20px;height:20px;border-radius:50%;">` : '👤'}
+            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(f.name)}</span>
+            <span style="font-size:12px;color:var(--text4);">${f.id}</span>
+          </div>
+        `).join('')
+        : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No favorites yet'}</div>`;
+
+      p.innerHTML = `
+        <div class="ss-info-header">
+          <div class="ss-info-title">Favorites</div>
+          <button class="ss-close" id="ss-close-fav-btn">✕</button>
         </div>
-      `).join('');
-      p.querySelectorAll('.ss-hist-term').forEach(el => {
+        <div class="ss-panel-search-wrapper">
+          <input type="text" class="ss-panel-search-input" id="ss-fav-filter" placeholder="Filter favorites..." value="${esc(filter)}">
+        </div>
+        <div class="ss-panel-list-content">
+          ${listHtml}
+        </div>
+      `;
+
+      p.querySelector('#ss-close-fav-btn').onclick = () => {
+        state.contactShowFavorites = false; p.classList.remove('open');
+        document.getElementById('ss-contact-fav-btn').classList.remove('active');
+      };
+      
+      const filterInput = p.querySelector('#ss-fav-filter');
+      filterInput.focus();
+      filterInput.oninput = (e) => renderFavList(e.target.value);
+
+      p.querySelectorAll('.ss-hist-term[data-id]').forEach(el => {
         el.onclick = () => {
           document.getElementById('ss-contact-input').value = el.dataset.id;
           state.contactShowFavorites = false;
-          p.style.display = 'none';
+          p.classList.remove('open');
           document.getElementById('ss-contact-fav-btn').classList.remove('active');
-          // Trigger search by ID
           const btn = document.getElementById('ss-contact-btn');
           if (btn) btn.click();
         };
       });
-    }
+    };
+
+    renderFavList();
   }
 
   function renderContactSettingsPanel() {
     const p = document.getElementById('ss-contact-settings-panel'); if (!p) return;
     p.innerHTML = `
-      <div class="ss-settings-item" id="ss-toggle-profile">
-        <span>Profile Header</span>
-        <div class="ss-settings-check ${state.contactSettings.showProfile ? 'active' : ''}">${state.contactSettings.showProfile ? '✓' : ''}</div>
+      <div class="ss-info-header">
+        <div class="ss-info-title">Options</div>
+        <button class="ss-close" onclick="document.getElementById('ss-contact-settings-btn').click()">✕</button>
       </div>
-      <div class="ss-settings-item" id="ss-toggle-details">
-        <span>Basic Data</span>
-        <div class="ss-settings-check ${state.contactSettings.showDetails ? 'active' : ''}">${state.contactSettings.showDetails ? '✓' : ''}</div>
-      </div>
-      <div class="ss-settings-item" id="ss-toggle-tags">
-        <span>Tags</span>
-        <div class="ss-settings-check ${state.contactSettings.showTags ? 'active' : ''}">${state.contactSettings.showTags ? '✓' : ''}</div>
-      </div>
-      <div class="ss-settings-item" id="ss-toggle-vars">
-        <span>Variables</span>
-        <div class="ss-settings-check ${state.contactSettings.showVars ? 'active' : ''}">${state.contactSettings.showVars ? '✓' : ''}</div>
-      </div>
-      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
-      <div class="ss-settings-item" id="ss-toggle-compact">
-        <span>Compact Search Cards</span>
-        <div class="ss-settings-check ${state.contactSettings.compactCards ? 'active' : ''}">${state.contactSettings.compactCards ? '✓' : ''}</div>
+      <div style="padding:16px;">
+        <div class="ss-settings-item" id="ss-toggle-profile">
+          <span>Profile Header</span>
+          <div class="ss-settings-check ${state.contactSettings.showProfile ? 'active' : ''}">${state.contactSettings.showProfile ? '✓' : ''}</div>
+        </div>
+        <div class="ss-settings-item" id="ss-toggle-details">
+          <span>Basic Data</span>
+          <div class="ss-settings-check ${state.contactSettings.showDetails ? 'active' : ''}">${state.contactSettings.showDetails ? '✓' : ''}</div>
+        </div>
+        <div class="ss-settings-item" id="ss-toggle-tags">
+          <span>Tags</span>
+          <div class="ss-settings-check ${state.contactSettings.showTags ? 'active' : ''}">${state.contactSettings.showTags ? '✓' : ''}</div>
+        </div>
+        <div class="ss-settings-item" id="ss-toggle-vars">
+          <span>Variables</span>
+          <div class="ss-settings-check ${state.contactSettings.showVars ? 'active' : ''}">${state.contactSettings.showVars ? '✓' : ''}</div>
+        </div>
+        <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+        <div class="ss-settings-item" id="ss-toggle-compact">
+          <span>Compact Search Cards</span>
+          <div class="ss-settings-check ${state.contactSettings.compactCards ? 'active' : ''}">${state.contactSettings.compactCards ? '✓' : ''}</div>
+        </div>
       </div>
     `;
     p.querySelectorAll('.ss-settings-item').forEach(el => {
@@ -796,7 +1061,7 @@
         else if (el.id === 'ss-toggle-tags') type = 'showTags';
         else if (el.id === 'ss-toggle-vars') type = 'showVars';
         else if (el.id === 'ss-toggle-compact') type = 'compactCards';
-        
+
         state.contactSettings[type] = !state.contactSettings[type];
         saveContactSettings(state.contactSettings);
         renderContactSettingsPanel();
@@ -817,16 +1082,19 @@
     state.contactResults.forEach(c => {
       const card = document.createElement('div'); card.className = 'ss-var-card';
       card.style.padding = '12px';
-      card.onclick = () => renderContactInfoPanel(c.id);
-      
-      const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>`;
-      
+      card.onclick = () => {
+        renderContactInfoPanel(c.id);
+        toggleSidePanel('ss-info-panel');
+      };
+
+      const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>`;
+
       card.innerHTML = `
         <div style="display:flex;gap:12px;align-items:center;${state.contactSettings.compactCards ? '' : 'margin-bottom:8px;'}">
           ${thumb}
           <div style="min-width:0;flex:1;">
-            <div style="font-weight:700;color:var(--text);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.fullName || 'Unnamed')}</div>
-            <div style="font-size:11px;color:var(--text4);">ID: <span style="color:var(--success);font-weight:600;">${c.id}</span></div>
+            <div style="font-weight:700;color:var(--text);font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.fullName || 'Unnamed')}</div>
+            <div style="font-size:13px;color:var(--text4);">ID: <span style="color:var(--success);font-weight:600;">${c.id}</span></div>
           </div>
           <div style="display:flex;gap:4px;align-items:center;">
             <button class="ss-var-btn ss-fav-btn" data-id="${c.id}" title="${state.contactFavorites.some(f => f.id == c.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.contactFavorites.some(f => f.id == c.id) ? 'var(--accent)' : 'var(--text4)'};">
@@ -843,10 +1111,10 @@
             <button class="ss-var-btn ss-copy-btn" data-copy="${c.id}" title="Copy ID">${iCopy}</button>
           </div>
         </div>
-        ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:10px;">✉</span> ${esc(c.email)}</div>` : ''}
-        ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:10px;">📞</span> ${esc(c.phone)}</div>` : ''}
+        ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">✉</span> ${esc(c.email)}</div>` : ''}
+        ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:12px;">📞</span> ${esc(c.phone)}</div>` : ''}
       `;
-      
+
       card.querySelector('.ss-copy-btn').onclick = (e) => {
         const btn = e.currentTarget; e.stopPropagation();
         navigator.clipboard.writeText(btn.dataset.copy);
@@ -861,7 +1129,11 @@
         if (exists > -1) {
           state.contactFavorites.splice(exists, 1);
         } else {
-          state.contactFavorites.push({ id: c.id, name: c.fullName || 'Unnamed', photo: c.photo });
+          if (state.contactFavorites.length >= 100) {
+             showNotice('Limit of 100 favorites reached');
+             return;
+          }
+          state.contactFavorites.unshift({ id: c.id, name: c.fullName || 'Unnamed', photo: c.photo });
         }
         saveContactFavorites(state.contactFavorites);
         renderContacts();
@@ -877,21 +1149,18 @@
   function renderVarsTab() {
     const body = document.getElementById('ss-body');
     body.innerHTML = `
-      <div style="margin-bottom:10px;">
+      <div style="margin-bottom:12px;">
         <div class="ss-section-label">Variable search</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-          <div style="position:relative;flex:1;">
-            <input class="ss-input" id="ss-var-input" type="text" placeholder="name1, name2, name3" autocomplete="off" />
-          </div>
-          <button class="ss-var-btn ss-var-btn-hist-search" id="ss-var-hist-btn" title="Search history">${iClock}</button>
-          <button class="ss-var-btn ss-var-btn-preset-open" id="ss-var-preset-btn" title="Presets">${iPreset}</button>
-          <button class="ss-var-btn ss-var-btn-reset-search" id="ss-var-reset-btn" title="Clear results">${iReset}</button>
-          <button class="ss-btn-search" id="ss-var-btn">Find</button>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+          <input class="ss-input" id="ss-var-input" type="text" placeholder="name1, name2, name3" autocomplete="off" style="flex:1;" />
+          <button class="ss-btn-search" id="ss-var-btn" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
+          <button class="ss-btn-search" id="ss-var-reset-btn" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text4);">${iReset}</button>
         </div>
-        <!-- Search history dropdown -->
-        <div id="ss-var-search-hist" class="ss-search-hist-panel" style="display:none;"></div>
-        <!-- Presets panel -->
-        <div id="ss-var-presets-panel" class="ss-var-presets-panel" style="display:none;"></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="ss-action-btn" id="ss-var-hist-btn">History</button>
+          <button class="ss-action-btn" id="ss-var-preset-btn">Presets</button>
+          <button class="ss-action-btn" id="ss-var-fav-tab-btn">Favorites</button>
+        </div>
       </div>
       <div id="ss-var-list" style="display:flex;flex-direction:column;gap:6px;"></div>
       <div class="ss-error" id="ss-var-error"></div>
@@ -905,51 +1174,96 @@
     const loadEl = document.getElementById('ss-var-loading');
     const histPanel = document.getElementById('ss-var-search-hist');
     const presetsPanel = document.getElementById('ss-var-presets-panel');
+    const favPanel = document.getElementById('ss-var-fav-panel');
 
     const showVarErr = (msg) => { errEl.textContent = `⚠ ${msg}`; errEl.classList.add('visible'); setTimeout(() => errEl.classList.remove('visible'), 5000); };
 
     // ── Search history panel ──
     function toggleSearchHist() {
       state.varShowSearchHist = !state.varShowSearchHist;
-      state.varPresetsOpen = false;
-      presetsPanel.style.display = 'none';
-      if (!state.varShowSearchHist) { histPanel.style.display = 'none'; return; }
+      if (!state.varShowSearchHist) {
+        histPanel.classList.remove('open');
+        document.getElementById('ss-var-hist-btn').classList.remove('active');
+        return;
+      }
+      
+      state.varPresetsOpen = false; presetsPanel.classList.remove('open'); document.getElementById('ss-var-preset-btn').classList.remove('active');
+      state.varShowFavorites = false; favPanel.classList.remove('open'); document.getElementById('ss-var-fav-tab-btn').classList.remove('active');
+
+      document.getElementById('ss-var-hist-btn').classList.add('active');
       const hist = loadSearchHist(state.projectId);
-      if (!hist.length) { histPanel.innerHTML = `<div class="ss-empty" style="border:none;padding:8px;">No search history</div>`; histPanel.style.display = 'block'; return; }
-      histPanel.innerHTML = hist.map((t, i) => `<div class="ss-hist-term" data-index="${i}">${esc(t)}</div>`).join('');
-      histPanel.style.display = 'block';
-      histPanel.querySelectorAll('.ss-hist-term').forEach(el => {
-        el.addEventListener('click', () => {
-          input.value = loadSearchHist(state.projectId)[parseInt(el.dataset.index)];
-          histPanel.style.display = 'none'; state.varShowSearchHist = false;
-          doSearch();
+      
+      const renderHistList = (filter = '') => {
+        const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
+        const listHtml = filtered.length 
+          ? filtered.map((t, i) => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
+          : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
+        
+        histPanel.innerHTML = `
+          <div class="ss-info-header">
+            <div class="ss-info-title">Search History</div>
+            <button class="ss-close" onclick="document.getElementById('ss-var-hist-btn').click()">✕</button>
+          </div>
+          <div class="ss-panel-search-wrapper">
+            <input type="text" class="ss-panel-search-input" id="ss-var-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
+          </div>
+          <div class="ss-panel-list-content">
+            ${listHtml}
+          </div>
+        `;
+        
+        const filterInput = histPanel.querySelector('#ss-var-hist-filter');
+        filterInput.focus();
+        filterInput.oninput = (e) => renderHistList(e.target.value);
+        
+        histPanel.querySelectorAll('.ss-hist-term[data-term]').forEach(el => {
+          el.onclick = () => {
+            input.value = el.dataset.term;
+            toggleSearchHist();
+            doSearch();
+          };
         });
-      });
+      };
+
+      renderHistList();
+      toggleSidePanel('ss-var-search-hist');
     }
 
     // ── Presets panel ──
     function renderPresetsPanel() {
       state.varPresetsOpen = !state.varPresetsOpen;
+      if (!state.varPresetsOpen) {
+        presetsPanel.classList.remove('open');
+        document.getElementById('ss-var-preset-btn').classList.remove('active');
+        return;
+      }
+
       state.varShowSearchHist = false;
-      histPanel.style.display = 'none';
-      if (!state.varPresetsOpen) { presetsPanel.style.display = 'none'; return; }
+      histPanel.classList.remove('open');
+      document.getElementById('ss-var-hist-btn').classList.remove('active');
+      state.varShowFavorites = false;
+      favPanel.classList.remove('open');
+      document.getElementById('ss-var-fav-tab-btn').classList.remove('active');
+
+      document.getElementById('ss-var-preset-btn').classList.add('active');
+      toggleSidePanel('ss-var-presets-panel');
 
       const pid = state.projectId;
-      const presets = loadVarPresets(pid);
-      presetsPanel.style.display = 'block';
-
       function drawPresets() {
         const ps = loadVarPresets(pid);
         presetsPanel.innerHTML = `
-          <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text4);text-transform:uppercase;letter-spacing:.08em;">Variable Presets</span>
-            <button class="ss-var-btn" id="ss-preset-add-btn" title="New preset">${iSave}</button>
+          <div class="ss-info-header">
+            <div class="ss-info-title">Presets</div>
+            <div style="display:flex;gap:4px;align-items:center;">
+              <button class="ss-var-btn" id="ss-preset-add-btn" title="New preset">${iSave}</button>
+              <button class="ss-close" onclick="document.getElementById('ss-var-preset-btn').click()">✕</button>
+            </div>
           </div>
           ${ps.length === 0 ? `<div class="ss-empty" style="border:none;padding:10px;">No presets yet</div>`
             : ps.map((p, i) => `
               <div class="ss-vpreset-item" data-pi="${i}">
                 ${state.varPresetEditing === i ? `
-                  <input class="ss-input ss-vpreset-name-input" data-pi="${i}" value="${esc(p.name)}" style="flex:1;padding:4px 8px;font-size:11px;" />
+                  <input class="ss-input ss-vpreset-name-input" data-pi="${i}" value="${esc(p.name)}" style="flex:1;padding:4px 8px;font-size:13px;" />
                   <button class="ss-var-btn ss-vpreset-name-save" data-pi="${i}" title="Save name">${iDone}</button>
                 `: `
                   <span class="ss-vpreset-name" title="Click to load" style="cursor:pointer;flex:1;" data-load-pi="${i}"><b>${esc(p.name)}</b></span>
@@ -962,13 +1276,13 @@
               </div>
               ${state.varPresetConfigPanelId === i ? `
                 <div style="padding:6px 10px;background:var(--bg4);border-bottom:1px solid var(--border);">
-                  <div style="font-size:11px;font-weight:600;margin-bottom:6px;">Variables inside ${esc(p.name)}</div>
-                  <div id="ss-preset-cfg-list-${i}" style="margin-bottom:8px;font-size:11px;color:var(--text3);max-height:120px;overflow-y:auto;">
+                  <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Variables inside ${esc(p.name)}</div>
+                  <div id="ss-preset-cfg-list-${i}" style="margin-bottom:8px;font-size:13px;color:var(--text3);max-height:120px;overflow-y:auto;">
                       Loading variables...
                   </div>
                   <div style="display:flex;gap:4px;">
-                    <input class="ss-input" id="ss-cfg-add-id-${i}" placeholder="ID" style="width:60px;font-size:11px;" />
-                    <input class="ss-input" id="ss-cfg-add-name-${i}" placeholder="Name" style="flex:1;font-size:11px;" />
+                    <input class="ss-input" id="ss-cfg-add-id-${i}" placeholder="ID" style="width:60px;font-size:13px;" />
+                    <input class="ss-input" id="ss-cfg-add-name-${i}" placeholder="Name" style="flex:1;font-size:13px;" />
                     <button class="ss-var-btn" id="ss-cfg-add-btn-${i}" title="Add by ID">${iSave}</button>
                   </div>
                 </div>
@@ -978,7 +1292,7 @@
           ${state.varResults.length > 0 ? `
             <div style="padding:8px 10px;border-top:1px solid var(--border);">
               <div style="display:flex;gap:6px;align-items:center;">
-                <input class="ss-input" id="ss-new-preset-name" placeholder="Preset name" style="flex:1;padding:6px 8px;font-size:11px;" />
+                <input class="ss-input" id="ss-new-preset-name" placeholder="Preset name" style="flex:1;padding:6px 8px;font-size:13px;" />
                 <button class="ss-var-btn ss-new-preset-save" title="Save">${iSave}</button>
               </div>
             </div>`: ''}
@@ -995,11 +1309,11 @@
           const name = nameEl?.value.trim();
           if (!name) { nameEl?.focus(); return; }
           const ps = loadVarPresets(pid);
-          ps.push({ 
-            name, 
+          ps.push({
+            name,
             ids: state.varResults.map(d => d.id),
-            items: state.varResults.map(d => ({id: d.id, name: d.name})), 
-            ts: new Date().toISOString() 
+            items: state.varResults.map(d => ({ id: d.id, name: d.name })),
+            ts: new Date().toISOString()
           });
           saveVarPresets(pid, ps);
           drawPresets();
@@ -1035,34 +1349,34 @@
           const listDiv = document.getElementById(`ss-preset-cfg-list-${pi}`);
           if (listDiv && p) {
             if (!p.items || p.items.length !== p.ids.length) {
-               p.items = p.ids.map(id => ({id, name: '...'}));
-               fetchDefinitionsByIds(p.ids).then(results => {
-                 p.items = p.ids.map(id => {
-                   const f = results.find(r => r.id === id);
-                   return {id, name: f ? f.name : `Unknown (${id})`};
-                 });
-                 const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
-                 if(state.varPresetConfigPanelId === pi) drawPresets();
-               });
+              p.items = p.ids.map(id => ({ id, name: '...' }));
+              fetchDefinitionsByIds(p.ids).then(results => {
+                p.items = p.ids.map(id => {
+                  const f = results.find(r => r.id === id);
+                  return { id, name: f ? f.name : `Unknown (${id})` };
+                });
+                const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
+                if (state.varPresetConfigPanelId === pi) drawPresets();
+              });
             } else {
-               if (p.items.length === 0) listDiv.innerHTML = '<div class="ss-empty" style="border:none;padding:4px;">No variables</div>';
-               else {
-                 listDiv.innerHTML = p.items.map(item => `
+              if (p.items.length === 0) listDiv.innerHTML = '<div class="ss-empty" style="border:none;padding:4px;">No variables</div>';
+              else {
+                listDiv.innerHTML = p.items.map(item => `
                    <div style="display:flex;align-items:center;justify-content:space-between;padding:3px 2px;border-bottom:1px solid rgba(0,0,0,0.05);">
                      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:6px;" title="${item.id}"><b>${item.id}</b> · ${esc(item.name)}</span>
                      <button class="ss-var-btn" data-cfg-rm="${item.id}" title="Remove">${iTrash}</button>
                    </div>
                  `).join('');
-                 listDiv.querySelectorAll('[data-cfg-rm]').forEach(btn => {
-                   btn.addEventListener('click', () => {
-                     const rmId = parseInt(btn.dataset.cfgRm);
-                     p.ids = p.ids.filter(x => x !== rmId);
-                     p.items = p.items.filter(x => x.id !== rmId);
-                     const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
-                     drawPresets();
-                   });
-                 });
-               }
+                listDiv.querySelectorAll('[data-cfg-rm]').forEach(btn => {
+                  btn.addEventListener('click', () => {
+                    const rmId = parseInt(btn.dataset.cfgRm);
+                    p.ids = p.ids.filter(x => x !== rmId);
+                    p.items = p.items.filter(x => x.id !== rmId);
+                    const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
+                    drawPresets();
+                  });
+                });
+              }
             }
           }
 
@@ -1074,8 +1388,8 @@
               if (!idVal) return;
               if (!p.ids.includes(idVal)) {
                 p.ids.push(idVal);
-                if(!p.items) p.items = [];
-                p.items.push({id: idVal, name: nameVal});
+                if (!p.items) p.items = [];
+                p.items.push({ id: idVal, name: nameVal });
                 const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
                 drawPresets();
               }
@@ -1106,7 +1420,7 @@
             const pi = parseInt(b.dataset.loadPi);
             const ps = loadVarPresets(pid);
             const preset = ps[pi]; if (!preset) return;
-            state.varPresetsOpen = false; presetsPanel.style.display = 'none'; state.varPresetConfigPanelId = null;
+            state.varPresetsOpen = false; presetsPanel.classList.remove('open'); state.varPresetConfigPanelId = null;
             btn.disabled = true; btn.textContent = '...'; loadEl.style.display = 'flex';
             listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;
             state.varViewingPresetId = pi;
@@ -1115,7 +1429,7 @@
               state.varResults = preset.ids.map(id => results.find(r => r.id === id)).filter(Boolean);
               renderVarList(listEl, showVarErr);
             } catch (err) { showVarErr(err.message); }
-            finally { btn.disabled = false; btn.textContent = 'Find'; loadEl.style.display = 'none'; }
+            finally { btn.disabled = false; btn.innerHTML = iSearch; loadEl.style.display = 'none'; }
           });
         });
 
@@ -1132,15 +1446,82 @@
       drawPresets();
     }
 
+    // ── Favorites panel ──
+    function toggleFavPanel() {
+      state.varShowFavorites = !state.varShowFavorites;
+      if (!state.varShowFavorites) {
+        favPanel.classList.remove('open');
+        document.getElementById('ss-var-fav-tab-btn').classList.remove('active');
+        return;
+      }
+      
+      state.varPresetsOpen = false; presetsPanel.classList.remove('open'); document.getElementById('ss-var-preset-btn').classList.remove('active');
+      state.varShowSearchHist = false; histPanel.classList.remove('open'); document.getElementById('ss-var-hist-btn').classList.remove('active');
+
+      document.getElementById('ss-var-fav-tab-btn').classList.add('active');
+      const favs = loadVarFavorites();
+      
+      const renderFavList = (filter = '') => {
+        const filtered = favs.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()) || f.id.toString().includes(filter));
+        const listHtml = filtered.length 
+          ? filtered.map((f, i) => `<div class="ss-hist-term" data-index="${favs.indexOf(f)}">${esc(f.name)} <span style="font-size:11px;color:var(--text4);margin-left:auto;">${f.id}</span></div>`).join('')
+          : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No favorites yet'}</div>`;
+
+        favPanel.innerHTML = `
+          <div class="ss-info-header">
+            <div class="ss-info-title">Favorites</div>
+            <button class="ss-close" onclick="document.getElementById('ss-var-fav-tab-btn').click()">✕</button>
+          </div>
+          <div class="ss-panel-search-wrapper">
+            <input type="text" class="ss-panel-search-input" id="ss-var-fav-filter" placeholder="Filter variables..." value="${esc(filter)}">
+          </div>
+          <div class="ss-panel-list-content">
+            ${listHtml}
+          </div>
+        `;
+        
+        const filterInput = favPanel.querySelector('#ss-var-fav-filter');
+        filterInput.focus();
+        filterInput.oninput = (e) => renderFavList(e.target.value);
+        
+        favPanel.querySelectorAll('.ss-hist-term[data-index]').forEach(el => {
+          el.addEventListener('click', async () => {
+            const fav = favs[parseInt(el.dataset.index)];
+            toggleFavPanel();
+            input.value = ''; 
+            loadEl.style.display = 'flex';
+            listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;
+            state.varViewingPresetId = null;
+            try {
+              const results = await fetchDefinitionsByIds([fav.id]);
+              if (results.length) {
+                state.varResults = results;
+                renderVarList(listEl, showVarErr);
+              } else {
+                listEl.innerHTML = `<div class="ss-empty">Variable not found</div>`;
+              }
+            } catch (e) {
+              showVarErr(e.message);
+            } finally {
+              loadEl.style.display = 'none';
+            }
+          });
+        });
+      };
+
+      renderFavList();
+      toggleSidePanel('ss-var-fav-panel');
+    }
+
     // ── Search ──
     async function doSearch() {
       const raw = input.value.trim(); if (!raw || !state.projectId) return;
       // Split by comma, trim each term
       const terms = raw.split(',').map(t => t.trim()).filter(Boolean);
-      btn.disabled = true; btn.textContent = '...'; loadEl.style.display = 'flex';
-      listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null; 
+      btn.disabled = true; btn.innerHTML = '...'; loadEl.style.display = 'flex';
+      listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;
       state.varViewingPresetId = null;
-      histPanel.style.display = 'none'; state.varShowSearchHist = false;
+      histPanel.classList.remove('open'); state.varShowSearchHist = false;
       // Save each term to search history
       terms.forEach(t => saveSearchHist(state.projectId, t));
       try {
@@ -1153,27 +1534,41 @@
         state.varResults = all;
         renderVarList(listEl, showVarErr);
       } catch (err) { showVarErr(err.message); }
-      finally { btn.disabled = false; btn.textContent = 'Find'; loadEl.style.display = 'none'; }
+      finally { btn.disabled = false; btn.innerHTML = iSearch; loadEl.style.display = 'none'; }
     }
 
-    btn.addEventListener('click', doSearch);
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
-    
-    document.getElementById('ss-var-hist-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleSearchHist(); });
-    document.getElementById('ss-var-preset-btn').addEventListener('click', (e) => { e.stopPropagation(); renderPresetsPanel(); });
-    document.getElementById('ss-var-reset-btn').addEventListener('click', () => {
+    btn.onclick = doSearch;
+    input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(); };
+
+    document.getElementById('ss-var-hist-btn').onclick = (e) => { e.stopPropagation(); toggleSearchHist(); };
+    document.getElementById('ss-var-preset-btn').onclick = (e) => { e.stopPropagation(); renderPresetsPanel(); };
+    document.getElementById('ss-var-fav-tab-btn').onclick = (e) => { e.stopPropagation(); toggleFavPanel(); };
+    document.getElementById('ss-var-reset-btn').onclick = () => {
       input.value = '';
       state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null; state.varPresetPanelId = null;
       state.varViewingPresetId = null;
       listEl.innerHTML = '';
-      histPanel.style.display = 'none'; state.varShowSearchHist = false;
-      presetsPanel.style.display = 'none'; state.varPresetsOpen = false;
-    });
+      histPanel.classList.remove('open'); state.varShowSearchHist = false;
+      presetsPanel.classList.remove('open'); state.varPresetsOpen = false;
+      favPanel.classList.remove('open'); state.varShowFavorites = false;
+      document.querySelectorAll('.ss-action-btn').forEach(b => b.classList.remove('active'));
+    };
 
     // Close panels on outside click
     document.addEventListener('click', (e) => {
-      if (!histPanel.contains(e.target) && e.target.id !== 'ss-var-hist-btn') { histPanel.style.display = 'none'; state.varShowSearchHist = false; }
-      if (!presetsPanel.contains(e.target) && e.target.id !== 'ss-var-preset-btn') { presetsPanel.style.display = 'none'; state.varPresetsOpen = false; }
+      const target = e.target;
+      if (state.varShowSearchHist && !histPanel.contains(target) && target.id !== 'ss-var-hist-btn') {
+        state.varShowSearchHist = false; histPanel.classList.remove('open');
+        document.getElementById('ss-var-hist-btn')?.classList.remove('active');
+      }
+      if (state.varPresetsOpen && !presetsPanel.contains(target) && target.id !== 'ss-var-preset-btn') {
+        state.varPresetsOpen = false; presetsPanel.classList.remove('open');
+        document.getElementById('ss-var-preset-btn')?.classList.remove('active');
+      }
+      if (state.varShowFavorites && !favPanel.contains(target) && target.id !== 'ss-var-fav-tab-btn') {
+        state.varShowFavorites = false; favPanel.classList.remove('open');
+        document.getElementById('ss-var-fav-tab-btn')?.classList.remove('active');
+      }
     }, { capture: false });
 
     if (state.varResults.length) renderVarList(listEl, showVarErr);
@@ -1184,9 +1579,9 @@
     if (!state.varResults.length) { listEl.innerHTML = `<div class="ss-empty">No variables found</div>`; return; }
 
     if (state.varViewingPresetId !== null) {
-       const ps = loadVarPresets(state.projectId);
-       const p = ps[state.varViewingPresetId];
-       if (p) listEl.innerHTML += `<div style="padding:6px 10px;font-size:11px;color:var(--text4);background:var(--bg3);border-radius:4px;margin-bottom:6px;">Viewing Preset: <b>${esc(p.name)}</b></div>`;
+      const ps = loadVarPresets(state.projectId);
+      const p = ps[state.varViewingPresetId];
+      if (p) listEl.innerHTML += `<div style="padding:6px 10px;font-size:13px;color:var(--text4);background:var(--bg3);border-radius:4px;margin-bottom:6px;">Viewing Preset: <b>${esc(p.name)}</b></div>`;
     }
 
     state.varResults.forEach(def => {
@@ -1209,10 +1604,10 @@
           <div class="ss-card-preset-panel">
             <div class="ss-var-panel-label" style="padding:8px 10px 4px;">Add / Remove from preset</div>
             <div style="padding:0 10px 6px;">
-              <input class="ss-input ss-preset-search-input" placeholder="Filter presets..." style="padding:5px 8px;font-size:11px;" />
+              <input class="ss-input ss-preset-search-input" placeholder="Filter presets..." style="padding:5px 8px;font-size:13px;" />
             </div>
             <div class="ss-preset-list-inner">
-              ${ps.length === 0 ? `<div class="ss-empty" style="border:none;padding:6px 10px;font-size:11px;">No presets yet</div>`
+              ${ps.length === 0 ? `<div class="ss-empty" style="border:none;padding:6px 10px;font-size:13px;">No presets yet</div>`
             : inPresets.map(p => `
                   <div class="ss-preset-toggle-row" data-pi="${p.i}">
                     <span class="ss-preset-toggle-name">${esc(p.name)}</span>
@@ -1224,7 +1619,7 @@
             </div>
             <div style="padding:6px 10px 8px;border-top:1px solid var(--border);">
               <div style="display:flex;gap:6px;">
-                <input class="ss-input ss-new-preset-from-card" placeholder="New preset name..." style="flex:1;padding:5px 8px;font-size:11px;" />
+                <input class="ss-input ss-new-preset-from-card" placeholder="New preset name..." style="flex:1;padding:5px 8px;font-size:13px;" />
                 <button class="ss-var-btn ss-new-preset-from-card-btn" title="Create & add">${iSave}</button>
               </div>
             </div>
@@ -1235,7 +1630,12 @@
       card.innerHTML = `
         <div class="ss-var-card-main">
           <div class="ss-var-info">
-            <div class="ss-var-name">${esc(def.name)}</div>
+            <div class="ss-var-name" style="display:flex;align-items:center;">
+              <button class="ss-var-btn ss-fav-var-btn" data-action="fav" data-id="${def.id}" title="${state.varFavorites.some(f => f.id == def.id) ? 'Remove from favorites' : 'Add to favorites'}" style="margin-right:6px; color:${state.varFavorites.some(f => f.id == def.id) ? 'var(--accent)' : 'var(--border2)'};">
+                 ${state.varFavorites.some(f => f.id == def.id) ? iStarFill : iStar}
+              </button>
+              ${esc(def.name)}
+            </div>
             <div class="ss-var-value-preview">${esc(def.value || '—')}</div>
           </div>
           <div class="ss-var-actions">
@@ -1245,7 +1645,8 @@
               <button class="ss-var-btn ss-var-btn-reset" data-action="reset" data-id="${def.id}" title="Reset">${iReset}</button>
               <button class="ss-var-btn ss-var-btn-done" data-action="save" data-id="${def.id}" title="Save">${iDone}</button>
             `: `
-              <button class="ss-var-btn ss-var-btn-copy" data-action="copy" data-id="${def.id}" title="Copy value">${iCopy}</button>
+              <button class="ss-var-btn ss-var-btn-copy-name" data-action="copy-name" data-id="${def.id}" title="Copy Name">${iKey}</button>
+              <button class="ss-var-btn ss-var-btn-copy" data-action="copy" data-id="${def.id}" title="Copy Value">${iCopy}</button>
               <button class="ss-var-btn ss-var-btn-addpreset${showPresetPanel ? ' active' : ''}" data-action="addpreset" data-id="${def.id}" title="Add to preset">${iAddToPreset}</button>
               ${state.varViewingPresetId !== null ? `<button class="ss-var-btn" data-action="rm-from-preset" data-id="${def.id}" title="Remove from this preset">${iTrash}</button>` : ''}
               <button class="ss-var-btn ss-var-btn-edit" data-action="edit" data-id="${def.id}" title="Edit">${iEdit}</button>
@@ -1303,16 +1704,16 @@
             const has = b.dataset.has === 'true';
             const ps = loadVarPresets(pid);
             if (!ps[pi]) return;
-            if (has) { 
-              ps[pi].ids = ps[pi].ids.filter(x => x !== def.id); 
-              if(ps[pi].items) ps[pi].items = ps[pi].items.filter(x => x.id !== def.id);
+            if (has) {
+              ps[pi].ids = ps[pi].ids.filter(x => x !== def.id);
+              if (ps[pi].items) ps[pi].items = ps[pi].items.filter(x => x.id !== def.id);
             }
-            else { 
+            else {
               if (!ps[pi].ids.includes(def.id)) {
                 ps[pi].ids.push(def.id);
-                if(!ps[pi].items) ps[pi].items = [];
-                ps[pi].items.push({id: def.id, name: def.name});
-              } 
+                if (!ps[pi].items) ps[pi].items = [];
+                ps[pi].items.push({ id: def.id, name: def.name });
+              }
             }
             saveVarPresets(pid, ps);
             // Re-render just this card's preset panel
@@ -1327,7 +1728,7 @@
           const inp = panel.querySelector('.ss-new-preset-from-card');
           const name = inp?.value.trim(); if (!name) return;
           const ps = loadVarPresets(pid);
-          ps.push({ name, ids: [def.id], items: [{id: def.id, name: def.name}], ts: new Date().toISOString() });
+          ps.push({ name, ids: [def.id], items: [{ id: def.id, name: def.name }], ts: new Date().toISOString() });
           saveVarPresets(pid, ps);
           state.varPresetPanelId = def.id;
           renderVarList(listEl, showVarErr);
@@ -1344,18 +1745,43 @@
         const action = btn.dataset.action, id = parseInt(btn.dataset.id);
         const def = state.varResults.find(d => d.id === id); if (!def) return;
 
+        if (action === 'fav') {
+          const exists = state.varFavorites.findIndex(f => f.id == id);
+          if (exists > -1) { state.varFavorites.splice(exists, 1); } 
+          else {
+            if (state.varFavorites.length >= 100) {
+              showNotice('Limit of 100 favorites reached');
+              return;
+            }
+            state.varFavorites.unshift({ id: def.id, name: def.name }); 
+          }
+          saveVarFavorites(state.varFavorites);
+          renderVarList(listEl, showVarErr);
+          if (state.varShowFavorites) {
+            document.getElementById('ss-var-fav-tab-btn')?.click();
+            document.getElementById('ss-var-fav-tab-btn')?.click();
+          }
+          return;
+        }
+
+        if (action === 'copy-name') {
+          copyToClipboard(def.name);
+          const old = btn.innerHTML; btn.innerHTML = iDone;
+          setTimeout(() => btn.innerHTML = old, 1500);
+        }
+
         if (action === 'copy') { copyToClipboard(def.value || ''); btn.style.color = 'var(--success)'; setTimeout(() => btn.style.color = '', 1500); }
         if (action === 'copy-edit') { const ta = document.getElementById(`ss-var-edit-${id}`); copyToClipboard(ta?.value || def.value || ''); btn.style.color = 'var(--success)'; setTimeout(() => btn.style.color = '', 1500); }
         if (action === 'addpreset') { state.varPresetPanelId = state.varPresetPanelId === id ? null : id; state.varEditingId = null; renderVarList(listEl, showVarErr); }
-        if (action === 'rm-from-preset') { 
-            const pi = state.varViewingPresetId;
-            const ps = loadVarPresets(state.projectId);
-            if (ps[pi]) {
-                ps[pi].ids = ps[pi].ids.filter(x => x !== id);
-                saveVarPresets(state.projectId, ps);
-                state.varResults = state.varResults.filter(r => r.id !== id);
-                renderVarList(listEl, showVarErr);
-            }
+        if (action === 'rm-from-preset') {
+          const pi = state.varViewingPresetId;
+          const ps = loadVarPresets(state.projectId);
+          if (ps[pi]) {
+            ps[pi].ids = ps[pi].ids.filter(x => x !== id);
+            saveVarPresets(state.projectId, ps);
+            state.varResults = state.varResults.filter(r => r.id !== id);
+            renderVarList(listEl, showVarErr);
+          }
         }
         if (action === 'edit') { state.varEditingId = id; state.varShowHistoryId = null; state.varPresetPanelId = null; renderVarList(listEl, showVarErr); setTimeout(() => { const ta = document.getElementById(`ss-var-edit-${id}`); if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); } }, 30); }
         if (action === 'reset') { state.varEditingId = null; state.varShowHistoryId = null; renderVarList(listEl, showVarErr); }
@@ -1379,23 +1805,45 @@
     });
   }
 
+  function closeAllExtraPanels() {
+    document.querySelectorAll('.ss-extra-panel').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.ss-action-btn, .ss-var-btn').forEach(b => b.classList.remove('active'));
+    state.contactShowSearchHist = false; state.contactShowFavorites = false; state.contactSettingsOpen = false;
+    state.varShowSearchHist = false; state.varPresetsOpen = false;
+  }
+
   // ─── SWITCH ───────────────────────────────────────────────────────────────
   function switchView(view) {
+    closeAllExtraPanels();
     state.view = view;
     const sb = document.getElementById('ss-settings-btn'), bb = document.getElementById('ss-back-btn');
     const nav = document.getElementById('ss-nav'), hb = document.getElementById('ss-header-bottom');
+    const labelEl = document.getElementById('ss-current-tab-label');
+
     if (view === 'settings') {
       sb && (sb.style.display = 'none'); bb && (bb.style.display = 'flex');
       if (nav) nav.classList.remove('open'); if (hb) hb.style.display = 'none';
+      if (labelEl) labelEl.textContent = 'Preference';
       renderSettings();
     } else {
       sb && (sb.style.display = 'flex'); bb && (bb.style.display = 'none');
       if (hb) hb.style.display = 'flex';
-      state.activeTab === 'tags' ? renderMain() : renderVarsTab();
+      
+      if (labelEl) {
+        let label = 'Variables';
+        if (state.activeTab === 'tags') label = 'Tags';
+        if (state.activeTab === 'contacts') label = 'Contacts';
+        labelEl.textContent = label;
+      }
+
+      if (state.activeTab === 'tags') renderMain();
+      else if (state.activeTab === 'contacts') renderContactsTab();
+      else renderVarsTab();
     }
   }
 
   function switchTab(tab) {
+    if (state.view === 'settings') switchView('main');
     state.activeTab = tab; saveLastTab(state.projectId, tab);
     let label = 'Variables';
     if (tab === 'tags') label = 'Tags';
@@ -1431,28 +1879,37 @@
       <div class="ss-header">
         <div class="ss-header-top" style="align-items:center;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <button class="ss-icon-btn" id="ss-burger" style="font-size:2.2em;width:44px;height:44px;background:none;">☰</button>
+            <button class="ss-icon-btn" id="ss-burger" title="Navigation Menu" style="width:44px;height:44px;background:none;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text2);padding:0;">
+              ${iMenu}
+            </button>
             <div style="display:flex;align-items:center;">
               <span id="ss-current-tab-label" style="font-size:28px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
-              <a id="ss-tab-external-link" target="_blank" style="display:none;color:var(--text4);margin-left:10px;text-decoration:none;transition:color 0.2s;">
+              <a id="ss-tab-external-link" target="_blank" title="Open in SmartSender" style="display:none;color:var(--text4);margin-left:10px;text-decoration:none;transition:color 0.2s;">
                 ${iExternal.replace('width="16" height="16"', 'width="22" height="22"')}
               </a>
             </div>
           </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <button class="ss-icon-btn" id="ss-back-btn" style="display:none;">←</button>
-            <button class="ss-icon-btn" id="ss-settings-btn">⚙</button>
-            <button class="ss-close" id="ss-close">✕</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="ss-icon-btn" id="ss-back-btn" title="Back to Tabs" style="display:none;">${iBack}</button>
+            <button class="ss-icon-btn" id="ss-settings-btn" title="Settings">${iGear.replace('width="12" height="12"', 'width="18" height="18"')}</button>
+            <button class="ss-close" id="ss-close" title="Close Workspace">${iX}</button>
           </div>
         </div>
       </div>
       <div id="ss-nav" class="ss-nav"></div>
       <div id="ss-info-panel" class="ss-info-panel"></div>
+      <div id="ss-contact-search-hist" class="ss-extra-panel"></div>
+      <div id="ss-contact-fav-panel" class="ss-extra-panel"></div>
+      <div id="ss-contact-settings-panel" class="ss-extra-panel"></div>
+      <div id="ss-var-search-hist" class="ss-extra-panel"></div>
+      <div id="ss-var-presets-panel" class="ss-extra-panel"></div>
+      <div id="ss-var-fav-panel" class="ss-extra-panel"></div>
       <div class="ss-body" id="ss-body"></div>
       <div class="ss-footer" style="padding:10px 16px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
            <div style="display:flex;align-items:center;gap:8px;">
              <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
+             <div style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
              <div id="ss-api-status" style="display:none;font-size:10px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;">api key</div>
            </div>
            <div class="ss-project-badge" id="ss-project-container" style="margin:0;flex-shrink:0;"><span id="ss-project-display">—</span></div>
@@ -1469,8 +1926,7 @@
     document.body.appendChild(sidebar);
     sidebar.style.width = loadSidebarWidth() + 'px';
     applyTheme(state.theme);
-    applyFontSize(state.fontSize);
-    
+
     function refreshProjectContext() {
       const name = getProjectFromUrl();
       if (name !== state.projectName) {
@@ -1491,10 +1947,11 @@
 
     renderHeader(); renderNav();
 
-    chrome.runtime.onMessage.addListener((msg) => { 
+    chrome.runtime.onMessage.addListener((msg) => {
       if (msg.type === 'TOGGLE_SIDEBAR') {
         sidebar.classList.toggle('open');
         if (sidebar.classList.contains('open')) {
+          if (state.view === 'settings') switchView('main');
           refreshProjectContext();
           renderHeader();
         }
@@ -1510,25 +1967,33 @@
     document.getElementById('ss-close').onclick = () => sidebar.classList.remove('open');
     document.getElementById('ss-settings-btn').onclick = () => switchView('settings');
     document.getElementById('ss-back-btn').onclick = () => switchView('main');
-    document.getElementById('ss-burger').onclick = (e) => { 
-      e.stopPropagation(); 
-      const nav = document.getElementById('ss-nav');
-      nav.classList.toggle('open'); 
-      if (nav.classList.contains('open')) {
-        const info = document.getElementById('ss-info-panel');
-        if (info) info.classList.remove('open');
-        state.contactInfoOpen = false;
-      }
+    document.getElementById('ss-burger').onclick = (e) => {
+      e.stopPropagation();
+      toggleSidePanel('ss-nav');
     };
 
     document.addEventListener('click', (e) => {
       if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) closeDropdown();
       const nav = document.getElementById('ss-nav');
-      if (nav && nav.classList.contains('open') && !nav.contains(e.target) && e.target.id !== 'ss-burger') nav.classList.remove('open');
+      if (nav && nav.classList.contains('open') && !nav.contains(e.target) && e.target.id !== 'ss-burger') {
+        nav.classList.remove('open');
+        state.navOpen = false;
+      }
       const info = document.getElementById('ss-info-panel');
       if (info && info.classList.contains('open') && !info.contains(e.target) && !e.target.closest('.ss-var-card')) {
-        state.contactInfoOpen = false; info.classList.remove('open');
+        info.classList.remove('open');
+        state.contactInfoOpen = false;
       }
+      const extraPanels = ['ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel', 'ss-var-search-hist', 'ss-var-presets-panel'];
+      extraPanels.forEach(pId => {
+        const p = document.getElementById(pId);
+        if (p && p.classList.contains('open') && !p.contains(e.target) && !e.target.closest('.ss-action-btn') && !e.target.closest('.ss-var-btn')) {
+            p.classList.remove('open');
+            if (pId === 'ss-contact-search-hist') state.contactShowSearchHist = false;
+            if (pId === 'ss-contact-fav-panel') state.contactShowFavorites = false;
+            if (pId === 'ss-contact-settings-panel') state.contactSettingsOpen = false;
+        }
+      });
       // Close var edit if click outside any var card
       if (state.varEditingId !== null) {
         const clickedCard = e.target.closest('.ss-var-card');
@@ -1543,5 +2008,18 @@
     switchTab(state.activeTab);
   }
 
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  const startApp = async () => {
+    __localCache = await chrome.storage.local.get(null);
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local') {
+        for (const [key, { newValue }] of Object.entries(changes)) {
+          __localCache[key] = newValue;
+        }
+      }
+    });
+  };
+
+  startApp();
 })();

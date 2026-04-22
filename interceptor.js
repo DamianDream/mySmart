@@ -24,14 +24,16 @@
     return origOpen.apply(this, arguments);
   };
 
+  let interceptedCsrf = null;
+
   const origSetHeader = XMLHttpRequest.prototype.setRequestHeader;
   XMLHttpRequest.prototype.setRequestHeader = function(name, value) {
     const lower = name.toLowerCase();
-    if (lower === 'x-csrf-token') window.__ss_csrf_token = value;
-    if (lower === 'x-xsrf-token') window.__ss_xsrf_token = value;
+    if (lower === 'x-csrf-token') interceptedCsrf = value;
+    
     // Отправляем токены в content.js
     if (lower === 'x-xsrf-token') {
-      window.postMessage({ type: '__ss_tokens', csrf: window.__ss_csrf_token, xsrf: value }, '*');
+      window.postMessage({ type: '__ss_tokens', csrf: interceptedCsrf, xsrf: value }, '*');
     }
     return origSetHeader.apply(this, arguments);
   };

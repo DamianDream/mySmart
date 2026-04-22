@@ -16,8 +16,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function handleApiRequest({ url, method = 'GET', headers = {}, body = null }) {
   try {
-    const options = { method, headers };
-    if (body) options.body = body;
+    const options = { method, headers: { ...headers } };
+    if (body && typeof body === 'object') {
+      options.body = JSON.stringify(body);
+    } else {
+      options.body = body;
+    }
+    
+    // Auto-set Content-Type for JSON payloads if not provided
+    if (options.body && (typeof body === 'object' || (typeof options.body === 'string' && options.body.trim().startsWith('{')))) {
+      if (!options.headers['Content-Type'] && !options.headers['content-type']) {
+        options.headers['Content-Type'] = 'application/json';
+      }
+    }
+    
     const res = await fetch(url, options);
     
     let data = null;

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "mySender Tools",
-  "version": "2.0.0",
+  "version": "0.2.1",
   "description": "Tag search & variables manager for mySender",
-  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": [
     "https://*.smartsender.com/*",
     "https://api.smartsender.com/*"
