@@ -24,6 +24,9 @@
   const iX = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
   const iMenu = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
   const iKey = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`;
+  const iLock = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+  const iUnlock = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
+  const iPlus = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
 
   const iVariable = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`;
   const iTag = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>`;
@@ -60,16 +63,22 @@
   const K_THEME = 'ms_theme';
   const K_VAR_HISTORY = 'ms_var_history';     // edit history per variable
   const K_SEARCH_HIST = (pid) => `ms_search_hist_${pid}`;  // search term history
+  const K_TAG_SEARCH_HIST = (pid) => `ss_tag_search_hist_${pid}`;
   const K_CONTACT_SEARCH_HIST = (pid) => `ss_contact_search_hist_${pid}`;
   const K_VAR_PRESETS = (pid) => `ms_var_presets_${pid}`;  // var presets per project
   const K_CONTACT_SETTINGS = 'ss_contacts_display_settings';
   const K_LAST_TAB = (pid) => `ms_last_tab_${pid}`;
+  const K_SESSION_PROJECT = 'ms_session_project_id';
+  const K_LATEST_PROJECT_ID = 'ms_latest_project_id';
 
   let __localCache = {};
 
   // ─── STORAGE HELPERS ──────────────────────────────────────────────────────
   const loadFromCache = (key, defaultVal) => { try { const v = __localCache[key]; return v !== undefined ? (typeof v === 'string' && (v.startsWith('{') || v.startsWith('[')) ? JSON.parse(v) : v) : defaultVal; } catch { return defaultVal; } };
   const saveToStorage = (key, val) => { const str = typeof val === 'object' ? JSON.stringify(val) : String(val); __localCache[key] = str; chrome.storage.local.set({ [key]: str }); };
+
+  const saveToSession = (key, val) => { const str = typeof val === 'object' ? JSON.stringify(val) : String(val); chrome.storage.session.set({ [key]: str }); };
+  const loadFromSession = async (key) => { const res = await chrome.storage.session.get(key); return res[key] || null; };
 
   const loadSidebarWidth = () => loadFromCache(K_SIDEBAR_WIDTH, '500');
   const saveSidebarWidth = (w) => saveToStorage(K_SIDEBAR_WIDTH, w);
@@ -107,6 +116,15 @@
     } catch { }
   };
 
+  const loadTagSearchHist = (pid) => loadFromCache(K_TAG_SEARCH_HIST(pid), []);
+  const saveTagSearchHist = (pid, term) => {
+    try {
+      const arr = loadTagSearchHist(pid).filter(t => t !== term);
+      arr.unshift(term);
+      saveToStorage(K_TAG_SEARCH_HIST(pid), arr.slice(0, 100));
+    } catch { }
+  };
+
   const loadContactSearchHist = (pid) => loadFromCache(K_CONTACT_SEARCH_HIST(pid), []);
   const saveContactSearchHist = (pid, term) => {
     try {
@@ -126,6 +144,14 @@
   const loadContactFavorites = () => loadFromCache(K_CONTACT_FAVORITES, []);
   const saveContactFavorites = (f) => saveToStorage(K_CONTACT_FAVORITES, f.slice(0, 100));
   
+  const K_TAG_FAVORITES = 'ss_tag_favorites';
+  const loadTagFavorites = () => loadFromCache(K_TAG_FAVORITES, []);
+  const saveTagFavorites = (f) => saveToStorage(K_TAG_FAVORITES, f.slice(0, 100));
+
+  const K_CONTACT_PRIORITY_VARS = (pid) => `ss_contact_priority_vars_${pid}`;
+  const loadContactPriorityVars = (pid) => loadFromCache(K_CONTACT_PRIORITY_VARS(pid), '');
+  const saveContactPriorityVars = (pid, val) => saveToStorage(K_CONTACT_PRIORITY_VARS(pid), val);
+
   const K_VAR_FAVORITES = 'ms_var_favorites';
   const loadVarFavorites = () => loadFromCache(K_VAR_FAVORITES, []);
   const saveVarFavorites = (f) => saveToStorage(K_VAR_FAVORITES, f.slice(0, 100));
@@ -135,7 +161,9 @@
     const panels = [
       'ss-nav', 'ss-info-panel', 
       'ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel',
-      'ss-var-search-hist', 'ss-var-presets-panel', 'ss-var-fav-panel', 'ss-extra-panel'
+      'ss-var-search-hist', 'ss-var-presets-panel', 'ss-var-fav-panel',
+      'ss-tag-search-hist', 'ss-tag-fav-panel',
+      'ss-project-switcher-panel', 'ss-extra-panel'
     ];
     const target = document.getElementById(id);
     if (!target) return;
@@ -168,7 +196,13 @@
       return;
     }
 
-    // Tab-specific logic (Instant Swap)
+    // Tab-specific logic
+    if (alreadyOpenId === id) {
+      target.classList.remove('open');
+      document.querySelectorAll('.ss-action-btn.active, .ss-var-btn.active').forEach(b => b.classList.remove('active'));
+      return;
+    }
+
     if (alreadyOpenId && alreadyOpenId !== 'ss-nav') {
       const old = document.getElementById(alreadyOpenId);
       old.classList.add('ss-no-transition');
@@ -176,8 +210,6 @@
       
       old.classList.remove('open');
       target.classList.add('open');
-      
-      // Delay removal to ensure reflow
       setTimeout(() => {
         old.classList.remove('ss-no-transition');
         target.classList.remove('ss-no-transition');
@@ -197,13 +229,19 @@
   // ─── STATE ────────────────────────────────────────────────────────────────
   const state = {
     projectId: null, projectName: null,
+    projectMode: loadFromCache('ss_project_mode', 'AUTO'),
     xsrfToken: null, activePreset: null,
     theme: loadTheme(),
     fontSize: 'regular',
     activeTab: 'vars',
     view: 'main',
     navOpen: false,
-    selectedTags: [], isSearching: false, isCounting: false,
+    editingProjectId: null,
+    systemicNameLocked: true,
+    tagResults: [],
+    tagShowSearchHist: false,
+    tagShowFavorites: false,
+    tagFavorites: loadTagFavorites(),
     varResults: [], varEditingId: null, varShowHistoryId: null,
     varShowSearchHist: false,
     varShowFavorites: false,
@@ -233,8 +271,22 @@
 
   const getXsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
   const getXsrfCookie = () => decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
-  const getProjectFromUrl = () => { const p = new URLSearchParams(location.search).get('project'); return p ? p.replace(/-\d+$/, '') : null; };
-  const getFullProjectFromUrl = () => new URLSearchParams(location.search).get('project');
+  const getProjectFromUrl = () => {
+    const p = new URLSearchParams(location.search).get('project');
+    if (p) return p.replace(/-\d+$/, '');
+    const path = location.pathname.split('/');
+    if (path[1] === 'projects' && path[2]) return path[2].replace(/-\d+$/, '');
+    return null;
+  };
+  const getFullProjectFromUrl = () => {
+    const p = new URLSearchParams(location.search).get('project');
+    if (p) return p;
+    const path = location.pathname.split('/');
+    // Check for /projects/full-id/...
+    if (path[1] === 'projects' && path[2]) return path[2];
+    return null;
+  };
+  const isSmartsender = () => location.hostname.endsWith('smartsender.com');
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
   const showNotice = (msg, type = 'error') => {
@@ -253,11 +305,9 @@
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
   });
 
-  // ─── INTERCEPTOR ──────────────────────────────────────────────────────────
-  function listenForProjectId(cb) {
+  function listenForTokens() {
     window.addEventListener('message', (e) => {
       if (e.source !== window) return;
-      if (e.data?.type === '__ss_project_id' && e.data?.id) cb(e.data.id);
       if (e.data?.type === '__ss_tokens' && e.data?.xsrf) state.xsrfToken = e.data.xsrf;
     });
   }
@@ -313,6 +363,10 @@
   }
 
   async function countContacts(pid, tags, dv, dop) {
+    if (!isSmartsender()) {
+      showNotice('This feature is only available on console.smartsender.com', 'error');
+      throw new Error('Unsupported domain');
+    }
     const scopes = tags.map(tag => ({ resource: { name: tag.name, referable: tag.id, operator: dv ? dop : '=', value: dv || tag.createdAt.split('T')[0] }, type: 'tags', condition: 'includes' }));
     const apiOrigin = location.origin;
     const res = await fetch(`${apiOrigin}/api/i/projects/${pid}/contacts`, {
@@ -363,7 +417,7 @@
     const status = document.getElementById('ss-api-status');
     if (state.projectId) {
       const name = state.projectName || '—';
-      if (disp) disp.innerHTML = `<span style="color:var(--text4);font-size:13px;">Project:</span> <span style="color:var(--success);font-weight:700;font-size:13px;">${name}</span> <span style="color:var(--text5);font-size:13px;">(id: ${state.projectId})</span>`;
+      if (disp) disp.innerHTML = `<span style="color:var(--text4);font-size:13px;">Project:</span> <span style="color:var(--success);font-weight:700;font-size:13px;">${name}</span>`;
       if (status) {
         const hasToken = getPreset(state.projectId)?.apiToken;
         status.style.display = hasToken ? 'none' : 'block';
@@ -378,7 +432,11 @@
   function renderNav() {
     const nav = document.getElementById('ss-nav'); if (!nav) return;
     nav.innerHTML = `
-      <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Workspace</div>
+      <div class="ss-info-header">
+        <div class="ss-info-title">Workspace</div>
+        <button class="ss-close" id="ss-nav-close">✕</button>
+      </div>
+      <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Menu</div>
       <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
         <span class="ss-nav-icon">${iVariable}</span>
         <span>Variables</span>
@@ -423,13 +481,18 @@
         switchTab(btn.dataset.tab);
       });
     });
+
+    const closeBtn = document.getElementById('ss-nav-close');
+    if (closeBtn) closeBtn.onclick = () => toggleSidePanel('ss-nav');
   }
 
   // ─── SETTINGS ─────────────────────────────────────────────────────────────
   function renderSettings() {
     const body = document.getElementById('ss-body');
-    const presets = loadPresets();
-    const themeIcon = state.theme === 'dark' ? '☀️' : '🌙';
+    const ep = state.editingProjectId ? getPreset(state.editingProjectId) : null;
+    const sysName = ep ? ep.projectId : (state.projectId || '');
+    const dispName = ep ? (ep.customName || '') : '';
+    const token = ep ? (ep.apiToken || '') : '';
 
     body.innerHTML = `
       <div style="margin-bottom:14px;">
@@ -445,136 +508,335 @@
         </div>
       </div>
       <div class="ss-divider"></div>
-      <div style="margin:14px 0;">
-        <div class="ss-section-label">Projects</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          ${presets.length === 0 ? `<div class="ss-empty">No presets — add one below</div>`
-        : presets.map((p, i) => `
-              <div class="ss-preset-card${state.projectId === p.projectId ? ' active' : ''}">
-                <div class="ss-preset-info">
-                  <div class="ss-preset-name">${esc(p.name || p.projectId)}</div>
-                  <div class="ss-preset-meta">ID: ${p.projectId} · ${p.apiToken ? '<span style="color:var(--success);">access provided</span>' : '<span style="color:var(--text5);">⚠ no token</span>'}</div>
-                </div>
-                <button class="ss-preset-delete" data-index="${i}">×</button>
-              </div>`).join('')}
-        </div>
-      </div>
-      <div class="ss-divider"></div>
       <div style="margin-top:14px;">
-        <div class="ss-section-label">Add / Update Preset</div>
-        <label class="ss-field-label">Project name</label>
-        <input class="ss-input" id="ss-preset-name" type="text" placeholder="newlook" style="margin-bottom:8px;" value="${state.projectName || ''}" />
-        <label class="ss-field-label">Project ID</label>
-        <input class="ss-input" id="ss-preset-pid" type="text" placeholder="86866" style="margin-bottom:8px;" value="${state.projectId || ''}" />
+        <div class="ss-section-label">${state.editingProjectId ? 'Edit Project' : 'Add Project'}</div>
+        
+        <label class="ss-field-label">Display Name (Optional)</label>
+        <input class="ss-input" id="ss-preset-custom-name" type="text" placeholder="e.g. My Main Project" style="margin-bottom:12px;" value="${esc(dispName)}" />
+
+        <label class="ss-field-label">System Name (URL identifier)</label>
+        <div style="position:relative;margin-bottom:12px;">
+          <input class="ss-input" id="ss-preset-name" type="text" placeholder="newlook" 
+                 style="padding-right:36px;${state.systemicNameLocked ? 'color:var(--text5);' : ''}" 
+                 value="${esc(sysName)}" ${state.systemicNameLocked ? 'disabled' : ''} />
+          <button id="ss-lock-toggle" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:${state.systemicNameLocked ? 'var(--text4)' : 'var(--error)'};cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;">
+            ${state.systemicNameLocked ? iLock : iUnlock}
+          </button>
+        </div>
+
         <label class="ss-field-label">API Token</label>
-        <input class="ss-input" id="ss-preset-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:12px;" />
+        <input class="ss-input" id="ss-preset-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:12px;" value="${token ? '********' : ''}" />
         <div id="ss-preset-msg" style="display:none;font-size:13px;margin-bottom:8px;font-family:monospace;"></div>
-        <button class="ss-btn-primary" id="ss-preset-save">Save Preset</button>
+        <div style="display:flex;gap:8px;">
+          <button class="ss-btn-primary" id="ss-preset-save" style="flex:1;">${state.editingProjectId ? 'Update' : 'Save'} Project</button>
+          ${state.editingProjectId ? '<button class="ss-btn-search" id="ss-preset-cancel" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);">Cancel</button>' : ''}
+        </div>
       </div>
     `;
 
     document.getElementById('ss-theme-toggle-input').onchange = (e) => { applyTheme(e.target.checked ? 'dark' : 'light'); renderSettings(); };
 
-    body.querySelectorAll('.ss-preset-delete').forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        const p = loadPresets(); p.splice(parseInt(btn.dataset.index), 1); savePresets(p);
-        if (state.activePreset && !getPreset(state.projectId)) { state.activePreset = null; renderHeader(); }
+    document.getElementById('ss-lock-toggle').onclick = () => {
+      state.systemicNameLocked = !state.systemicNameLocked;
+      renderSettings();
+    };
+
+    if (state.editingProjectId) {
+      document.getElementById('ss-preset-cancel').onclick = () => {
+        state.editingProjectId = null;
+        state.systemicNameLocked = true;
         renderSettings();
       };
-    });
+    }
 
     document.getElementById('ss-preset-save').onclick = () => {
-      const name = document.getElementById('ss-preset-name').value.trim();
-      const pid = document.getElementById('ss-preset-pid').value.trim();
-      const token = document.getElementById('ss-preset-token').value.trim();
+      const pid = document.getElementById('ss-preset-name').value.trim();
+      const customName = document.getElementById('ss-preset-custom-name').value.trim();
+      let token = document.getElementById('ss-preset-token').value.trim();
       const msg = document.getElementById('ss-preset-msg');
-      if (!pid) { msg.textContent = '⚠ Project ID required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:monospace;'; return; }
-      const presets = loadPresets(); const idx = presets.findIndex(p => p.projectId === pid);
-      // If updating existing preset and token is empty — keep old token
-      const existingToken = idx >= 0 ? presets[idx].apiToken : '';
-      const preset = { projectId: pid, apiToken: token || existingToken, name: name || pid };
-      if (idx >= 0) presets[idx] = preset; else presets.push(preset);
+      
+      if (!pid) { msg.textContent = '⚠ System name required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:monospace;'; return; }
+      
+      const presets = loadPresets();
+      
+      // If token is just placeholders, use existing one
+      if (token === '********') {
+        const existing = presets.find(p => p.projectId === (state.editingProjectId || pid));
+        token = existing ? existing.apiToken : '';
+      }
+      
+      const preset = { projectId: pid, apiToken: token, name: pid, customName: customName };
+      
+      if (state.editingProjectId && state.editingProjectId !== pid) {
+        const oldIdx = presets.findIndex(p => p.projectId === state.editingProjectId);
+        if (oldIdx >= 0) presets.splice(oldIdx, 1);
+      }
+      
+      const targetIdx = presets.findIndex(p => p.projectId === pid);
+      if (targetIdx >= 0) presets[targetIdx] = preset;
+      else presets.push(preset);
+      
       savePresets(presets);
-      if (pid === state.projectId) { state.activePreset = preset; renderHeader(); }
-      msg.textContent = '✅ Saved!'; msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:monospace;';
-      setTimeout(() => { msg.style.display = 'none'; }, 2000);
-      // Re-render but DON'T wipe the fields — just update preset list
-      body.querySelectorAll('.ss-preset-card').forEach(c => c.remove());
-      const listDiv = body.querySelector('[data-preset-list]');
-      // Simplest: full re-render is fine since token is now saved
-      renderSettings();
+      if (pid === state.projectId) { 
+        state.activePreset = preset; 
+        state.projectName = customName || pid;
+        renderHeader(); 
+      }
+      
+      msg.textContent = '✅ Saved!';
+      msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:monospace;';
+      
+      state.editingProjectId = null;
+      state.systemicNameLocked = true;
+      
+      setTimeout(() => { 
+        msg.style.display = 'none'; 
+        renderSettings(); 
+      }, 1500);
+      
+      renderProjectSwitcherPanel();
     };
   }
 
   // ─── TAGS TAB ─────────────────────────────────────────────────────────────
+  // ─── TAGS TAB ─────────────────────────────────────────────────────────────
   function renderMain() {
     const body = document.getElementById('ss-body');
+    const pid = state.projectId;
+    const hasHist = pid ? loadTagSearchHist(pid).length > 0 : false;
+    const hasFavs = state.tagFavorites.length > 0;
+    
     body.innerHTML = `
       <div style="margin-bottom:14px;">
         <div class="ss-section-label">Tag search</div>
-        <div style="display:flex;gap:6px;align-items:center;">
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
           <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" style="flex:1;" />
           <button class="ss-btn-search" id="ss-btn-search" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
+          <button class="ss-btn-search" id="ss-btn-tag-reset" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text);border:1px solid var(--border);">${iReset}</button>
         </div>
-        <div class="ss-dropdown" id="ss-dropdown" style="margin-top:8px;"></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="ss-action-btn ${state.tagShowSearchHist ? 'active' : ''}" id="ss-tag-hist-btn" style="${hasHist ? '' : 'display:none;'}">History</button>
+          <button class="ss-action-btn ${state.tagShowFavorites ? 'active' : ''}" id="ss-tag-fav-btn" style="${hasFavs ? '' : 'display:none;'}">Favorites</button>
+        </div>
       </div>
-      <div class="ss-error" id="ss-error"></div>
-      <div class="ss-loading" id="ss-loading" style="display:none;"><div class="ss-spinner"></div><span class="ss-loading-text">Searching...</span></div>
+      <div id="ss-tag-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div class="ss-error" id="ss-tag-error"></div>
+      <div class="ss-loading" id="ss-tag-loading" style="display:none;"><div class="ss-spinner"></div><span class="ss-loading-text">Searching...</span></div>
     `;
-    bindMainEvents();
+    renderTagList();
+    bindTagEvents();
   }
 
+  function renderTagList() {
+    const listEl = document.getElementById('ss-tag-list'); if (!listEl) return;
+    listEl.innerHTML = '';
+    const results = state.tagResults || [];
+    if (!results.length) {
+      if (state.tagSearchPerformed) {
+        listEl.innerHTML = `<div class="ss-empty">No tags found</div>`;
+      }
+      return;
+    }
 
-  function showDropdown(tags, term = '', isExact = false) {
-    const iCopy = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-    const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
-
-    const dd = document.getElementById('ss-dropdown'); if (!dd) return; dd.innerHTML = '';
-    if (!tags.length) { dd.innerHTML = `<div class="ss-dropdown-empty">No tags found</div>`; dd.classList.add('visible'); return; }
-    const hint = document.createElement('div'); hint.className = 'ss-dropdown-hint';
-    hint.textContent = isExact ? `✓ exact · ${tags.length}` : `~ partial · ${tags.length}`; dd.appendChild(hint);
-    tags.forEach(tag => {
-      let name = esc(tag.name);
-      if (term) { const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi'); name = tag.name.replace(re, `<mark style="background:var(--mark-bg);color:var(--mark-text);border-radius:2px;padding:0 2px;">$1</mark>`); }
-      const item = document.createElement('div'); item.className = 'ss-dropdown-item'; item.style.cursor = 'default';
-      item.innerHTML = `<div style="min-width:0;flex:1;"><div class="ss-dropdown-item-name">${name}</div><div class="ss-dropdown-item-id" style="font-size:13px;color:var(--success);margin-top:4px;">ID: <b style="font-size:14px;">${tag.id}</b></div></div><button class="ss-var-btn ss-tag-copy-btn" title="Copy ID">${iCopy}</button>`;
-      const copyBtn = item.querySelector('.ss-tag-copy-btn');
+    results.forEach(tag => {
+      const isFav = state.tagFavorites.some(f => f.id == tag.id);
+      const item = document.createElement('div');
+      item.className = 'ss-var-card';
+      item.innerHTML = `
+        <div class="ss-var-card-main">
+          <div class="ss-var-info">
+            <div class="ss-var-name" style="display:flex;align-items:center;">
+              <button class="ss-var-btn ss-fav-tag-btn" data-id="${tag.id}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}" style="margin-right:6px; color:${isFav ? 'var(--accent)' : 'var(--border2)'};">
+                 ${isFav ? iStarFill : iStar}
+              </button>
+              ${esc(tag.name)}
+            </div>
+            <div class="ss-var-value-preview" style="font-size:11px;color:var(--text5);">ID: ${tag.id}</div>
+          </div>
+          <div class="ss-var-actions">
+            <button class="ss-var-btn ss-tag-copy-id-btn" data-id="${tag.id}" title="Copy ID">${iCopy}</button>
+          </div>
+        </div>
+      `;
+      const favBtn = item.querySelector('.ss-fav-tag-btn');
+      favBtn.onclick = (e) => {
+        e.stopPropagation();
+        const exists = state.tagFavorites.findIndex(f => f.id == tag.id);
+        if (exists > -1) state.tagFavorites.splice(exists, 1);
+        else state.tagFavorites.unshift({ id: tag.id, name: tag.name });
+        saveTagFavorites(state.tagFavorites);
+        renderTagList();
+        renderMain();
+      };
+      const copyBtn = item.querySelector('.ss-tag-copy-id-btn');
       copyBtn.onclick = (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(tag.id);
-        copyBtn.innerHTML = iDone;
-        copyBtn.style.color = 'var(--success)';
-        setTimeout(() => { copyBtn.innerHTML = iCopy; copyBtn.style.color = ''; }, 1500);
+        const old = copyBtn.innerHTML; copyBtn.innerHTML = iDone; copyBtn.style.color = 'var(--success)';
+        setTimeout(() => { copyBtn.innerHTML = old; copyBtn.style.color = ''; }, 1500);
       };
-      dd.appendChild(item);
+      listEl.appendChild(item);
     });
-    dd.classList.add('visible');
   }
 
-  const closeDropdown = () => { const d = document.getElementById('ss-dropdown'); if (d) { d.classList.remove('visible'); d.innerHTML = ''; } };
+  function renderTagHistPanel() {
+    const p = document.getElementById('ss-tag-search-hist'); if (!p) return;
+    const hist = loadTagSearchHist(state.projectId);
+    const tagInput = document.getElementById('ss-tag-input');
 
-  function showTagError(msg) { const el = document.getElementById('ss-error'); if (!el) return; el.textContent = `⚠ ${msg}`; el.classList.add('visible'); setTimeout(() => el.classList.remove('visible'), 4000); }
-  function setLoading(v) { const el = document.getElementById('ss-loading'); if (el) el.classList.toggle('visible', v); }
+    const renderHistList = (filter = '') => {
+      const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
+      const listHtml = filtered.length 
+        ? filtered.map(t => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
+        : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
 
-  function bindMainEvents() {
+      p.innerHTML = `
+        <div class="ss-info-header">
+          <div class="ss-info-title">Search History</div>
+          <button class="ss-close" id="ss-tag-hist-close">✕</button>
+        </div>
+        <div class="ss-panel-search-wrapper">
+          <input type="text" class="ss-panel-search-input" id="ss-tag-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
+        </div>
+        <div class="ss-panel-list-content">
+          ${listHtml}
+        </div>
+      `;
+
+      const cb = p.querySelector('#ss-tag-hist-close');
+      if (cb) {
+        cb.onclick = () => {
+          state.tagShowSearchHist = false;
+          p.classList.remove('open');
+          document.getElementById('ss-tag-hist-btn')?.classList.remove('active');
+        };
+      }
+
+      const filterInput = p.querySelector('#ss-tag-hist-filter');
+      if (filterInput) {
+        filterInput.oninput = (e) => renderHistList(e.target.value);
+        if (filter) {
+          filterInput.focus();
+          filterInput.setSelectionRange(filter.length, filter.length);
+        }
+      }
+
+      p.querySelectorAll('.ss-hist-term[data-term]').forEach(item => {
+        item.onclick = () => {
+          if (tagInput) { 
+            tagInput.value = item.dataset.term; 
+            const searchBtn = document.getElementById('ss-btn-search');
+            if (searchBtn) searchBtn.click();
+          }
+          state.tagShowSearchHist = false;
+          p.classList.remove('open');
+          document.getElementById('ss-tag-hist-btn')?.classList.remove('active');
+        };
+      });
+    };
+
+    renderHistList();
+  }
+
+  function renderTagFavPanel() {
+    const p = document.getElementById('ss-tag-fav-panel'); if (!p) return;
+    p.innerHTML = `
+      <div class="ss-info-header">
+        <div class="ss-info-title">Favorite Tags</div>
+        <button class="ss-close" id="ss-tag-fav-close">✕</button>
+      </div>
+      <div class="ss-panel-list-content">
+        ${state.tagFavorites.length ? state.tagFavorites.map(f => `
+          <div class="ss-hist-term" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--border);">
+            <div style="min-width:0;flex:1;">
+              <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${esc(f.name)}</div>
+              <div style="font-size:11px;color:var(--text5);">ID: ${f.id}</div>
+            </div>
+            <div style="display:flex;gap:4px;">
+               <button class="ss-var-btn ss-fav-tag-copy" data-id="${f.id}" title="Copy ID">${iCopy}</button>
+               <button class="ss-var-btn ss-fav-tag-rm" data-id="${f.id}" title="Remove" style="color:var(--text5);">✕</button>
+            </div>
+          </div>
+        `).join('') : '<div class="ss-empty">No favorites yet</div>'}
+      </div>
+    `;
+    const cb = p.querySelector('#ss-tag-fav-close'); if (cb) cb.onclick = () => toggleSidePanel('ss-tag-fav-panel');
+    p.querySelectorAll('.ss-fav-tag-copy').forEach(btn => {
+      btn.onclick = () => {
+        navigator.clipboard.writeText(btn.dataset.id);
+        const old = btn.innerHTML; btn.innerHTML = iDone; btn.style.color = 'var(--success)';
+        setTimeout(() => { btn.innerHTML = old; btn.style.color = ''; }, 1500);
+      };
+    });
+    p.querySelectorAll('.ss-fav-tag-rm').forEach(btn => {
+      btn.onclick = () => {
+        state.tagFavorites = state.tagFavorites.filter(f => f.id != btn.dataset.id);
+        saveTagFavorites(state.tagFavorites);
+        renderTagFavPanel();
+        renderTagList();
+        renderMain();
+      };
+    });
+  }
+
+  function bindTagEvents() {
     const searchBtn = document.getElementById('ss-btn-search'), tagInput = document.getElementById('ss-tag-input');
+    const resetBtn = document.getElementById('ss-btn-tag-reset');
+    const histBtn = document.getElementById('ss-tag-hist-btn');
+    const favBtn = document.getElementById('ss-tag-fav-btn');
+
     async function doSearch() {
       const term = tagInput?.value.trim(); if (!term) return;
-      if (!state.projectId) { showTagError('Project ID not determined'); return; }
+      if (!state.projectId) { showNotice('Project not selected'); return; }
       if (state.isSearching) return;
       state.isSearching = true;
       if (searchBtn) { searchBtn.disabled = true; searchBtn.innerHTML = '...'; }
-      setLoading(true);
-      closeDropdown();
+      const l = document.getElementById('ss-tag-loading'); if (l) l.style.display = 'block';
+      state.tagSearchPerformed = true;
       try {
-        const data = await searchTags(state.projectId, term); const col = data.collection || [];
-        showDropdown(col, term, data.isExact);
-      } catch (err) { showTagError(err.message); }
-      finally { state.isSearching = false; setLoading(false); if (searchBtn) { searchBtn.disabled = false; searchBtn.innerHTML = iSearch; } }
+        const data = await searchTags(state.projectId, term);
+        state.tagResults = data.collection || [];
+        saveTagSearchHist(state.projectId, term);
+        renderTagList();
+      } catch (err) { showNotice(err.message); }
+      finally { state.isSearching = false; if (l) l.style.display = 'none'; if (searchBtn) { searchBtn.disabled = false; searchBtn.innerHTML = iSearch; } renderMain(); }
     }
+
     searchBtn?.addEventListener('click', doSearch);
-    tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); if (e.key === 'Escape') closeDropdown(); });
+    tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+    resetBtn?.addEventListener('click', () => {
+      if (tagInput) tagInput.value = '';
+      state.tagResults = [];
+      state.tagSearchPerformed = false;
+      renderTagList();
+      renderMain();
+    });
+    histBtn?.addEventListener('click', () => {
+      state.tagShowSearchHist = !state.tagShowSearchHist;
+      if (state.tagShowSearchHist) {
+        state.tagShowFavorites = false;
+        document.getElementById('ss-tag-fav-btn')?.classList.remove('active');
+        histBtn.classList.add('active');
+        renderTagHistPanel();
+        toggleSidePanel('ss-tag-search-hist');
+      } else {
+        histBtn.classList.remove('active');
+        toggleSidePanel('ss-tag-search-hist');
+      }
+    });
+    favBtn?.addEventListener('click', () => {
+      state.tagShowFavorites = !state.tagShowFavorites;
+      if (state.tagShowFavorites) {
+        state.tagShowSearchHist = false;
+        document.getElementById('ss-tag-hist-btn')?.classList.remove('active');
+        favBtn.classList.add('active');
+        renderTagFavPanel();
+        toggleSidePanel('ss-tag-fav-panel');
+      } else {
+        favBtn.classList.remove('active');
+        toggleSidePanel('ss-tag-fav-panel');
+      }
+    });
   }
 
   // ─── CONTACTS TAB ──────────────────────────────────────────────────────────
@@ -620,6 +882,7 @@
     const panel = document.getElementById('ss-info-panel');
     if (!panel) return;
 
+    closeAllExtraPanels();
     state.contactInfoOpen = true;
     state.contactInfoId = id;
     panel.classList.add('open');
@@ -651,126 +914,187 @@
       const standardKeys = ['id', 'name', 'firstName', 'lastName', 'fullName', 'email', 'phone', 'photo', 'createdAt', 'notes', 'tags', 'values', 'thumb', 'updatedAt', 'system_city', 'system_country', 'system_continent', 'system_timezone', 'system_os', 'system_browser', 'is_active', 'userId', 'projectId'];
 
       let vars = (data.values || []).map(v => ({ name: v.name, value: v.value }));
-      // Extract root level keys as fallback/addition
       Object.keys(data).forEach(k => {
         if (!standardKeys.includes(k) && data[k] !== null && typeof data[k] !== 'object') {
           if (!vars.find(v => v.name === k)) vars.push({ name: k, value: data[k] });
         }
       });
 
-      const renderVars = (filter = '') => {
+      const renderVarRow = (v) => {
+        const isEditing = state.contactVarEditingKey === v.name;
+        return `
+          <div class="ss-info-var${isEditing ? ' editing' : ''}" title="${esc(v.name)}: ${esc(String(v.value))}">
+            <div class="ss-info-var-name">
+              <span>${esc(v.name)}</span>
+              <button class="ss-info-copy-btn" data-copy="${esc(v.name)}" title="Copy key">${iCopy}</button>
+            </div>
+            <div class="ss-info-var-val">
+              ${isEditing ? `
+                <input class="ss-input ss-cvar-input" value="${esc(String(v.value))}" style="flex:1;height:22px;font-size:13px;padding:2px 6px;margin-right:4px;" />
+                <button class="ss-var-btn ss-cvar-save" data-key="${esc(v.name)}" title="Save">${iDone}</button>
+                <button class="ss-var-btn ss-cvar-cancel" title="Cancel">${iX}</button>
+              ` : `
+                <span>${esc(String(v.value))}</span>
+                <button class="ss-info-copy-btn ss-cvar-edit" data-key="${esc(v.name)}" title="Edit value">${iEdit}</button>
+                <button class="ss-info-copy-btn" data-copy="${esc(String(v.value))}" title="Copy value">${iCopy}</button>
+              `}
+            </div>
+          </div>
+        `;
+      };
+
+      const renderBodyContent = (filter = '') => {
         const terms = filter.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
-        const filtered = vars.filter(v => {
-          if (!terms.length) return true;
-          const vn = v.name.toLowerCase();
-          const vv = String(v.value).toLowerCase();
-          return terms.some(t => vn.includes(t) || vv.includes(t));
-        });
-        return filtered.map(v => {
-          const isEditing = state.contactVarEditingKey === v.name;
-          return `
-            <div class="ss-info-var${isEditing ? ' editing' : ''}" title="${esc(v.name)}: ${esc(String(v.value))}">
-              <div class="ss-info-var-name">
-                <span>${esc(v.name)}</span>
-                <button class="ss-info-copy-btn" data-copy="${esc(v.name)}" title="Copy key">${iCopy}</button>
-              </div>
-              <div class="ss-info-var-val">
-                ${isEditing ? `
-                  <input class="ss-input ss-cvar-input" value="${esc(String(v.value))}" style="flex:1;height:22px;font-size:13px;padding:2px 6px;margin-right:4px;" />
-                  <button class="ss-var-btn ss-cvar-save" data-key="${esc(v.name)}" title="Save">${iDone}</button>
-                  <button class="ss-var-btn ss-cvar-cancel" title="Cancel">${iX}</button>
-                ` : `
-                  <span>${esc(String(v.value))}</span>
-                  <button class="ss-info-copy-btn ss-cvar-edit" data-key="${esc(v.name)}" title="Edit value">${iEdit}</button>
-                  <button class="ss-info-copy-btn" data-copy="${esc(String(v.value))}" title="Copy value">${iCopy}</button>
-                `}
+        const pid = state.projectId;
+        const priorityKeys = loadContactPriorityVars(pid).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+
+        const filteredTags = (data.tags || []).filter(t => !terms.length || terms.some(term => t.name.toLowerCase().includes(term)));
+        const filteredVars = vars.filter(v => !terms.length || terms.some(t => v.name.toLowerCase().includes(t) || String(v.value).toLowerCase().includes(t)));
+
+        const priorityVars = filteredVars.filter(v => priorityKeys.includes(v.name.toLowerCase()));
+        
+        let html = '';
+
+        // Profile
+        if (state.contactSettings.showProfile) {
+          html += `
+            <div class="ss-info-section" style="display:flex;align-items:center;gap:12px;background:var(--bg2);padding:12px;border-radius:12px;margin-bottom:16px;">
+              ${data.photo ? `<img src="${data.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>`}
+              <div style="flex:1;overflow:hidden;">
+                <div style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
+                  <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
+                  ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
+                </div>
+                <div style="font-size:13px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
               </div>
             </div>
           `;
-        }).join('') || '<div class="ss-hint">No matching variables</div>';
+        }
+
+        // Basic Data
+        if (state.contactSettings.showDetails) {
+          html += `
+            <div class="ss-info-section">
+              <div class="ss-info-label">Basic Data</div>
+              ${data.email ? `<div class="ss-info-detail-row" title="Email: ${esc(data.email)}"><span class="ss-info-detail-label">Email</span><div class="ss-info-detail-value"><span>${esc(data.email)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.email)}" title="Copy email">${iCopy}</button></div></div>` : ''}
+              ${data.phone ? `<div class="ss-info-detail-row" title="Phone: ${esc(data.phone)}"><span class="ss-info-detail-label">Phone</span><div class="ss-info-detail-value"><span>${esc(data.phone)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.phone)}" title="Copy phone">${iCopy}</button></div></div>` : ''}
+              <div class="ss-info-detail-row" title="Created: ${new Date(data.createdAt).toLocaleString()}"><span class="ss-info-detail-label">Created</span><div class="ss-info-detail-value"><span>${new Date(data.createdAt).toLocaleDateString()}</span><button class="ss-info-copy-btn" data-copy="${new Date(data.createdAt).toLocaleDateString()}" title="Copy date">${iCopy}</button></div></div>
+            </div>
+          `;
+        }
+
+        // Priority Variables
+        if (priorityVars.length > 0) {
+          html += `
+            <div class="ss-priority-section">
+              <div class="ss-priority-label">Priority Variables</div>
+              ${priorityVars.map(v => renderVarRow(v)).join('')}
+            </div>
+          `;
+        }
+
+        // Tags Accordion
+        if (state.contactSettings.showTags) {
+          html += `
+            <div class="ss-info-accordion" id="ss-tags-accordion">
+              <div class="ss-info-accordion-header">
+                <span>Tags (${filteredTags.length})</span>
+                <span class="ss-info-accordion-icon">▾</span>
+              </div>
+              <div class="ss-info-accordion-content">
+                <div class="ss-info-tags">
+                  ${filteredTags.map(t => `<span class="ss-info-tag">${esc(t.name)}</span>`).join('') || '<div class="ss-hint">No tags matched</div>'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Variables Accordion
+        if (state.contactSettings.showVars) {
+          html += `
+            <div class="ss-info-accordion" id="ss-vars-accordion">
+              <div class="ss-info-accordion-header">
+                <span>Variables (${filteredVars.length})</span>
+                <span class="ss-info-accordion-icon">▾</span>
+              </div>
+              <div class="ss-info-accordion-content">
+                <div class="ss-info-vars">
+                  ${filteredVars.map(v => renderVarRow(v)).join('') || '<div class="ss-hint">No variables matched</div>'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        return html;
       };
 
-      const tagsHtml = (data.tags || []).map(t => `<span class="ss-info-tag" title="Created: ${t.createdAt}">${esc(t.name)}</span>`).join('');
-
-      body.innerHTML = `
-        ${state.contactSettings.showProfile ? `
-        <div class="ss-info-section" style="display:flex;align-items:center;gap:12px;background:var(--bg2);padding:12px;border-radius:12px;margin-bottom:16px;">
-          ${data.photo ? `<img src="${data.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>`}
-          <div style="flex:1;overflow:hidden;">
-            <div style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
-              <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
-              ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
-            </div>
-            <div style="font-size:13px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
-          </div>
-        </div>
-        ` : ''}
-
-        ${state.contactSettings.showDetails ? `
-        <div class="ss-info-section">
-          <div class="ss-info-label">Basic Data</div>
-          ${data.email ? `<div class="ss-info-detail-row" title="Email: ${esc(data.email)}"><span class="ss-info-detail-label">Email</span><div class="ss-info-detail-value"><span>${esc(data.email)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.email)}" title="Copy email">${iCopy}</button></div></div>` : ''}
-          ${data.phone ? `<div class="ss-info-detail-row" title="Phone: ${esc(data.phone)}"><span class="ss-info-detail-label">Phone</span><div class="ss-info-detail-value"><span>${esc(data.phone)}</span><button class="ss-info-copy-btn" data-copy="${esc(data.phone)}" title="Copy phone">${iCopy}</button></div></div>` : ''}
-          <div class="ss-info-detail-row" title="Created: ${new Date(data.createdAt).toLocaleString()}"><span class="ss-info-detail-label">Created</span><div class="ss-info-detail-value"><span>${new Date(data.createdAt).toLocaleDateString()}</span><button class="ss-info-copy-btn" data-copy="${new Date(data.createdAt).toLocaleDateString()}" title="Copy date">${iCopy}</button></div></div>
-        </div>
-        ` : ''}
-        
-        ${state.contactSettings.showTags ? `
-        <div class="ss-info-section">
-          <div class="ss-info-label">Tags (${(data.tags || []).length})</div>
-          <div class="ss-info-tags">${tagsHtml || '<div class="ss-hint">No tags assigned</div>'}</div>
-        </div>
-        ` : ''}
-        
-        ${state.contactSettings.showVars ? `
-        <div class="ss-info-section">
-          <div class="ss-info-label">Variables (${vars.length})</div>
-          <div class="ss-info-vars" id="ss-info-vars-list">${renderVars()}</div>
-        </div>
-        ` : ''}
-      `;
+      body.innerHTML = renderBodyContent();
 
       const vSearch = document.getElementById('ss-info-var-search');
       const vSearchSticky = document.getElementById('ss-info-search-sticky');
-      if (vSearchSticky) vSearchSticky.style.display = state.contactSettings.showVars ? 'block' : 'none';
+      if (vSearchSticky) vSearchSticky.style.display = (state.contactSettings.showVars || state.contactSettings.showTags) ? 'block' : 'none';
 
       if (vSearch) {
-        vSearch.value = ''; // Reset on open
+        vSearch.value = '';
         vSearch.oninput = (e) => {
-          document.getElementById('ss-info-vars-list').innerHTML = renderVars(e.target.value);
-          bindExpand();
+          body.innerHTML = renderBodyContent(e.target.value);
+          bindAll();
+          // Auto-expand if searching
+          if (e.target.value.trim()) {
+            body.querySelectorAll('.ss-info-accordion').forEach(a => a.classList.add('expanded'));
+          }
         };
       }
 
-      const bindExpand = () => {
-        body.querySelectorAll('.ss-info-detail-row, .ss-info-var').forEach(el => {
+      const bindAll = () => {
+        // Accordion toggle
+        body.querySelectorAll('.ss-info-accordion-header').forEach(h => {
+          h.onclick = () => h.closest('.ss-info-accordion').classList.toggle('expanded');
+        });
+
+        // Copy buttons
+        body.querySelectorAll('[data-copy]').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(btn.dataset.copy);
+            const old = btn.innerHTML; btn.innerHTML = iDone;
+            setTimeout(() => btn.innerHTML = old, 1500);
+          };
+        });
+
+        // Detail row expand
+        body.querySelectorAll('.ss-info-detail-row').forEach(el => {
+          el.onclick = (e) => {
+            if (e.target.closest('button')) return;
+            el.classList.toggle('expanded');
+          };
+        });
+
+        // Variable actions
+        body.querySelectorAll('.ss-info-var').forEach(el => {
           el.onclick = (e) => {
             if (e.target.closest('input') || e.target.closest('button')) return;
-            e.stopPropagation(); el.classList.toggle('expanded');
+            el.classList.toggle('expanded');
           };
-          el.querySelectorAll('.ss-info-copy-btn[data-copy]').forEach(btn => {
-            btn.onclick = (e) => {
-              e.stopPropagation();
-              const text = btn.dataset.copy;
-              navigator.clipboard.writeText(text);
-              const old = btn.innerHTML; btn.innerHTML = iDone;
-              setTimeout(() => btn.innerHTML = old, 1500);
-            };
-          });
 
           el.querySelector('.ss-cvar-edit')?.addEventListener('click', (e) => {
             e.stopPropagation();
             state.contactVarEditingKey = e.currentTarget.dataset.key;
-            document.getElementById('ss-info-vars-list').innerHTML = renderVars(vSearch?.value || '');
-            bindExpand();
+            body.innerHTML = renderBodyContent(vSearch?.value || '');
+            bindAll();
+            // Keep variables expanded when editing
+            body.querySelector('#ss-vars-accordion')?.classList.add('expanded');
             setTimeout(() => body.querySelector('.ss-cvar-input')?.focus(), 30);
           });
 
           el.querySelector('.ss-cvar-cancel')?.addEventListener('click', (e) => {
             e.stopPropagation();
             state.contactVarEditingKey = null;
-            document.getElementById('ss-info-vars-list').innerHTML = renderVars(vSearch?.value || '');
-            bindExpand();
+            body.innerHTML = renderBodyContent(vSearch?.value || '');
+            bindAll();
+            body.querySelector('#ss-vars-accordion')?.classList.add('expanded');
           });
 
           el.querySelector('.ss-cvar-save')?.addEventListener('click', async (e) => {
@@ -790,14 +1114,13 @@
             }
           });
 
-          // Handle Enter key for save
           el.querySelector('.ss-cvar-input')?.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') el.querySelector('.ss-cvar-save')?.click();
             if (e.key === 'Escape') el.querySelector('.ss-cvar-cancel')?.click();
           });
         });
       };
-      bindExpand();
+      bindAll();
     }).catch(err => {
       const body = document.getElementById('ss-info-body');
       if (body) body.innerHTML = `<div class="ss-error visible">⚠ ${err.message}</div>`;
@@ -817,7 +1140,7 @@
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn" id="ss-contact-hist-btn">History</button>
           <button class="ss-action-btn" id="ss-contact-settings-btn">Options</button>
-          <button class="ss-action-btn" id="ss-contact-fav-btn">Favorite</button>
+          <button class="ss-action-btn" id="ss-contact-fav-btn" style="${state.contactFavorites.length > 0 ? '' : 'display:none;'}">Favorite</button>
         </div>
       </div>
       <div id="ss-contact-list" style="display:flex;flex-direction:column;gap:6px;"></div>
@@ -1023,6 +1346,9 @@
 
   function renderContactSettingsPanel() {
     const p = document.getElementById('ss-contact-settings-panel'); if (!p) return;
+    const pid = state.projectId;
+    const priorityVars = loadContactPriorityVars(pid);
+
     p.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Options</div>
@@ -1045,13 +1371,37 @@
           <span>Variables</span>
           <div class="ss-settings-check ${state.contactSettings.showVars ? 'active' : ''}">${state.contactSettings.showVars ? '✓' : ''}</div>
         </div>
-        <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+        <div style="height:1px;background:var(--border);margin:12px 0;"></div>
         <div class="ss-settings-item" id="ss-toggle-compact">
           <span>Compact Search Cards</span>
           <div class="ss-settings-check ${state.contactSettings.compactCards ? 'active' : ''}">${state.contactSettings.compactCards ? '✓' : ''}</div>
         </div>
+        
+        <div style="height:1px;background:var(--border);margin:12px 0;"></div>
+        <div class="ss-section-label" style="margin-bottom:8px;padding:0;color:var(--text2);">Priority Variables</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
+          <input type="text" class="ss-input" id="ss-priority-vars-input" placeholder="key1, key2, key3..." value="${esc(priorityVars)}" style="flex:1;font-size:13px;padding:8px 12px;height:32px;">
+          <button class="ss-btn-primary" id="ss-priority-vars-save" style="width:44px;height:32px;padding:0;justify-content:center;" title="Apply Filter">${iDone}</button>
+        </div>
+        <div class="ss-hint" style="margin-top:4px;color:var(--text5);">Show these at the top (per project)</div>
       </div>
     `;
+
+    p.querySelector('#ss-priority-vars-save')?.addEventListener('click', () => {
+      const inp = p.querySelector('#ss-priority-vars-input');
+      const val = inp?.value || '';
+      saveContactPriorityVars(pid, val);
+      if (state.contactInfoId) renderContactInfoPanel(state.contactInfoId);
+      
+      const btn = p.querySelector('#ss-priority-vars-save');
+      const old = btn.innerHTML; btn.innerHTML = '✓';
+      setTimeout(() => btn.innerHTML = old, 1000);
+    });
+
+    p.querySelector('#ss-priority-vars-input')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') p.querySelector('#ss-priority-vars-save')?.click();
+    });
+
     p.querySelectorAll('.ss-settings-item').forEach(el => {
       el.onclick = (e) => {
         e.stopPropagation();
@@ -1084,7 +1434,6 @@
       card.style.padding = '12px';
       card.onclick = () => {
         renderContactInfoPanel(c.id);
-        toggleSidePanel('ss-info-panel');
       };
 
       const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>`;
@@ -1137,6 +1486,8 @@
         }
         saveContactFavorites(state.contactFavorites);
         renderContacts();
+        const favBtnTab = document.getElementById('ss-contact-fav-btn');
+        if (favBtnTab) favBtnTab.style.display = state.contactFavorites.length > 0 ? '' : 'none';
       };
 
       list.appendChild(card);
@@ -1159,7 +1510,7 @@
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn" id="ss-var-hist-btn">History</button>
           <button class="ss-action-btn" id="ss-var-preset-btn">Presets</button>
-          <button class="ss-action-btn" id="ss-var-fav-tab-btn">Favorites</button>
+          <button class="ss-action-btn" id="ss-var-fav-tab-btn" style="${state.varFavorites.length > 0 ? '' : 'display:none;'}">Favorites</button>
         </div>
       </div>
       <div id="ss-var-list" style="display:flex;flex-direction:column;gap:6px;"></div>
@@ -1255,7 +1606,6 @@
           <div class="ss-info-header">
             <div class="ss-info-title">Presets</div>
             <div style="display:flex;gap:4px;align-items:center;">
-              <button class="ss-var-btn" id="ss-preset-add-btn" title="New preset">${iSave}</button>
               <button class="ss-close" onclick="document.getElementById('ss-var-preset-btn').click()">✕</button>
             </div>
           </div>
@@ -1270,65 +1620,45 @@
                   <span class="ss-vpreset-count">${p.ids.length} vars</span>
                 `}
                 <button class="ss-var-btn ss-vpreset-config" data-pi="${i}" title="Configure Preset">${iGear}</button>
-                <button class="ss-var-btn ss-vpreset-edit" data-pi="${i}" title="Rename">${iPen}</button>
-                <button class="ss-var-btn ss-vpreset-copy" data-pi="${i}" title="Copy">${iCopy}</button>
+                ${state.varPresetConfigPanelId === i ? `<button class="ss-var-btn ss-vpreset-edit" data-pi="${i}" title="Rename">${iPen}</button>` : ''}
                 <button class="ss-var-btn ss-vpreset-delete" data-pi="${i}" title="Delete">${iTrash}</button>
               </div>
               ${state.varPresetConfigPanelId === i ? `
                 <div style="padding:6px 10px;background:var(--bg4);border-bottom:1px solid var(--border);">
-                  <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Variables inside ${esc(p.name)}</div>
                   <div id="ss-preset-cfg-list-${i}" style="margin-bottom:8px;font-size:13px;color:var(--text3);max-height:120px;overflow-y:auto;">
                       Loading variables...
                   </div>
-                  <div style="display:flex;gap:4px;">
-                    <input class="ss-input" id="ss-cfg-add-id-${i}" placeholder="ID" style="width:60px;font-size:13px;" />
-                    <input class="ss-input" id="ss-cfg-add-name-${i}" placeholder="Name" style="flex:1;font-size:13px;" />
-                    <button class="ss-var-btn" id="ss-cfg-add-btn-${i}" title="Add by ID">${iSave}</button>
+                  <div style="display:flex;gap:4px;align-items:center;">
+                    <input class="ss-input" id="ss-cfg-add-id-${i}" placeholder="Enter Variable ID..." style="flex:1;font-size:13px;height:28px;" />
+                    <button class="ss-var-btn" id="ss-cfg-add-btn-${i}" title="Add by ID" style="height:28px;">${iPlus}</button>
                   </div>
                 </div>
               ` : ''}
               `).join('')}
-          <!-- Save current results as preset -->
-          ${state.varResults.length > 0 ? `
-            <div style="padding:8px 10px;border-top:1px solid var(--border);">
-              <div style="display:flex;gap:6px;align-items:center;">
-                <input class="ss-input" id="ss-new-preset-name" placeholder="Preset name" style="flex:1;padding:6px 8px;font-size:13px;" />
-                <button class="ss-var-btn ss-new-preset-save" title="Save">${iSave}</button>
-              </div>
-            </div>`: ''}
+          <!-- Save / Create preset -->
+          <div style="padding:8px 10px;border-top:1px solid var(--border);">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input class="ss-input" id="ss-new-preset-name" placeholder="Preset name..." style="flex:1;padding:6px 8px;font-size:13px;" />
+              <button class="ss-var-btn ss-new-preset-save" title="Save">${iPlus}</button>
+            </div>
+          </div>
         `;
 
-        // Add new preset
-        presetsPanel.querySelector('#ss-preset-add-btn')?.addEventListener('click', () => {
-          document.getElementById('ss-new-preset-name')?.focus();
-        });
-
-        // Save new preset from current results
+        // Rename (edit) logic remains but we removed header '+' and copy buttons
+        // Save new preset (empty or from current results)
         presetsPanel.querySelector('.ss-new-preset-save')?.addEventListener('click', () => {
           const nameEl = document.getElementById('ss-new-preset-name');
           const name = nameEl?.value.trim();
           if (!name) { nameEl?.focus(); return; }
           const ps = loadVarPresets(pid);
-          ps.push({
-            name,
-            ids: state.varResults.map(d => d.id),
-            items: state.varResults.map(d => ({ id: d.id, name: d.name })),
-            ts: new Date().toISOString()
-          });
+          // If we have search results, use them; otherwise create empty
+          const ids = state.varResults.length > 0 ? state.varResults.map(d => d.id) : [];
+          const items = state.varResults.length > 0 ? state.varResults.map(d => ({ id: d.id, name: d.name })) : [];
+          
+          ps.push({ name, ids, items, ts: new Date().toISOString() });
           saveVarPresets(pid, ps);
+          nameEl.value = '';
           drawPresets();
-        });
-
-        // Copy preset
-        presetsPanel.querySelectorAll('.ss-vpreset-copy').forEach(b => {
-          b.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const pi = parseInt(b.dataset.pi);
-            const ps = loadVarPresets(pid);
-            ps.push({ name: ps[pi].name + ' (copy)', ids: [...ps[pi].ids], ts: new Date().toISOString() });
-            saveVarPresets(pid, ps);
-            drawPresets();
-          });
         });
 
         // Configure preset toggle
@@ -1384,12 +1714,11 @@
           if (addBtn) {
             addBtn.addEventListener('click', () => {
               const idVal = parseInt(document.getElementById(`ss-cfg-add-id-${pi}`).value.trim());
-              const nameVal = document.getElementById(`ss-cfg-add-name-${pi}`).value.trim() || 'Custom Variable';
               if (!idVal) return;
               if (!p.ids.includes(idVal)) {
                 p.ids.push(idVal);
                 if (!p.items) p.items = [];
-                p.items.push({ id: idVal, name: nameVal });
+                p.items.push({ id: idVal, name: '...' });
                 const allPs = loadVarPresets(pid); allPs[pi] = p; saveVarPresets(pid, allPs);
                 drawPresets();
               }
@@ -1420,7 +1749,7 @@
             const pi = parseInt(b.dataset.loadPi);
             const ps = loadVarPresets(pid);
             const preset = ps[pi]; if (!preset) return;
-            state.varPresetsOpen = false; presetsPanel.classList.remove('open'); state.varPresetConfigPanelId = null;
+            state.varPresetConfigPanelId = null;
             btn.disabled = true; btn.textContent = '...'; loadEl.style.display = 'flex';
             listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;
             state.varViewingPresetId = pi;
@@ -1554,21 +1883,9 @@
       document.querySelectorAll('.ss-action-btn').forEach(b => b.classList.remove('active'));
     };
 
-    // Close panels on outside click
+    // Close panels logic removed as per user request to keep them open
     document.addEventListener('click', (e) => {
-      const target = e.target;
-      if (state.varShowSearchHist && !histPanel.contains(target) && target.id !== 'ss-var-hist-btn') {
-        state.varShowSearchHist = false; histPanel.classList.remove('open');
-        document.getElementById('ss-var-hist-btn')?.classList.remove('active');
-      }
-      if (state.varPresetsOpen && !presetsPanel.contains(target) && target.id !== 'ss-var-preset-btn') {
-        state.varPresetsOpen = false; presetsPanel.classList.remove('open');
-        document.getElementById('ss-var-preset-btn')?.classList.remove('active');
-      }
-      if (state.varShowFavorites && !favPanel.contains(target) && target.id !== 'ss-var-fav-tab-btn') {
-        state.varShowFavorites = false; favPanel.classList.remove('open');
-        document.getElementById('ss-var-fav-tab-btn')?.classList.remove('active');
-      }
+      // Logic for closing panels on outside click removed
     }, { capture: false });
 
     if (state.varResults.length) renderVarList(listEl, showVarErr);
@@ -1602,26 +1919,21 @@
         const inPresets = ps.map((p, i) => ({ ...p, i, has: p.ids.includes(def.id) }));
         return `
           <div class="ss-card-preset-panel">
-            <div class="ss-var-panel-label" style="padding:8px 10px 4px;">Add / Remove from preset</div>
-            <div style="padding:0 10px 6px;">
-              <input class="ss-input ss-preset-search-input" placeholder="Filter presets..." style="padding:5px 8px;font-size:13px;" />
+            <div class="ss-var-panel-label" style="padding:8px 10px 4px;">Preset Name / Search</div>
+            <div style="padding:0 10px 6px; display:flex; gap:4px;">
+              <input class="ss-input ss-preset-combined-input" placeholder="Name to create or search..." style="flex:1;padding:5px 8px;font-size:13px;" />
+              <button class="ss-var-btn ss-preset-combined-save" title="Save / Create">${iSave}</button>
             </div>
             <div class="ss-preset-list-inner">
               ${ps.length === 0 ? `<div class="ss-empty" style="border:none;padding:6px 10px;font-size:13px;">No presets yet</div>`
             : inPresets.map(p => `
-                  <div class="ss-preset-toggle-row" data-pi="${p.i}">
+                  <div class="ss-preset-toggle-row" data-pi="${p.i}" style="display:${p.has ? 'flex' : 'none'};">
                     <span class="ss-preset-toggle-name">${esc(p.name)}</span>
                     <span class="ss-preset-toggle-count">${p.ids.length}</span>
                     <button class="ss-var-btn ss-preset-toggle-btn${p.has ? ' active' : ''}" data-pi="${p.i}" data-has="${p.has}" title="${p.has ? 'Remove from preset' : 'Add to preset'}">
-                      ${p.has ? iDone : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`}
+                      ${p.has ? iDone : iPlus}
                     </button>
                   </div>`).join('')}
-            </div>
-            <div style="padding:6px 10px 8px;border-top:1px solid var(--border);">
-              <div style="display:flex;gap:6px;">
-                <input class="ss-input ss-new-preset-from-card" placeholder="New preset name..." style="flex:1;padding:5px 8px;font-size:13px;" />
-                <button class="ss-var-btn ss-new-preset-from-card-btn" title="Create & add">${iSave}</button>
-              </div>
             </div>
           </div>
         `;
@@ -1630,13 +1942,14 @@
       card.innerHTML = `
         <div class="ss-var-card-main">
           <div class="ss-var-info">
-            <div class="ss-var-name" style="display:flex;align-items:center;">
-              <button class="ss-var-btn ss-fav-var-btn" data-action="fav" data-id="${def.id}" title="${state.varFavorites.some(f => f.id == def.id) ? 'Remove from favorites' : 'Add to favorites'}" style="margin-right:6px; color:${state.varFavorites.some(f => f.id == def.id) ? 'var(--accent)' : 'var(--border2)'};">
-                 ${state.varFavorites.some(f => f.id == def.id) ? iStarFill : iStar}
-              </button>
-              ${esc(def.name)}
+            <div class="ss-var-name" style="display:flex;align-items:center;gap:4px;">
+              <button class="ss-var-btn ss-var-btn-copy-name" data-action="copy-name" data-id="${def.id}" title="Copy Name">${iCopy}</button>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(def.name)}</span>
             </div>
-            <div class="ss-var-value-preview">${esc(def.value || '—')}</div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+              <button class="ss-var-btn ss-var-btn-copy" data-action="copy" data-id="${def.id}" title="Copy Value">${iCopy}</button>
+              <div class="ss-var-value-preview">${esc(def.value || '—')}</div>
+            </div>
           </div>
           <div class="ss-var-actions">
             ${isEditing ? `
@@ -1645,9 +1958,10 @@
               <button class="ss-var-btn ss-var-btn-reset" data-action="reset" data-id="${def.id}" title="Reset">${iReset}</button>
               <button class="ss-var-btn ss-var-btn-done" data-action="save" data-id="${def.id}" title="Save">${iDone}</button>
             `: `
-              <button class="ss-var-btn ss-var-btn-copy-name" data-action="copy-name" data-id="${def.id}" title="Copy Name">${iKey}</button>
-              <button class="ss-var-btn ss-var-btn-copy" data-action="copy" data-id="${def.id}" title="Copy Value">${iCopy}</button>
-              <button class="ss-var-btn ss-var-btn-addpreset${showPresetPanel ? ' active' : ''}" data-action="addpreset" data-id="${def.id}" title="Add to preset">${iAddToPreset}</button>
+              <button class="ss-var-btn ss-fav-var-btn" data-action="fav" data-id="${def.id}" title="${state.varFavorites.some(f => f.id == def.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.varFavorites.some(f => f.id == def.id) ? 'var(--accent)' : 'var(--border2)'};">
+                 ${state.varFavorites.some(f => f.id == def.id) ? iStarFill : iStar}
+              </button>
+              <button class="ss-var-btn ss-var-btn-addpreset${showPresetPanel ? ' active' : ''}" data-action="addpreset" data-id="${def.id}" title="Add to preset">${iPlus}</button>
               ${state.varViewingPresetId !== null ? `<button class="ss-var-btn" data-action="rm-from-preset" data-id="${def.id}" title="Remove from this preset">${iTrash}</button>` : ''}
               <button class="ss-var-btn ss-var-btn-edit" data-action="edit" data-id="${def.id}" title="Edit">${iEdit}</button>
             `}
@@ -1687,16 +2001,20 @@
       function bindPresetPanel() {
         const panel = card.querySelector('.ss-card-preset-panel'); if (!panel) return;
 
-        // Filter presets
-        panel.querySelector('.ss-preset-search-input')?.addEventListener('input', (e) => {
+        // Combined Search & Create
+        panel.querySelector('.ss-preset-combined-input')?.addEventListener('input', (e) => {
           const q = e.target.value.toLowerCase();
           panel.querySelectorAll('.ss-preset-toggle-row').forEach(row => {
             const name = row.querySelector('.ss-preset-toggle-name')?.textContent.toLowerCase() || '';
-            row.style.display = name.includes(q) ? '' : 'none';
+            const isAdded = row.querySelector('.ss-preset-toggle-btn')?.dataset.has === 'true';
+            if (!q) {
+              row.style.display = isAdded ? 'flex' : 'none';
+            } else {
+              row.style.display = name.includes(q) ? 'flex' : 'none';
+            }
           });
         });
 
-        // Toggle add/remove
         panel.querySelectorAll('.ss-preset-toggle-btn').forEach(b => {
           b.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1707,8 +2025,7 @@
             if (has) {
               ps[pi].ids = ps[pi].ids.filter(x => x !== def.id);
               if (ps[pi].items) ps[pi].items = ps[pi].items.filter(x => x.id !== def.id);
-            }
-            else {
+            } else {
               if (!ps[pi].ids.includes(def.id)) {
                 ps[pi].ids.push(def.id);
                 if (!ps[pi].items) ps[pi].items = [];
@@ -1716,19 +2033,27 @@
               }
             }
             saveVarPresets(pid, ps);
-            // Re-render just this card's preset panel
             state.varPresetPanelId = def.id;
             renderVarList(listEl, showVarErr);
           });
         });
 
-        // Create new preset and add this var
-        panel.querySelector('.ss-new-preset-from-card-btn')?.addEventListener('click', (e) => {
+        panel.querySelector('.ss-preset-combined-save')?.addEventListener('click', (e) => {
           e.stopPropagation();
-          const inp = panel.querySelector('.ss-new-preset-from-card');
+          const inp = panel.querySelector('.ss-preset-combined-input');
           const name = inp?.value.trim(); if (!name) return;
           const ps = loadVarPresets(pid);
-          ps.push({ name, ids: [def.id], items: [{ id: def.id, name: def.name }], ts: new Date().toISOString() });
+          const existingIdx = ps.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+          
+          if (existingIdx > -1) {
+            if (!ps[existingIdx].ids.includes(def.id)) {
+              ps[existingIdx].ids.push(def.id);
+              if (!ps[existingIdx].items) ps[existingIdx].items = [];
+              ps[existingIdx].items.push({ id: def.id, name: def.name });
+            }
+          } else {
+            ps.push({ name, ids: [def.id], items: [{ id: def.id, name: def.name }], ts: new Date().toISOString() });
+          }
           saveVarPresets(pid, ps);
           state.varPresetPanelId = def.id;
           renderVarList(listEl, showVarErr);
@@ -1757,6 +2082,8 @@
           }
           saveVarFavorites(state.varFavorites);
           renderVarList(listEl, showVarErr);
+          const favBtnTab = document.getElementById('ss-var-fav-tab-btn');
+          if (favBtnTab) favBtnTab.style.display = state.varFavorites.length > 0 ? '' : 'none';
           if (state.varShowFavorites) {
             document.getElementById('ss-var-fav-tab-btn')?.click();
             document.getElementById('ss-var-fav-tab-btn')?.click();
@@ -1824,8 +2151,21 @@
       sb && (sb.style.display = 'none'); bb && (bb.style.display = 'flex');
       if (nav) nav.classList.remove('open'); if (hb) hb.style.display = 'none';
       if (labelEl) labelEl.textContent = 'Preference';
+      const link = document.getElementById('ss-tab-external-link');
+      if (link) link.style.display = 'none';
+      
+      renderProjectSwitcherPanel();
       renderSettings();
+      
+      // Auto-open project switcher
+      setTimeout(() => {
+        const p = document.getElementById('ss-project-switcher-panel');
+        if (p) p.classList.add('open');
+      }, 0);
     } else {
+      // Close project switcher when leaving settings
+      const p = document.getElementById('ss-project-switcher-panel');
+      if (p) p.classList.remove('open');
       sb && (sb.style.display = 'flex'); bb && (bb.style.display = 'none');
       if (hb) hb.style.display = 'flex';
       
@@ -1839,6 +2179,8 @@
       if (state.activeTab === 'tags') renderMain();
       else if (state.activeTab === 'contacts') renderContactsTab();
       else renderVarsTab();
+      
+      updateExternalLink(state.activeTab);
     }
   }
 
@@ -1858,16 +2200,29 @@
 
   function updateExternalLink(tab) {
     const link = document.getElementById('ss-tab-external-link');
-    const fullProject = getFullProjectFromUrl();
-    if (link && fullProject) {
-      let path = 'home';
+    if (!link) return;
+
+    const pid = state.projectId;
+    const isActive = isSmartsender() && pid;
+
+    link.style.display = 'inline-flex';
+
+    if (isActive) {
+      let path = 'definitions';
       if (tab === 'tags') path = 'tags';
       if (tab === 'contacts') path = 'contacts';
-      if (tab === 'vars') path = 'definitions';
-      link.href = `https://console.smartsender.com/${path}?project=${fullProject}`;
-      link.style.display = 'inline-flex';
-    } else if (link) {
-      link.style.display = 'none';
+      
+      link.href = `https://console.smartsender.com/${path}?project=${pid}`;
+      link.style.opacity = '1';
+      link.style.pointerEvents = 'auto';
+      link.style.cursor = 'pointer';
+      link.title = 'Open in SmartSender';
+    } else {
+      link.removeAttribute('href');
+      link.style.opacity = '0.3';
+      link.style.pointerEvents = 'none';
+      link.style.cursor = 'default';
+      link.title = 'Available only on smartsender.com with active project';
     }
   }
 
@@ -1904,53 +2259,239 @@
       <div id="ss-var-search-hist" class="ss-extra-panel"></div>
       <div id="ss-var-presets-panel" class="ss-extra-panel"></div>
       <div id="ss-var-fav-panel" class="ss-extra-panel"></div>
+      <div id="ss-tag-search-hist" class="ss-extra-panel"></div>
+      <div id="ss-tag-fav-panel" class="ss-extra-panel"></div>
+      <div id="ss-project-switcher-panel" class="ss-extra-panel"></div>
       <div class="ss-body" id="ss-body"></div>
       <div class="ss-footer" style="padding:10px 16px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
            <div style="display:flex;align-items:center;gap:8px;">
              <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
              <div style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
-             <div id="ss-api-status" style="display:none;font-size:10px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;">api key</div>
            </div>
-           <div class="ss-project-badge" id="ss-project-container" style="margin:0;flex-shrink:0;"><span id="ss-project-display">—</span></div>
+           <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
+             <div id="ss-mode-toggle-container" style="display:flex;align-items:center;gap:6px;">
+                <span id="ss-mode-text" style="font-size:10px;font-weight:700;text-transform:uppercase;">AUTO</span>
+                <label class="ss-mode-switch" id="ss-mode-switch-label" title="Toggle Auto/Manual Project Selection">
+                  <input type="checkbox" id="ss-mode-checkbox">
+                  <span class="ss-mode-slider"></span>
+                </label>
+             </div>
+             <div class="ss-project-badge" id="ss-project-container" style="margin:0;flex-shrink:0;cursor:pointer;"><span id="ss-project-display">—</span></div>
+             <div id="ss-api-status" style="display:none;font-size:10px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;cursor:pointer;" title="No API Key — Click to add">api key</div>
+           </div>
         </div>
       </div>
     `;
     return s;
   }
 
+  function renderProjectSwitcherPanel() {
+    const p = document.getElementById('ss-project-switcher-panel'); if (!p) return;
+    const presets = loadPresets();
+    
+    const listHtml = presets.length 
+      ? presets.map((pr, idx) => `
+        <div class="ss-hist-term ${state.projectId === pr.projectId ? 'active' : ''}" style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding: 10px 14px;border-bottom:1px solid var(--border);">
+          <div style="min-width:0;flex:1;cursor:pointer;" class="ss-project-select-trigger" data-pid="${pr.projectId}">
+            <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${esc(pr.customName || pr.name)}</div>
+            ${pr.customName ? `<div style="font-size:10px;color:var(--text5);">${esc(pr.projectId)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="ss-project-edit-btn" data-pid="${pr.projectId}" style="background:none;border:none;color:var(--text4);cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;transition:color 0.2s;" title="Edit Project">${iPen}</button>
+            <button class="ss-preset-delete" data-index="${idx}" style="background:none;border:none;color:var(--text5);cursor:pointer;font-size:18px;padding:4px;display:flex;align-items:center;justify-content:center;transition:color 0.2s;">✕</button>
+          </div>
+        </div>
+      `).join('')
+      : '<div class="ss-empty" style="border:none;padding:12px;">No projects saved. Click below to add one.</div>';
+
+    p.innerHTML = `
+      <div class="ss-info-header">
+        <div class="ss-info-title">Switch Project</div>
+        <button class="ss-close" id="ss-project-switcher-close">✕</button>
+      </div>
+      <div class="ss-panel-list-content" style="flex:1;overflow-y:auto;">
+        ${listHtml}
+      </div>
+      <div style="padding: 16px; border-top: 1px solid var(--border); background: var(--bg);">
+        <button class="ss-btn-primary" id="ss-project-add-btn" style="width: 100%; justify-content: center; gap: 8px;">
+          <span style="font-size: 18px; line-height: 1;">+</span>
+          <span>Add Project</span>
+        </button>
+      </div>
+    `;
+
+    document.getElementById('ss-project-switcher-close').onclick = () => {
+      toggleSidePanel('ss-project-switcher-panel');
+    };
+
+    p.querySelectorAll('.ss-project-select-trigger').forEach(el => {
+      el.onclick = () => {
+        setProjectMode('MANUAL');
+        switchProject(el.dataset.pid);
+        if (state.view !== 'settings') {
+          toggleSidePanel('ss-project-switcher-panel');
+        } else {
+          renderProjectSwitcherPanel(); // Update active state highlight
+        }
+      };
+    });
+
+    p.querySelectorAll('.ss-project-edit-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        state.editingProjectId = btn.dataset.pid;
+        state.systemicNameLocked = true;
+        switchView('settings');
+      };
+    });
+
+    p.querySelectorAll('.ss-preset-delete').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.index);
+        const presets = loadPresets();
+        const deletedId = presets[idx].projectId;
+        presets.splice(idx, 1);
+        savePresets(presets);
+        if (state.editingProjectId === deletedId) {
+          state.editingProjectId = null;
+        }
+        renderProjectSwitcherPanel();
+        if (state.view === 'settings') renderSettings();
+      };
+    });
+
+    document.getElementById('ss-project-add-btn').onclick = () => {
+      state.editingProjectId = null;
+      state.systemicNameLocked = false;
+      switchView('settings');
+    };
+  }
+
+  function setProjectMode(mode) {
+    state.projectMode = mode;
+    saveToStorage('ss_project_mode', mode);
+    updateModeUI();
+  }
+
+  function updateModeUI() {
+    const textEl = document.getElementById('ss-mode-text');
+    const checkbox = document.getElementById('ss-mode-checkbox');
+    const label = document.getElementById('ss-mode-switch-label');
+    
+    if (!textEl || !checkbox || !label) return;
+
+    const isAuto = state.projectMode === 'AUTO';
+
+    if (!isSmartsender()) {
+      label.classList.add('disabled');
+      checkbox.disabled = true;
+      textEl.textContent = isAuto ? 'AUTO' : 'MANUAL';
+      textEl.style.color = 'var(--text5)';
+      checkbox.checked = isAuto;
+    } else {
+      label.classList.remove('disabled');
+      checkbox.disabled = false;
+      if (isAuto) {
+        textEl.textContent = 'AUTO';
+        textEl.style.color = 'var(--success)';
+        checkbox.checked = true;
+      } else {
+        textEl.textContent = 'MANUAL';
+        textEl.style.color = 'var(--error)';
+        checkbox.checked = false;
+      }
+    }
+  }
+
+  const switchProject = (id) => {
+    state.projectId = id;
+    const p = getPreset(id);
+    state.activePreset = p;
+    state.projectName = p ? (p.customName || p.name) : id;
+    
+    saveToSession(K_SESSION_PROJECT, id);
+    saveToStorage(K_LATEST_PROJECT_ID, id);
+    
+    // Reset temporary results
+    state.varResults = [];
+    state.contactResults = [];
+    state.contactSearchPerformed = false;
+    
+    const lastTab = loadLastTab(id);
+    switchTab(lastTab);
+    renderHeader();
+    if (state.view === 'settings') renderSettings();
+  };
+
   // ─── INIT ─────────────────────────────────────────────────────────────────
-  function init() {
+  async function init() {
     if (document.getElementById('ss-sidebar')) return;
     const sidebar = buildSidebar();
     document.body.appendChild(sidebar);
     sidebar.style.width = loadSidebarWidth() + 'px';
     applyTheme(state.theme);
 
+    // Persistence Logic
+    const sessionPid = await loadFromSession(K_SESSION_PROJECT);
+    const urlPid = getFullProjectFromUrl();
+    const latestPid = loadFromCache(K_LATEST_PROJECT_ID, null);
+    
+    let targetPid = null;
+
+    if (isSmartsender()) {
+      if (state.projectMode === 'AUTO') {
+        targetPid = urlPid || sessionPid || latestPid;
+      } else {
+        targetPid = sessionPid || latestPid || urlPid;
+      }
+    } else {
+      targetPid = sessionPid || latestPid;
+    }
+
+    if (targetPid) {
+      switchProject(targetPid);
+    }
+
     function refreshProjectContext() {
-      const name = getProjectFromUrl();
-      if (name !== state.projectName) {
-        state.projectName = name;
-        renderHeader();
-        updateExternalLink(state.activeTab);
+      if (!isSmartsender() || state.projectMode === 'MANUAL') return;
+      const pid = getFullProjectFromUrl();
+      if (pid && pid !== state.projectId) {
+        switchProject(pid);
       }
     }
     state.projectName = getProjectFromUrl();
 
-    listenForProjectId((id) => {
-      if (id === state.projectId) return;
-      state.projectId = id; state.activePreset = getPreset(id);
-      const lastTab = loadLastTab(id);
-      switchTab(lastTab);
-      renderHeader();
-    });
+    listenForTokens();
 
-    renderHeader(); renderNav();
+    renderHeader(); renderNav(); updateModeUI();
+
+    const modeCheckbox = document.getElementById('ss-mode-checkbox');
+    if (modeCheckbox) {
+      modeCheckbox.addEventListener('change', (e) => {
+        if (!isSmartsender()) return;
+        setProjectMode(e.target.checked ? 'AUTO' : 'MANUAL');
+        if (state.projectMode === 'AUTO') refreshProjectContext();
+      });
+    }
+
+    const closeSidebar = () => {
+      closeAllExtraPanels();
+      const nav = document.getElementById('ss-nav');
+      if (nav) nav.classList.remove('open');
+      state.navOpen = false;
+      setTimeout(() => {
+        sidebar.classList.remove('open');
+      }, 100);
+    };
 
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg.type === 'TOGGLE_SIDEBAR') {
-        sidebar.classList.toggle('open');
         if (sidebar.classList.contains('open')) {
+          closeSidebar();
+        } else {
+          sidebar.classList.add('open');
           if (state.view === 'settings') switchView('main');
           refreshProjectContext();
           renderHeader();
@@ -1964,16 +2505,23 @@
     document.addEventListener('mousemove', (e) => { if (!isResizing) return; sidebar.style.width = Math.min(1200, Math.max(320, startWidth + (startX - e.clientX))) + 'px'; });
     document.addEventListener('mouseup', () => { if (!isResizing) return; isResizing = false; handle.classList.remove('dragging'); document.body.style.userSelect = ''; document.body.style.cursor = ''; saveSidebarWidth(sidebar.offsetWidth); });
 
-    document.getElementById('ss-close').onclick = () => sidebar.classList.remove('open');
+    document.getElementById('ss-close').onclick = closeSidebar;
     document.getElementById('ss-settings-btn').onclick = () => switchView('settings');
     document.getElementById('ss-back-btn').onclick = () => switchView('main');
+    document.getElementById('ss-project-container').onclick = (e) => {
+      e.stopPropagation();
+      renderProjectSwitcherPanel();
+      toggleSidePanel('ss-project-switcher-panel');
+    };
+    document.getElementById('ss-api-status').onclick = () => {
+      switchView('settings');
+    };
     document.getElementById('ss-burger').onclick = (e) => {
       e.stopPropagation();
       toggleSidePanel('ss-nav');
     };
 
     document.addEventListener('click', (e) => {
-      if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) closeDropdown();
       const nav = document.getElementById('ss-nav');
       if (nav && nav.classList.contains('open') && !nav.contains(e.target) && e.target.id !== 'ss-burger') {
         nav.classList.remove('open');
@@ -1984,7 +2532,7 @@
         info.classList.remove('open');
         state.contactInfoOpen = false;
       }
-      const extraPanels = ['ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel', 'ss-var-search-hist', 'ss-var-presets-panel'];
+      const extraPanels = ['ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel', 'ss-project-switcher-panel'];
       extraPanels.forEach(pId => {
         const p = document.getElementById(pId);
         if (p && p.classList.contains('open') && !p.contains(e.target) && !e.target.closest('.ss-action-btn') && !e.target.closest('.ss-var-btn')) {

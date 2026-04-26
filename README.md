@@ -21,9 +21,16 @@ Discover and track tags across your project.
 ## 👤 Contacts Tab
 Comprehensive management for your user base.
 - **Universal Search**: Find any contact by User ID, Email, or Name.
-- **Enhanced Insights**: Access detailed contact profiles in a dedicated slide-out window.
+- **Detailed Profiles**: Access comprehensive contact data in a dedicated slide-out window.
+- **Inline Editing**: Update contact variables directly from the profile with real-time API sync.
 - **Favorites System**: Star important contacts for immediate access via the Favorites panel.
-- **Flexible UI**: Switch between compact cards for high-density browsing or detailed views for more data.
+- **Flexible UI**: Switch between compact cards for high-density browsing or detailed views.
+
+## 🌍 Universal Accessibility
+- **Works Everywhere**: Use the tool on any website (Google, CRMs, etc.) to lookup and manage your SmartSender data.
+- **Project Switcher**: Rapidly switch between your saved projects from the footer or settings.
+- **Smart Detection**: Automatically syncs with the project identifier (e.g., `newlook-73200`) from the SmartSender dashboard URL.
+- **Auto/Manual Modes**: Toggle between following the dashboard's project or locking to a manual choice.
 
 ## 🎨 Professional Experience
 - **Resizable Sidebar**: An elastic workspace that adapts to your screen and workflow.

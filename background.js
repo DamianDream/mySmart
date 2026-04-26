@@ -1,6 +1,8 @@
+// Set session storage access level for content scripts
+chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' }).catch(() => {});
+
 // Toggle sidebar on icon click
 chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.url?.includes('smartsender.com')) return;
   chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' });
 });
 

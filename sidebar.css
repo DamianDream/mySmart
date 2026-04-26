@@ -184,10 +184,22 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 4px 9px;
-  margin-bottom: 10px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: var(--text4);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.ss-project-badge:hover {
+  background: var(--bg2);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.ss-project-badge.active {
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .ss-project-badge .dot {
@@ -196,6 +208,82 @@
   border-radius: 50%;
   background: var(--success);
   box-shadow: 0 0 5px var(--success);
+}
+
+/* ─── PROJECT SWITCHER ─────────────────────────────────── */
+#ss-project-switcher-panel {
+  right: 0;
+  width: 280px;
+  transform: translateX(100%);
+}
+#ss-project-switcher-panel.open {
+  transform: translateX(-100%);
+  pointer-events: auto;
+}
+.ss-hist-term.active {
+  background: var(--bg2);
+  border-left: 2px solid var(--accent);
+}
+
+/* ─── PRESET CARDS ─────────────────────────────────────── */
+.ss-preset-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.ss-preset-card:hover {
+  border-color: var(--accent);
+}
+
+.ss-preset-card.active {
+  background: var(--bg2);
+  border-color: var(--success);
+  box-shadow: 0 0 0 1px var(--success);
+}
+
+.ss-preset-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ss-preset-name {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ss-preset-meta {
+  font-size: 11px;
+  color: var(--text5);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.ss-preset-delete {
+  background: none;
+  border: none;
+  color: var(--text5);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.ss-preset-delete:hover {
+  color: var(--error);
+  background: rgba(255, 100, 100, 0.1);
 }
 
 /* ─── NAV (side panel) ─────────────────────────────────── */
@@ -346,6 +434,7 @@
   transition: all 0.2s;
   cursor: pointer;
   min-width: 0;
+  margin-bottom: 2px;
 }
 
 .ss-info-var:hover {
@@ -1019,12 +1108,12 @@
 }
 
 .ss-var-card:hover {
+  background: var(--bg3);
   border-color: var(--border2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px var(--shadow);
 }
 
 .ss-var-card.editing {
+  background: var(--bg3);
   border-color: var(--accent);
 }
 
@@ -1308,9 +1397,14 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 7px 10px;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
+}
+
+.ss-info-var {
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 2px;
 }
 
 .ss-vpreset-item:last-child {
@@ -1618,11 +1712,10 @@ input:checked+.ss-slider:before {
 }
 
 .ss-extra-panel .ss-info-title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
 }
 
 .ss-extra-panel::-webkit-scrollbar {
@@ -1632,4 +1725,119 @@ input:checked+.ss-slider:before {
 .ss-extra-panel::-webkit-scrollbar-thumb {
   background: var(--border2);
   border-radius: 3px;
+}
+
+/* ─── PROJECT MODE SWITCH (FOOTER) ─────────────────────── */
+.ss-mode-switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+}
+
+.ss-mode-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ss-mode-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--error);
+  transition: .3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 18px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ss-mode-slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  transition: .3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .ss-mode-slider {
+  background-color: var(--success);
+}
+
+input:checked + .ss-mode-slider:before {
+  transform: translateX(14px);
+}
+
+.ss-mode-switch.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ─── ACCORDIONS ────────────────────────────────────────── */
+.ss-info-accordion {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.ss-info-accordion-header {
+  padding: 12px 14px;
+  background: var(--bg2);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text2);
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.ss-info-accordion-header:hover {
+  background: var(--bg3);
+}
+
+.ss-info-accordion-content {
+  display: none;
+  padding: 10px;
+  background: var(--bg-solid);
+}
+
+.ss-info-accordion.expanded .ss-info-accordion-content {
+  display: block;
+}
+
+.ss-info-accordion-icon {
+  transition: transform 0.2s;
+  color: var(--text5);
+}
+
+.ss-info-accordion.expanded .ss-info-accordion-icon {
+  transform: rotate(180deg);
+}
+
+.ss-priority-section {
+  padding: 12px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.ss-priority-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
 }
