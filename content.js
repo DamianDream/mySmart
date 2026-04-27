@@ -1,27 +1,33 @@
 (() => {
   'use strict';
 
+  // Inject Google Fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'stylesheet';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap';
+  document.head.appendChild(fontLink);
+
   // SVG icons (shared)
-  const iGear = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>`;
+  const iGear = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.60679 18C2.43395 19.4356 4.26831 19.9288 5.7039 19.1017C5.70488 19.1011 5.70582 19.1005 5.70681 19.1L6.15179 18.843C6.99179 19.5616 7.95732 20.119 8.99977 20.487V21C8.99977 22.6568 10.3429 24 11.9998 24C13.6566 24 14.9998 22.6568 14.9998 21V20.487C16.0424 20.1184 17.0079 19.5604 17.8478 18.841L18.2948 19.099C19.7307 19.9274 21.5664 19.4349 22.3948 17.999C23.2232 16.563 22.7307 14.7274 21.2948 13.899L20.8508 13.643C21.0506 12.5554 21.0506 11.4405 20.8508 10.353L21.2948 10.097C22.7307 9.26855 23.2232 7.43292 22.3948 5.99695C21.5664 4.56103 19.7307 4.06852 18.2948 4.89694L17.8498 5.15395C17.0089 4.43616 16.0427 3.87984 14.9998 3.513V3C14.9998 1.34316 13.6566 0 11.9998 0C10.3429 0 8.99977 1.34316 8.99977 3V3.513C7.95718 3.88158 6.9916 4.43958 6.15179 5.15902L5.70479 4.90003C4.26882 4.07156 2.4332 4.56408 1.60477 6C0.776353 7.43592 1.26882 9.27159 2.70479 10.1L3.14879 10.356C2.94892 11.4435 2.94892 12.5584 3.14879 13.646L2.70479 13.902C1.27281 14.7326 0.781931 16.5647 1.60679 18ZM11.9998 8.00002C14.2089 8.00002 15.9998 9.79088 15.9998 12C15.9998 14.2091 14.2089 16 11.9998 16C9.79065 16 7.99979 14.2091 7.99979 12C7.99979 9.79088 9.79065 8.00002 11.9998 8.00002Z" fill="currentColor"/></svg>`;
   const iCopy = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
   const iEdit = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
   const iDone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const iReset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>`;
+  const iReset = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_406_1903)"><path d="M11.9998 2.00033C14.6791 2.00914 17.2435 3.08934 19.1216 5.00023H15.9997C15.4474 5.00023 14.9997 5.44792 14.9997 6.00019C14.9997 6.55245 15.4474 7.00014 15.9997 7.00014H20.1425C21.1678 6.99958 21.9989 6.16851 21.9995 5.1432V1.00033C21.9995 0.448063 21.5518 0.000374387 20.9995 0.000374387C20.4472 0.000374387 19.9996 0.448063 19.9996 1.00033V3.07828C15.0828 -1.34972 7.50748 -0.953549 3.07948 3.96316C1.34661 5.88732 0.28375 8.32113 0.050179 10.9C-0.00119436 11.4538 0.40609 11.9443 0.959854 11.9957C0.989853 11.9985 1.01999 11.9999 1.05018 12C1.55702 12.0065 1.98549 11.6261 2.03916 11.122C2.50049 5.96292 6.82012 2.00712 11.9998 2.00033Z" fill="currentColor"/><path d="M22.9505 12.0002C22.4436 11.9937 22.0152 12.3741 21.9615 12.8782C21.4843 18.3724 16.6435 22.4396 11.1492 21.9623C8.77202 21.7559 6.54735 20.7049 4.87805 19H7.99997C8.55223 19 8.99992 18.5523 8.99992 18C8.99992 17.4478 8.55223 17.0001 7.99997 17.0001H3.85709C2.83206 16.9995 2.00072 17.83 2.00015 18.855C2.00015 18.8556 2.00015 18.8563 2.00015 18.857V22.9999C2.00015 23.5521 2.44784 23.9998 3.00011 23.9998C3.55237 23.9998 4.00006 23.5521 4.00006 22.9999V20.9219C8.91676 25.3499 16.4921 24.9538 20.9201 20.037C22.653 18.1129 23.7159 15.6791 23.9494 13.1001C24.0008 12.5464 23.5935 12.0558 23.0398 12.0045C23.0101 12.0018 22.9803 12.0003 22.9505 12.0002Z" fill="currentColor"/></g><defs><clipPath id="clip0_406_1903"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>`;
   const iHistory = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
   const iExternal = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-  const iSearch = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+  const iSearch = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_405_1640)"><path d="M23.5612 21.4454L18.9161 16.7983C22.3918 12.1535 21.4441 5.57052 16.7993 2.0948C12.1545 -1.38092 5.57153 -0.433205 2.09581 4.21157C-1.37991 8.85634 -0.432198 15.4393 4.21258 18.9151C7.94364 21.7071 13.0682 21.7071 16.7993 18.9151L21.4464 23.5622C22.0304 24.1462 22.9772 24.1462 23.5612 23.5622C24.1452 22.9782 24.1452 22.0314 23.5612 21.4474L23.5612 21.4454ZM10.5447 18.0181C6.41661 18.0181 3.0702 14.6717 3.0702 10.5437C3.0702 6.4156 6.41661 3.06919 10.5447 3.06919C14.6727 3.06919 18.0191 6.4156 18.0191 10.5437C18.0147 14.6698 14.6709 18.0137 10.5447 18.0181Z" fill="currentColor"/></g><defs><clipPath id="clip0_405_1640"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>`;
   const iClock = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
   const iPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>`;
   const iStar = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
   const iStarFill = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
   const iSave = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
-  const iTrash = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
+  const iTrash = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23 4.5C23 3.67158 22.3285 3 21.5 3H17.724C17.0921 1.20736 15.4007 0.00609375 13.5 0H10.5C8.59928 0.00609375 6.90789 1.20736 6.27602 3H2.5C1.67158 3 1 3.67158 1 4.5C1 5.32842 1.67158 6 2.5 6H3.00002V18.5C3.00002 21.5376 5.46245 24 8.5 24H15.5C18.5376 24 21 21.5376 21 18.5V6H21.5C22.3285 6 23 5.32842 23 4.5ZM18 18.5C18 19.8807 16.8807 21 15.5 21H8.5C7.1193 21 6.00002 19.8807 6.00002 18.5V6H18V18.5Z" fill="currentColor"/><path d="M9.5 18C10.3284 18 11 17.3284 11 16.5V10.5C11 9.67158 10.3284 9 9.5 9C8.67158 9 8 9.67158 8 10.5V16.5C8 17.3284 8.67158 18 9.5 18Z" fill="currentColor"/><path d="M14.5 18C15.3284 18 16 17.3284 16 16.5V10.5C16 9.67158 15.3284 9 14.5 9C13.6716 9 13 9.67158 13 10.5V16.5C13 17.3284 13.6716 18 14.5 18Z" fill="currentColor"/></svg>`;
   const iPen = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
   const iAddToPreset = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>`;
   const iTune = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>`;
   const iFilter = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>`;
   const iBack = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`;
-  const iX = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const iX = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.7068 6.70685L17.2928 5.29285L11.9998 10.5858L6.70685 5.29285L5.29285 6.70685L10.5858 11.9998L5.29285 17.2928L6.70685 18.7068L11.9998 13.4138L17.2928 18.7068L18.7068 17.2928L13.4138 11.9998L18.7068 6.70685Z" fill="currentColor"/></svg>`;
   const iMenu = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
   const iKey = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`;
   const iLock = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
@@ -35,6 +41,7 @@
   const iChat = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
   const iMonitor = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
   const iLog = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`;
+  const iInfo = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
 
   // ─── COLORS ───────────────────────────────────────────────────────────────
   const THEMES = {
@@ -86,10 +93,10 @@
   const loadPresets = () => loadFromCache(K_PRESETS, []);
   const savePresets = (p) => saveToStorage(K_PRESETS, p);
   const getPreset = (id) => loadPresets().find(p => p.projectId === id) || null;
-  
+
   const loadTheme = () => loadFromCache(K_THEME, 'dark');
   const saveTheme = (t) => saveToStorage(K_THEME, t);
-  
+
   const loadLastTab = (pid) => loadFromCache(K_LAST_TAB(pid), 'vars');
   const saveLastTab = (pid, tab) => { if (pid) saveToStorage(K_LAST_TAB(pid), tab); };
 
@@ -140,10 +147,10 @@
 
   const loadContactSettings = () => loadFromCache(K_CONTACT_SETTINGS, { showProfile: true, showDetails: true, showTags: true, showVars: true, compactCards: false });
   const saveContactSettings = (s) => saveToStorage(K_CONTACT_SETTINGS, s);
-  
+
   const loadContactFavorites = () => loadFromCache(K_CONTACT_FAVORITES, []);
   const saveContactFavorites = (f) => saveToStorage(K_CONTACT_FAVORITES, f.slice(0, 100));
-  
+
   const K_TAG_FAVORITES = 'ss_tag_favorites';
   const loadTagFavorites = () => loadFromCache(K_TAG_FAVORITES, []);
   const saveTagFavorites = (f) => saveToStorage(K_TAG_FAVORITES, f.slice(0, 100));
@@ -159,7 +166,7 @@
   // --- PANEL MANAGER ---
   const toggleSidePanel = (id) => {
     const panels = [
-      'ss-nav', 'ss-info-panel', 
+      'ss-nav', 'ss-info-panel',
       'ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel',
       'ss-var-search-hist', 'ss-var-presets-panel', 'ss-var-fav-panel',
       'ss-tag-search-hist', 'ss-tag-fav-panel',
@@ -190,7 +197,7 @@
       });
       // Clean up all active buttons in sidebar
       document.querySelectorAll('.ss-action-btn.active, .ss-var-btn.active').forEach(b => b.classList.remove('active'));
-      
+
       target.classList.toggle('open');
       state.navOpen = target.classList.contains('open');
       return;
@@ -207,7 +214,7 @@
       const old = document.getElementById(alreadyOpenId);
       old.classList.add('ss-no-transition');
       target.classList.add('ss-no-transition');
-      
+
       old.classList.remove('open');
       target.classList.add('open');
       setTimeout(() => {
@@ -434,7 +441,7 @@
     nav.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Workspace</div>
-        <button class="ss-close" id="ss-nav-close">✕</button>
+        <button class="ss-close" id="ss-nav-close">${iX}</button>
       </div>
       <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Menu</div>
       <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
@@ -449,6 +456,7 @@
         <span class="ss-nav-icon">${iUsers}</span>
         <span>Contacts</span>
       </button>
+    
 
       <div class="ss-divider" style="margin: 8px 0;"></div>
       <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Coming Soon</div>
@@ -473,6 +481,12 @@
         <span>Log</span>
         <span class="ss-nav-soon">Soon</span>
       </div>
+       <div class="ss-nav-item disabled">
+        <span class="ss-nav-icon">${iInfo}</span>
+        <span>About</span>
+        <span class="ss-nav-soon">Soon</span>
+      </div>
+      
     `;
     nav.querySelectorAll('.ss-nav-item:not(.disabled)').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -499,7 +513,7 @@
         <div class="ss-section-label" style="margin-bottom:12px;">Appearance</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
           <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-            <span style="font-size:11px;color:var(--text5);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
+            <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
             <label class="ss-theme-switch" title="Toggle Theme" style="flex-shrink:0;">
               <input type="checkbox" id="ss-theme-toggle-input"${state.theme === 'dark' ? ' checked' : ''}>
               <span class="ss-slider"></span>
@@ -526,7 +540,7 @@
 
         <label class="ss-field-label">API Token</label>
         <input class="ss-input" id="ss-preset-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:12px;" value="${token ? '********' : ''}" />
-        <div id="ss-preset-msg" style="display:none;font-size:13px;margin-bottom:8px;font-family:monospace;"></div>
+        <div id="ss-preset-msg" style="display:none;font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;"></div>
         <div style="display:flex;gap:8px;">
           <button class="ss-btn-primary" id="ss-preset-save" style="flex:1;">${state.editingProjectId ? 'Update' : 'Save'} Project</button>
           ${state.editingProjectId ? '<button class="ss-btn-search" id="ss-preset-cancel" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);">Cancel</button>' : ''}
@@ -554,46 +568,46 @@
       const customName = document.getElementById('ss-preset-custom-name').value.trim();
       let token = document.getElementById('ss-preset-token').value.trim();
       const msg = document.getElementById('ss-preset-msg');
-      
-      if (!pid) { msg.textContent = '⚠ System name required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:monospace;'; return; }
-      
+
+      if (!pid) { msg.textContent = '⚠ System name required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;'; return; }
+
       const presets = loadPresets();
-      
+
       // If token is just placeholders, use existing one
       if (token === '********') {
         const existing = presets.find(p => p.projectId === (state.editingProjectId || pid));
         token = existing ? existing.apiToken : '';
       }
-      
+
       const preset = { projectId: pid, apiToken: token, name: pid, customName: customName };
-      
+
       if (state.editingProjectId && state.editingProjectId !== pid) {
         const oldIdx = presets.findIndex(p => p.projectId === state.editingProjectId);
         if (oldIdx >= 0) presets.splice(oldIdx, 1);
       }
-      
+
       const targetIdx = presets.findIndex(p => p.projectId === pid);
       if (targetIdx >= 0) presets[targetIdx] = preset;
       else presets.push(preset);
-      
+
       savePresets(presets);
-      if (pid === state.projectId) { 
-        state.activePreset = preset; 
+      if (pid === state.projectId) {
+        state.activePreset = preset;
         state.projectName = customName || pid;
-        renderHeader(); 
+        renderHeader();
       }
-      
+
       msg.textContent = '✅ Saved!';
-      msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:monospace;';
-      
+      msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;';
+
       state.editingProjectId = null;
       state.systemicNameLocked = true;
-      
-      setTimeout(() => { 
-        msg.style.display = 'none'; 
-        renderSettings(); 
+
+      setTimeout(() => {
+        msg.style.display = 'none';
+        renderSettings();
       }, 1500);
-      
+
       renderProjectSwitcherPanel();
     };
   }
@@ -605,14 +619,14 @@
     const pid = state.projectId;
     const hasHist = pid ? loadTagSearchHist(pid).length > 0 : false;
     const hasFavs = state.tagFavorites.length > 0;
-    
+
     body.innerHTML = `
       <div style="margin-bottom:14px;">
         <div class="ss-section-label">Tag search</div>
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
           <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" style="flex:1;" />
-          <button class="ss-btn-search" id="ss-btn-search" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
-          <button class="ss-btn-search" id="ss-btn-tag-reset" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text);border:1px solid var(--border);">${iReset}</button>
+          <button class="ss-btn-search" id="ss-btn-search" title="Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;">${iSearch.replace('width="24" height="24"', 'width="16" height="16"')}</button>
+          <button class="ss-btn-search" id="ss-btn-tag-reset" title="Reset Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;color:var(--text4);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn ${state.tagShowSearchHist ? 'active' : ''}" id="ss-tag-hist-btn" style="${hasHist ? '' : 'display:none;'}">History</button>
@@ -686,14 +700,14 @@
 
     const renderHistList = (filter = '') => {
       const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
-      const listHtml = filtered.length 
+      const listHtml = filtered.length
         ? filtered.map(t => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
         : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
 
       p.innerHTML = `
         <div class="ss-info-header">
           <div class="ss-info-title">Search History</div>
-          <button class="ss-close" id="ss-tag-hist-close">✕</button>
+          <button class="ss-close" id="ss-tag-hist-close">${iX}</button>
         </div>
         <div class="ss-panel-search-wrapper">
           <input type="text" class="ss-panel-search-input" id="ss-tag-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
@@ -723,8 +737,8 @@
 
       p.querySelectorAll('.ss-hist-term[data-term]').forEach(item => {
         item.onclick = () => {
-          if (tagInput) { 
-            tagInput.value = item.dataset.term; 
+          if (tagInput) {
+            tagInput.value = item.dataset.term;
             const searchBtn = document.getElementById('ss-btn-search');
             if (searchBtn) searchBtn.click();
           }
@@ -743,7 +757,7 @@
     p.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Favorite Tags</div>
-        <button class="ss-close" id="ss-tag-fav-close">✕</button>
+        <button class="ss-close" id="ss-tag-fav-close">${iX}</button>
       </div>
       <div class="ss-panel-list-content">
         ${state.tagFavorites.length ? state.tagFavorites.map(f => `
@@ -754,7 +768,7 @@
             </div>
             <div style="display:flex;gap:4px;">
                <button class="ss-var-btn ss-fav-tag-copy" data-id="${f.id}" title="Copy ID">${iCopy}</button>
-               <button class="ss-var-btn ss-fav-tag-rm" data-id="${f.id}" title="Remove" style="color:var(--text5);">✕</button>
+               <button class="ss-var-btn ss-fav-tag-rm" data-id="${f.id}" title="Remove" style="color:var(--text5);">${iX}</button>
             </div>
           </div>
         `).join('') : '<div class="ss-empty">No favorites yet</div>'}
@@ -890,7 +904,7 @@
     panel.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Contact Info</div>
-        <button class="ss-close" id="ss-info-close">✕</button>
+        <button class="ss-close" id="ss-info-close">${iX}</button>
       </div>
       <div id="ss-info-search-sticky" style="padding:10px 16px;background:var(--bg-solid);border-bottom:1px solid var(--border);display:none;">
         <input class="ss-input" id="ss-info-var-search" type="text" placeholder="Filter variables..." style="font-size:13px;padding:6px 10px;height:28px;" />
@@ -952,7 +966,7 @@
         const filteredVars = vars.filter(v => !terms.length || terms.some(t => v.name.toLowerCase().includes(t) || String(v.value).toLowerCase().includes(t)));
 
         const priorityVars = filteredVars.filter(v => priorityKeys.includes(v.name.toLowerCase()));
-        
+
         let html = '';
 
         // Profile
@@ -965,7 +979,7 @@
                   <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
                   ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
                 </div>
-                <div style="font-size:13px;color:var(--text4);font-family:'JetBrains Mono',monospace;">ID: ${data.id}</div>
+                <div style="font-size:13px;color:var(--text4);font-family:Roboto,sans-serif;">ID: ${data.id}</div>
               </div>
             </div>
           `;
@@ -1134,8 +1148,8 @@
         <div class="ss-section-label">Contact search</div>
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
           <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" style="flex:1;" />
-          <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
-          <button class="ss-btn-search" id="ss-contact-reset-btn" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text4);">${iReset}</button>
+          <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;">${iSearch.replace('width="24" height="24"', 'width="16" height="16"')}</button>
+          <button class="ss-btn-search" id="ss-contact-reset-btn" title="Reset Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;color:var(--text4);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn" id="ss-contact-hist-btn">History</button>
@@ -1170,23 +1184,23 @@
         histBtn.classList.remove('active');
         return;
       }
-      
+
       state.contactShowFavorites = false; state.contactSettingsOpen = false;
       favBtn.classList.remove('active'); setBtn.classList.remove('active');
 
       histBtn.classList.add('active');
       const hist = loadContactSearchHist(state.projectId);
-      
+
       const renderHistList = (filter = '') => {
         const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
-        const listHtml = filtered.length 
+        const listHtml = filtered.length
           ? filtered.map((t, i) => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
           : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
-        
+
         histPanel.innerHTML = `
           <div class="ss-info-header">
             <div class="ss-info-title">Search History</div>
-            <button class="ss-close" id="ss-close-hist-btn">✕</button>
+            <button class="ss-close" id="ss-close-hist-btn">${iX}</button>
           </div>
           <div class="ss-panel-search-wrapper">
             <input type="text" class="ss-panel-search-input" id="ss-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
@@ -1195,12 +1209,12 @@
             ${listHtml}
           </div>
         `;
-        
+
         histPanel.querySelector('#ss-close-hist-btn').onclick = () => toggleHist();
         const filterInput = histPanel.querySelector('#ss-hist-filter');
         filterInput.focus();
         filterInput.oninput = (e) => renderHistList(e.target.value);
-        
+
         histPanel.querySelectorAll('.ss-hist-term[data-term]').forEach(el => {
           el.onclick = () => {
             input.value = el.dataset.term;
@@ -1209,7 +1223,7 @@
           };
         });
       };
-      
+
       renderHistList();
       toggleSidePanel('ss-contact-search-hist');
     };
@@ -1220,7 +1234,7 @@
         favPanel.classList.remove('open'); favBtn.classList.remove('active');
         return;
       }
-      
+
       state.contactShowSearchHist = false; state.contactSettingsOpen = false;
       histBtn.classList.remove('active'); setBtn.classList.remove('active');
 
@@ -1235,7 +1249,7 @@
         setPanel.classList.remove('open'); setBtn.classList.remove('active');
         return;
       }
-      
+
       state.contactShowSearchHist = false; state.contactShowFavorites = false;
       histBtn.classList.remove('active'); favBtn.classList.remove('active');
 
@@ -1297,7 +1311,7 @@
 
     const renderFavList = (filter = '') => {
       const filtered = favs.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()) || f.id.toString().includes(filter));
-      const listHtml = filtered.length 
+      const listHtml = filtered.length
         ? filtered.map(f => `
           <div class="ss-hist-term" data-id="${f.id}" style="display:flex;align-items:center;gap:8px;">
             ${f.photo ? `<img src="${f.photo}" style="width:20px;height:20px;border-radius:50%;">` : '👤'}
@@ -1310,7 +1324,7 @@
       p.innerHTML = `
         <div class="ss-info-header">
           <div class="ss-info-title">Favorites</div>
-          <button class="ss-close" id="ss-close-fav-btn">✕</button>
+          <button class="ss-close" id="ss-close-fav-btn">${iX}</button>
         </div>
         <div class="ss-panel-search-wrapper">
           <input type="text" class="ss-panel-search-input" id="ss-fav-filter" placeholder="Filter favorites..." value="${esc(filter)}">
@@ -1324,7 +1338,7 @@
         state.contactShowFavorites = false; p.classList.remove('open');
         document.getElementById('ss-contact-fav-btn').classList.remove('active');
       };
-      
+
       const filterInput = p.querySelector('#ss-fav-filter');
       filterInput.focus();
       filterInput.oninput = (e) => renderFavList(e.target.value);
@@ -1352,7 +1366,7 @@
     p.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Options</div>
-        <button class="ss-close" onclick="document.getElementById('ss-contact-settings-btn').click()">✕</button>
+        <button class="ss-close" onclick="document.getElementById('ss-contact-settings-btn').click()">${iX}</button>
       </div>
       <div style="padding:16px;">
         <div class="ss-settings-item" id="ss-toggle-profile">
@@ -1392,7 +1406,7 @@
       const val = inp?.value || '';
       saveContactPriorityVars(pid, val);
       if (state.contactInfoId) renderContactInfoPanel(state.contactInfoId);
-      
+
       const btn = p.querySelector('#ss-priority-vars-save');
       const old = btn.innerHTML; btn.innerHTML = '✓';
       setTimeout(() => btn.innerHTML = old, 1000);
@@ -1479,8 +1493,8 @@
           state.contactFavorites.splice(exists, 1);
         } else {
           if (state.contactFavorites.length >= 100) {
-             showNotice('Limit of 100 favorites reached');
-             return;
+            showNotice('Limit of 100 favorites reached');
+            return;
           }
           state.contactFavorites.unshift({ id: c.id, name: c.fullName || 'Unnamed', photo: c.photo });
         }
@@ -1504,8 +1518,8 @@
         <div class="ss-section-label">Variable search</div>
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
           <input class="ss-input" id="ss-var-input" type="text" placeholder="name1, name2, name3" autocomplete="off" style="flex:1;" />
-          <button class="ss-btn-search" id="ss-var-btn" title="Search" style="width:44px;padding:0;justify-content:center;">${iSearch}</button>
-          <button class="ss-btn-search" id="ss-var-reset-btn" title="Reset Search" style="width:44px;padding:0;justify-content:center;background:var(--bg3);color:var(--text4);">${iReset}</button>
+          <button class="ss-btn-search" id="ss-var-btn" title="Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;">${iSearch.replace('width="24" height="24"', 'width="16" height="16"')}</button>
+          <button class="ss-btn-search" id="ss-var-reset-btn" title="Reset Search" style="background:none;width:32px;padding:0;justify-content:center;border:none;color:var(--text4);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="ss-action-btn" id="ss-var-hist-btn">History</button>
@@ -1537,23 +1551,23 @@
         document.getElementById('ss-var-hist-btn').classList.remove('active');
         return;
       }
-      
+
       state.varPresetsOpen = false; presetsPanel.classList.remove('open'); document.getElementById('ss-var-preset-btn').classList.remove('active');
       state.varShowFavorites = false; favPanel.classList.remove('open'); document.getElementById('ss-var-fav-tab-btn').classList.remove('active');
 
       document.getElementById('ss-var-hist-btn').classList.add('active');
       const hist = loadSearchHist(state.projectId);
-      
+
       const renderHistList = (filter = '') => {
         const filtered = hist.filter(t => t.toLowerCase().includes(filter.toLowerCase()));
-        const listHtml = filtered.length 
+        const listHtml = filtered.length
           ? filtered.map((t, i) => `<div class="ss-hist-term" data-term="${esc(t)}">${esc(t)}</div>`).join('')
           : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No history'}</div>`;
-        
+
         histPanel.innerHTML = `
           <div class="ss-info-header">
             <div class="ss-info-title">Search History</div>
-            <button class="ss-close" onclick="document.getElementById('ss-var-hist-btn').click()">✕</button>
+            <button class="ss-close" onclick="document.getElementById('ss-var-hist-btn').click()">${iX}</button>
           </div>
           <div class="ss-panel-search-wrapper">
             <input type="text" class="ss-panel-search-input" id="ss-var-hist-filter" placeholder="Quick search..." value="${esc(filter)}">
@@ -1562,11 +1576,11 @@
             ${listHtml}
           </div>
         `;
-        
+
         const filterInput = histPanel.querySelector('#ss-var-hist-filter');
         filterInput.focus();
         filterInput.oninput = (e) => renderHistList(e.target.value);
-        
+
         histPanel.querySelectorAll('.ss-hist-term[data-term]').forEach(el => {
           el.onclick = () => {
             input.value = el.dataset.term;
@@ -1606,7 +1620,7 @@
           <div class="ss-info-header">
             <div class="ss-info-title">Presets</div>
             <div style="display:flex;gap:4px;align-items:center;">
-              <button class="ss-close" onclick="document.getElementById('ss-var-preset-btn').click()">✕</button>
+              <button class="ss-close" onclick="document.getElementById('ss-var-preset-btn').click()">${iX}</button>
             </div>
           </div>
           ${ps.length === 0 ? `<div class="ss-empty" style="border:none;padding:10px;">No presets yet</div>`
@@ -1619,9 +1633,9 @@
                   <span class="ss-vpreset-name" title="Click to load" style="cursor:pointer;flex:1;" data-load-pi="${i}"><b>${esc(p.name)}</b></span>
                   <span class="ss-vpreset-count">${p.ids.length} vars</span>
                 `}
-                <button class="ss-var-btn ss-vpreset-config" data-pi="${i}" title="Configure Preset">${iGear}</button>
+                <button class="ss-var-btn ss-vpreset-config" data-pi="${i}" title="Configure Preset" style="background:none;">${iGear.replace('width="24" height="24"', 'width="14" height="14"')}</button>
                 ${state.varPresetConfigPanelId === i ? `<button class="ss-var-btn ss-vpreset-edit" data-pi="${i}" title="Rename">${iPen}</button>` : ''}
-                <button class="ss-var-btn ss-vpreset-delete" data-pi="${i}" title="Delete">${iTrash}</button>
+                <button class="ss-var-btn ss-vpreset-delete" data-pi="${i}" title="Delete" style="background:none;">${iTrash.replace('width="24" height="24"', 'width="18" height="18"')}</button>
               </div>
               ${state.varPresetConfigPanelId === i ? `
                 <div style="padding:6px 10px;background:var(--bg4);border-bottom:1px solid var(--border);">
@@ -1636,7 +1650,7 @@
               ` : ''}
               `).join('')}
           <!-- Save / Create preset -->
-          <div style="padding:8px 10px;border-top:1px solid var(--border);">
+          <div style="padding:8px 16px;border-top:1px solid var(--border);">
             <div style="display:flex;gap:6px;align-items:center;">
               <input class="ss-input" id="ss-new-preset-name" placeholder="Preset name..." style="flex:1;padding:6px 8px;font-size:13px;" />
               <button class="ss-var-btn ss-new-preset-save" title="Save">${iPlus}</button>
@@ -1654,7 +1668,7 @@
           // If we have search results, use them; otherwise create empty
           const ids = state.varResults.length > 0 ? state.varResults.map(d => d.id) : [];
           const items = state.varResults.length > 0 ? state.varResults.map(d => ({ id: d.id, name: d.name })) : [];
-          
+
           ps.push({ name, ids, items, ts: new Date().toISOString() });
           saveVarPresets(pid, ps);
           nameEl.value = '';
@@ -1783,23 +1797,23 @@
         document.getElementById('ss-var-fav-tab-btn').classList.remove('active');
         return;
       }
-      
+
       state.varPresetsOpen = false; presetsPanel.classList.remove('open'); document.getElementById('ss-var-preset-btn').classList.remove('active');
       state.varShowSearchHist = false; histPanel.classList.remove('open'); document.getElementById('ss-var-hist-btn').classList.remove('active');
 
       document.getElementById('ss-var-fav-tab-btn').classList.add('active');
       const favs = loadVarFavorites();
-      
+
       const renderFavList = (filter = '') => {
         const filtered = favs.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()) || f.id.toString().includes(filter));
-        const listHtml = filtered.length 
+        const listHtml = filtered.length
           ? filtered.map((f, i) => `<div class="ss-hist-term" data-index="${favs.indexOf(f)}">${esc(f.name)} <span style="font-size:11px;color:var(--text4);margin-left:auto;">${f.id}</span></div>`).join('')
           : `<div class="ss-hist-term" style="opacity:0.5;cursor:default;">${filter ? 'No matches' : 'No favorites yet'}</div>`;
 
         favPanel.innerHTML = `
           <div class="ss-info-header">
             <div class="ss-info-title">Favorites</div>
-            <button class="ss-close" onclick="document.getElementById('ss-var-fav-tab-btn').click()">✕</button>
+            <button class="ss-close" onclick="document.getElementById('ss-var-fav-tab-btn').click()">${iX}</button>
           </div>
           <div class="ss-panel-search-wrapper">
             <input type="text" class="ss-panel-search-input" id="ss-var-fav-filter" placeholder="Filter variables..." value="${esc(filter)}">
@@ -1808,16 +1822,16 @@
             ${listHtml}
           </div>
         `;
-        
+
         const filterInput = favPanel.querySelector('#ss-var-fav-filter');
         filterInput.focus();
         filterInput.oninput = (e) => renderFavList(e.target.value);
-        
+
         favPanel.querySelectorAll('.ss-hist-term[data-index]').forEach(el => {
           el.addEventListener('click', async () => {
             const fav = favs[parseInt(el.dataset.index)];
             toggleFavPanel();
-            input.value = ''; 
+            input.value = '';
             loadEl.style.display = 'flex';
             listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;
             state.varViewingPresetId = null;
@@ -2044,7 +2058,7 @@
           const name = inp?.value.trim(); if (!name) return;
           const ps = loadVarPresets(pid);
           const existingIdx = ps.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-          
+
           if (existingIdx > -1) {
             if (!ps[existingIdx].ids.includes(def.id)) {
               ps[existingIdx].ids.push(def.id);
@@ -2072,13 +2086,13 @@
 
         if (action === 'fav') {
           const exists = state.varFavorites.findIndex(f => f.id == id);
-          if (exists > -1) { state.varFavorites.splice(exists, 1); } 
+          if (exists > -1) { state.varFavorites.splice(exists, 1); }
           else {
             if (state.varFavorites.length >= 100) {
               showNotice('Limit of 100 favorites reached');
               return;
             }
-            state.varFavorites.unshift({ id: def.id, name: def.name }); 
+            state.varFavorites.unshift({ id: def.id, name: def.name });
           }
           saveVarFavorites(state.varFavorites);
           renderVarList(listEl, showVarErr);
@@ -2153,10 +2167,10 @@
       if (labelEl) labelEl.textContent = 'Preference';
       const link = document.getElementById('ss-tab-external-link');
       if (link) link.style.display = 'none';
-      
+
       renderProjectSwitcherPanel();
       renderSettings();
-      
+
       // Auto-open project switcher
       setTimeout(() => {
         const p = document.getElementById('ss-project-switcher-panel');
@@ -2168,18 +2182,20 @@
       if (p) p.classList.remove('open');
       sb && (sb.style.display = 'flex'); bb && (bb.style.display = 'none');
       if (hb) hb.style.display = 'flex';
-      
+
       if (labelEl) {
         let label = 'Variables';
         if (state.activeTab === 'tags') label = 'Tags';
         if (state.activeTab === 'contacts') label = 'Contacts';
+        // if (state.activeTab === 'info') label = 'About';
         labelEl.textContent = label;
       }
 
       if (state.activeTab === 'tags') renderMain();
       else if (state.activeTab === 'contacts') renderContactsTab();
+      else if (state.activeTab === 'info') renderInfoTab();
       else renderVarsTab();
-      
+
       updateExternalLink(state.activeTab);
     }
   }
@@ -2211,7 +2227,7 @@
       let path = 'definitions';
       if (tab === 'tags') path = 'tags';
       if (tab === 'contacts') path = 'contacts';
-      
+
       link.href = `https://console.smartsender.com/${path}?project=${pid}`;
       link.style.opacity = '1';
       link.style.pointerEvents = 'auto';
@@ -2238,7 +2254,7 @@
               ${iMenu}
             </button>
             <div style="display:flex;align-items:center;">
-              <span id="ss-current-tab-label" style="font-size:28px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
+              <span id="ss-current-tab-label" style="font-size:24px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
               <a id="ss-tab-external-link" target="_blank" title="Open in SmartSender" style="display:none;color:var(--text4);margin-left:10px;text-decoration:none;transition:color 0.2s;">
                 ${iExternal.replace('width="16" height="16"', 'width="22" height="22"')}
               </a>
@@ -2246,7 +2262,7 @@
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="ss-icon-btn" id="ss-back-btn" title="Back to Tabs" style="display:none;">${iBack}</button>
-            <button class="ss-icon-btn" id="ss-settings-btn" title="Settings">${iGear.replace('width="12" height="12"', 'width="18" height="18"')}</button>
+            <button id="ss-settings-btn" title="Settings" style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;color:var(--text4);transition:color 0.2s;">${iGear.replace('width="24" height="24"', 'width="20" height="20"')}</button>
             <button class="ss-close" id="ss-close" title="Close Workspace">${iX}</button>
           </div>
         </div>
@@ -2267,18 +2283,18 @@
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
            <div style="display:flex;align-items:center;gap:8px;">
              <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
-             <div style="font-size:9px;color:var(--text5);font-family:'JetBrains Mono',monospace;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
+             <div style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
            </div>
            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
              <div id="ss-mode-toggle-container" style="display:flex;align-items:center;gap:6px;">
-                <span id="ss-mode-text" style="font-size:10px;font-weight:700;text-transform:uppercase;">AUTO</span>
+                <span id="ss-mode-text" style="font-size:11px;font-weight:700;text-transform:uppercase;">AUTO</span>
                 <label class="ss-mode-switch" id="ss-mode-switch-label" title="Toggle Auto/Manual Project Selection">
                   <input type="checkbox" id="ss-mode-checkbox">
                   <span class="ss-mode-slider"></span>
                 </label>
              </div>
              <div class="ss-project-badge" id="ss-project-container" style="margin:0;flex-shrink:0;cursor:pointer;"><span id="ss-project-display">—</span></div>
-             <div id="ss-api-status" style="display:none;font-size:10px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;cursor:pointer;" title="No API Key — Click to add">api key</div>
+             <div id="ss-api-status" style="display:none;font-size:11px;background:var(--error);color:white;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;cursor:pointer;" title="No API Key — Click to add">api key</div>
            </div>
         </div>
       </div>
@@ -2289,17 +2305,17 @@
   function renderProjectSwitcherPanel() {
     const p = document.getElementById('ss-project-switcher-panel'); if (!p) return;
     const presets = loadPresets();
-    
-    const listHtml = presets.length 
+
+    const listHtml = presets.length
       ? presets.map((pr, idx) => `
         <div class="ss-hist-term ${state.projectId === pr.projectId ? 'active' : ''}" style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding: 10px 14px;border-bottom:1px solid var(--border);">
           <div style="min-width:0;flex:1;cursor:pointer;" class="ss-project-select-trigger" data-pid="${pr.projectId}">
             <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${esc(pr.customName || pr.name)}</div>
-            ${pr.customName ? `<div style="font-size:10px;color:var(--text5);">${esc(pr.projectId)}</div>` : ''}
+            ${pr.customName ? `<div style="font-size:11px;color:var(--text5);">${esc(pr.projectId)}</div>` : ''}
           </div>
           <div style="display:flex;gap:4px;">
             <button class="ss-project-edit-btn" data-pid="${pr.projectId}" style="background:none;border:none;color:var(--text4);cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;transition:color 0.2s;" title="Edit Project">${iPen}</button>
-            <button class="ss-preset-delete" data-index="${idx}" style="background:none;border:none;color:var(--text5);cursor:pointer;font-size:18px;padding:4px;display:flex;align-items:center;justify-content:center;transition:color 0.2s;">✕</button>
+            <button class="ss-preset-delete" data-index="${idx}" style="background:none;border:none;color:var(--text5);cursor:pointer;font-size:18px;padding:4px;display:flex;align-items:center;justify-content:center;transition:color 0.2s;">${iX}</button>
           </div>
         </div>
       `).join('')
@@ -2308,7 +2324,7 @@
     p.innerHTML = `
       <div class="ss-info-header">
         <div class="ss-info-title">Switch Project</div>
-        <button class="ss-close" id="ss-project-switcher-close">✕</button>
+        <button class="ss-close" id="ss-project-switcher-close">${iX}</button>
       </div>
       <div class="ss-panel-list-content" style="flex:1;overflow-y:auto;">
         ${listHtml}
@@ -2379,7 +2395,7 @@
     const textEl = document.getElementById('ss-mode-text');
     const checkbox = document.getElementById('ss-mode-checkbox');
     const label = document.getElementById('ss-mode-switch-label');
-    
+
     if (!textEl || !checkbox || !label) return;
 
     const isAuto = state.projectMode === 'AUTO';
@@ -2410,15 +2426,15 @@
     const p = getPreset(id);
     state.activePreset = p;
     state.projectName = p ? (p.customName || p.name) : id;
-    
+
     saveToSession(K_SESSION_PROJECT, id);
     saveToStorage(K_LATEST_PROJECT_ID, id);
-    
+
     // Reset temporary results
     state.varResults = [];
     state.contactResults = [];
     state.contactSearchPerformed = false;
-    
+
     const lastTab = loadLastTab(id);
     switchTab(lastTab);
     renderHeader();
@@ -2437,7 +2453,7 @@
     const sessionPid = await loadFromSession(K_SESSION_PROJECT);
     const urlPid = getFullProjectFromUrl();
     const latestPid = loadFromCache(K_LATEST_PROJECT_ID, null);
-    
+
     let targetPid = null;
 
     if (isSmartsender()) {
@@ -2452,6 +2468,9 @@
 
     if (targetPid) {
       switchProject(targetPid);
+    } else {
+      // Initialize default UI if no project detected
+      switchTab(state.activeTab);
     }
 
     function refreshProjectContext() {
@@ -2536,10 +2555,10 @@
       extraPanels.forEach(pId => {
         const p = document.getElementById(pId);
         if (p && p.classList.contains('open') && !p.contains(e.target) && !e.target.closest('.ss-action-btn') && !e.target.closest('.ss-var-btn')) {
-            p.classList.remove('open');
-            if (pId === 'ss-contact-search-hist') state.contactShowSearchHist = false;
-            if (pId === 'ss-contact-fav-panel') state.contactShowFavorites = false;
-            if (pId === 'ss-contact-settings-panel') state.contactSettingsOpen = false;
+          p.classList.remove('open');
+          if (pId === 'ss-contact-search-hist') state.contactShowSearchHist = false;
+          if (pId === 'ss-contact-fav-panel') state.contactShowFavorites = false;
+          if (pId === 'ss-contact-settings-panel') state.contactSettingsOpen = false;
         }
       });
       // Close var edit if click outside any var card
@@ -2557,8 +2576,26 @@
   }
 
   const startApp = async () => {
-    __localCache = await chrome.storage.local.get(null);
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+    try {
+      __localCache = await chrome.storage.local.get(null);
+    } catch (e) {
+      console.warn('Storage access failed, using empty cache', e);
+      __localCache = {};
+    }
+
+    const runInit = () => {
+      if (document.body) {
+        init();
+      } else {
+        setTimeout(runInit, 50);
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+      runInit();
+    }
 
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === 'local') {

@@ -3,7 +3,11 @@ chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONT
 
 // Toggle sidebar on icon click
 chrome.action.onClicked.addListener(async (tab) => {
-  chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' });
+  if (!tab.id) return;
+  chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' }).catch(() => {
+    // Content script might not be loaded (e.g. on chrome:// pages or before reload)
+    console.log('Content script not detected on this page.');
+  });
 });
 
 // CORS-free API requests
