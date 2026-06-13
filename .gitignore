@@ -8,6 +8,7 @@
 .vscode/settings.json
 .vscode/tasks.json
 *.iml
+node_modules/
 build/
 out/
 logs/
