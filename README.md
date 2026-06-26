@@ -28,6 +28,9 @@ A premium Chrome extension designed to supercharge your `console.smartsender.com
 ---
 
 ## 🛠 Quick Start
-1.  Open `chrome://extensions/` and enable **Developer mode**.
-2.  Click **Load unpacked** and select this project folder.
-3.  Open the extension on any page and start managing your SmartSender projects.
+1.  Install dependencies and build: `npm install && npm run build`. This produces the loadable extension in the `dist/` folder.
+2.  Open `chrome://extensions/` and enable **Developer mode**.
+3.  Click **Load unpacked** and select the **`dist`** folder.
+4.  Open the extension on any page and start managing your SmartSender projects.
+
+> While developing, run `npm run dev` to rebuild `dist/` on every change, then hit **Reload** on the extension card.

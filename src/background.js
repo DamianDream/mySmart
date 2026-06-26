@@ -18,6 +18,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     return true;
   }
+  if (message.type === 'CHECK_FOR_UPDATES') {
+    if (chrome.runtime.requestUpdateCheck) {
+      chrome.runtime.requestUpdateCheck((status, details) => {
+        sendResponse({ status, version: details?.version });
+      });
+    } else {
+      sendResponse({ status: 'no_update', version: chrome.runtime.getManifest().version });
+    }
+    return true;
+  }
 });
 
 async function handleApiRequest({ url, method = 'GET', headers = {}, body = null }) {
@@ -51,3 +61,20 @@ async function handleApiRequest({ url, method = 'GET', headers = {}, body = null
     return { ok: false, error: err.message };
   }
 }
+
+// 1. Update is downloaded and waiting to be applied
+chrome.runtime.onUpdateAvailable.addListener((details) => {
+  console.log(`New version downloaded: ${details.version}`);
+  chrome.storage.local.set({ 
+    updatePending: true,
+    newVersion: details.version 
+  });
+});
+
+// 2. Extension was installed or updated
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'update') {
+    console.log(`Successfully updated from version ${details.previousVersion}`);
+    chrome.storage.local.remove(['updatePending', 'newVersion']);
+  }
+});

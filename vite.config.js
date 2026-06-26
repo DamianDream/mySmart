@@ -22,8 +22,9 @@ export default defineConfig({
     copy({
       targets: [
         { src: 'src/manifest.json', dest: 'dist' },
-        { src: 'src/icon.png', dest: 'dist' },
-        { src: 'src/sidebar.css', dest: 'dist' }
+        { src: 'src/icons', dest: 'dist' },
+        { src: 'src/sidebar.css', dest: 'dist' },
+        { src: 'src/interceptor.js', dest: 'dist' }
       ],
       hook: 'writeBundle'
     })

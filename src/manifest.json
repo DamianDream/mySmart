@@ -1,34 +1,40 @@
 {
   "manifest_version": 3,
   "name": "mySender Tools",
-  "version": "0.3",
+  "version": "0.3.0",
   "description": "SmartSender Tools Manager",
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": [
-    "https://*/*",
-    "http://*/*"
+    "*://*.smartsender.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
     },
     "default_title": "mySender Tools"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["*://*.smartsender.com/*"],
+      "js": ["interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["*://*.smartsender.com/*"],
       "js": ["content.js"],
+      "css": ["sidebar.css"],
       "run_at": "document_end"
     }
   ],
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   }
 }
