@@ -51,7 +51,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           ? `<button class="ss-btn" id="ss-btn-apply-update" style="width:100%;height:40px;border-radius:8px;background:var(--error);color:white;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;">
                ${iconRefresh} Restart to Update
              </button>`
-          : `<button class="ss-btn" id="ss-btn-check-update" style="width:100%;height:40px;border-radius:8px;background:#1a8cff;color:white;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;">
+          : `<button class="ss-btn" id="ss-btn-check-update" style="width:100%;height:40px;border-radius:8px;background:var(--accent);color:var(--accent-text);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;">
                ${iconRefresh} Check for Updates
              </button>`
         }
@@ -100,7 +100,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           <textarea id="ss-feedback-desc" class="ss-input" rows="4" placeholder="Describe your problem or idea in detail..." style="resize:vertical;"></textarea>
         </div>
         <div id="ss-feedback-msg" style="display:none;font-size:13px;padding:8px;border-radius:4px;margin-top:4px;"></div>
-        <button id="ss-feedback-submit" class="ss-btn-search" style="justify-content:center;margin-top:4px;padding:10px;color:#fff;">Send Feedback</button>
+        <button id="ss-feedback-submit" class="ss-btn-search" style="justify-content:center;margin-top:4px;padding:10px;color:var(--accent-text);">Send Feedback</button>
       </div>
 
       <div id="ss-feedback-success-container" style="display:none; background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:32px 16px; flex-direction:column; align-items:center; gap:12px; text-align:center;">
@@ -224,7 +224,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
           <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" style="width:100%;box-sizing:border-box;" />
           <div style="display:flex;gap:8px;align-items:center;">
-            <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:#fff;">Search</button>
+            <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:var(--accent-text);">Search</button>
             <button class="ss-btn-search" id="ss-contact-reset-btn" title="Reset Search" style="width:auto;padding:8px 12px;justify-content:center;background:var(--bg3);color:var(--text2);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
           </div>
         </div>
@@ -238,7 +238,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
     checkActiveContactUrl();
   }
 
-  async function checkActiveContactUrl() {
+  export async function checkActiveContactUrl() {
     const urlId = getUrlContactId();
     if (urlId) {
       if (!state.activeUrlContact || state.activeUrlContact.id != urlId) {
@@ -557,7 +557,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           ${thumb}
           <div style="min-width:0;flex:1;">
             <div style="font-weight:700;color:var(--text);font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.fullName || 'Unnamed')}</div>
-            <div style="font-size:13px;color:var(--text4);">ID: <span style="color:var(--success);font-weight:600;">${c.id}</span></div>
+            <div style="font-size:13px;color:var(--text4);">ID: <span style="color:var(--accent);font-weight:600;">${c.id}</span></div>
           </div>
           <div style="display:flex;gap:4px;align-items:center;">
             <button class="ss-var-btn ss-fav-btn" data-id="${c.id}" title="${state.contactFavorites.some(f => f.id == c.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.contactFavorites.some(f => f.id == c.id) ? 'var(--accent)' : 'var(--text4)'};">

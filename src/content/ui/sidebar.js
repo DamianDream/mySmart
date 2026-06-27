@@ -7,6 +7,7 @@ import { renderSettings, renderProjectSwitcherPanel } from './settings.js';
 import { renderVarsTab, closeAllExtraPanels } from '../tabs/vars.js';
 import { renderTagsTab } from '../tabs/tags.js';
 import { renderContactsTab, renderInfoTab } from '../tabs/info.js';
+import { renderLogsTab } from '../tabs/logs.js';
 
 // ─── HEADER ───────────────────────────────────────────────────────────────
 export function renderHeader() {
@@ -14,7 +15,7 @@ export function renderHeader() {
   const status = shadowRootRef.getElementById('ss-api-status');
   if (state.projectId) {
     const name = state.projectName || '—';
-    if (disp) disp.innerHTML = `<span style="color:var(--text4);font-size:13px;">Project:</span> <span style="color:var(--success);font-weight:700;font-size:13px;">${name}</span>`;
+    if (disp) disp.innerHTML = `<span style="color:var(--text4);font-size:13px;">Project:</span> <span style="color:var(--accent);font-weight:700;font-size:13px;">${name}</span>`;
     if (status) {
       const hasToken = getPreset(state.projectId)?.apiToken;
       status.style.display = hasToken ? 'none' : 'block';
@@ -46,6 +47,14 @@ export function renderNav() {
       <span class="ss-nav-icon">${iUsers}</span>
       <span>Contacts</span>
     </button>
+    <button class="ss-nav-item ${state.activeTab === 'log' ? 'active' : ''}" data-tab="log">
+      <span class="ss-nav-icon">${iLog}</span>
+      <span>Action Logs</span>
+    </button>
+    <button class="ss-nav-item ${state.activeTab === 'info' ? 'active' : ''}" data-tab="info">
+      <span class="ss-nav-icon">${iInfo}</span>
+      <span>About</span>
+    </button>
 
     <div class="ss-divider" style="margin: 8px 0;"></div>
     <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Coming Soon</div>
@@ -63,16 +72,6 @@ export function renderNav() {
     <div class="ss-nav-item disabled">
       <span class="ss-nav-icon">${iMonitor}</span>
       <span>Monitoring</span>
-      <span class="ss-nav-soon">Soon</span>
-    </div>
-    <div class="ss-nav-item disabled">
-      <span class="ss-nav-icon">${iLog}</span>
-      <span>Log</span>
-      <span class="ss-nav-soon">Soon</span>
-    </div>
-    <div class="ss-nav-item disabled">
-      <span class="ss-nav-icon">${iInfo}</span>
-      <span>About</span>
       <span class="ss-nav-soon">Soon</span>
     </div>
   `;
@@ -121,12 +120,15 @@ export function switchView(view) {
       let label = 'Variables';
       if (state.activeTab === 'tags') label = 'Tags';
       if (state.activeTab === 'contacts') label = 'Contacts';
+      if (state.activeTab === 'log') label = 'Action Logs';
+      if (state.activeTab === 'info') label = 'About';
       labelEl.textContent = label;
     }
 
     if (state.activeTab === 'tags') renderTagsTab();
     else if (state.activeTab === 'contacts') renderContactsTab();
     else if (state.activeTab === 'info') renderInfoTab();
+    else if (state.activeTab === 'log') renderLogsTab();
     else renderVarsTab();
 
     updateExternalLink(state.activeTab);
@@ -139,18 +141,24 @@ export function switchTab(tab) {
   let label = 'Variables';
   if (tab === 'tags') label = 'Tags';
   if (tab === 'contacts') label = 'Contacts';
+  if (tab === 'log') label = 'Action Logs';
+  if (tab === 'info') label = 'About';
   const labelEl = shadowRootRef.getElementById('ss-current-tab-label');
   if (labelEl) labelEl.textContent = label;
   renderNav();
   updateExternalLink(tab);
   if (tab === 'tags') renderTagsTab();
   else if (tab === 'contacts') renderContactsTab();
+  else if (tab === 'log') renderLogsTab();
+  else if (tab === 'info') renderInfoTab();
   else renderVarsTab();
 }
 
 export function updateExternalLink(tab) {
   const link = shadowRootRef.getElementById('ss-tab-external-link');
   if (!link) return;
+
+  if (tab === 'log' || tab === 'info') { link.style.display = 'none'; return; }
 
   const pid = state.projectId;
   const isActive = isSmartsender() && pid;
@@ -248,7 +256,7 @@ export const toggleSidePanel = (id) => {
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
            <div style="display:flex;align-items:center;gap:8px;">
              <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
-             <div style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
+             <div id="ss-footer-version" style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
            </div>
            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
              <div id="ss-mode-toggle-container" style="display:flex;align-items:center;gap:6px;">

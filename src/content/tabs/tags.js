@@ -27,7 +27,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
           <input class="ss-input" id="ss-tag-input" type="text" placeholder="tag name" autocomplete="off" style="width:100%;box-sizing:border-box;" />
           <div style="display:flex;gap:8px;align-items:center;">
-            <button class="ss-btn-search" id="ss-btn-search" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:#fff;">Search</button>
+            <button class="ss-btn-search" id="ss-btn-search" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:var(--accent-text);">Search</button>
             <button class="ss-btn-search" id="ss-btn-tag-reset" title="Reset Search" style="width:auto;padding:8px 12px;justify-content:center;background:var(--bg3);color:var(--text2);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
           </div>
         </div>
@@ -61,7 +61,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
             <div class="ss-var-name" style="display:flex;align-items:center;">
               ${esc(tag.name)}
             </div>
-            <div class="ss-var-value-preview" style="font-size:11px;color:var(--text5);">ID: ${tag.id}</div>
+            <div class="ss-var-value-preview" style="font-size:11px;color:var(--text5);">ID: <span style="color:var(--accent);font-weight:600;">${tag.id}</span></div>
           </div>
           <div class="ss-var-actions">
             <button class="ss-var-btn ss-fav-tag-btn" data-id="${tag.id}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}" style="color:${isFav ? 'var(--accent)' : 'var(--border2)'};">
@@ -163,7 +163,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           <div class="ss-hist-term" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--border);">
             <div style="min-width:0;flex:1;">
               <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${esc(f.name)}</div>
-              <div style="font-size:11px;color:var(--text5);">ID: ${f.id}</div>
+              <div style="font-size:11px;color:var(--text5);">ID: <span style="color:var(--accent);font-weight:600;">${f.id}</span></div>
             </div>
             <div style="display:flex;gap:4px;">
                <button class="ss-var-btn ss-fav-tag-copy" data-id="${f.id}" title="Copy ID">${iCopy}</button>

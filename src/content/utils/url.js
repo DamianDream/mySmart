@@ -29,7 +29,7 @@ export const getUrlContactId = () => {
       if (/^\d+$/.test(maybeId)) return maybeId;
     }
   }
-  return url.searchParams.get('contactId') || url.searchParams.get('contact_id') || null;
+  return url.searchParams.get('selectedContactId') || url.searchParams.get('contactId') || url.searchParams.get('contact_id') || null;
 };
 
 export const getFullProjectFromUrl = () => {

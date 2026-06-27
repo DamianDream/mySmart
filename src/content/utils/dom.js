@@ -13,44 +13,31 @@ export function debounce(func, wait) {
 
 export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+// Toasts are shown for errors only — info/success calls are ignored.
+// Plain text, no icons; styling lives in .ss-toast (sidebar.css).
 export const showNotice = (msg, type = 'error') => {
-  if (!shadowRootRef) return;
-  
+  if (type !== 'error' || !shadowRootRef) return;
+
   let container = shadowRootRef.getElementById('ss-toast-container');
   if (!container) {
     container = document.createElement('div');
     container.id = 'ss-toast-container';
     shadowRootRef.appendChild(container);
   }
+
   const toast = document.createElement('div');
   toast.className = 'ss-toast';
-  toast.style.background = type === 'error' ? 'var(--error, #ef4444)' : 'var(--success, #10b981)';
-  
-  if (type === 'info') toast.style.background = 'var(--accent, #3b82f6)';
-  
-  toast.innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span>${type === 'error' ? '⚠️' : (type === 'info' ? 'ℹ️' : '✅')}</span>
-      <span>${esc(msg)}</span>
-    </div>
-    <div class="ss-toast-progress" style="animation-duration: 3s;"></div>
-  `;
-  
+  toast.textContent = msg;
   container.appendChild(toast);
-  void toast.offsetWidth; // Force reflow
+  void toast.offsetWidth; // force reflow so the transition runs
   toast.classList.add('visible');
-  
-  toast.onclick = () => {
+
+  const dismiss = () => {
     toast.classList.remove('visible');
     setTimeout(() => toast.remove(), 300);
   };
-
-  setTimeout(() => {
-    if (toast.parentNode) {
-      toast.classList.remove('visible');
-      setTimeout(() => toast.remove(), 300);
-    }
-  }, 3000);
+  toast.onclick = dismiss;
+  setTimeout(() => { if (toast.parentNode) dismiss(); }, 3000);
 };
 
 export const copyToClipboard = (text, actionName = 'Copy Data', detailText = '') => {

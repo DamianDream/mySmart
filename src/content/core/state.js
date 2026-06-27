@@ -80,5 +80,7 @@ export function initState() {
   state.varFavorites = loadVarFavorites();
   state.tagFavorites = loadTagFavorites();
   state.latestVersion = loadFromCache('ss_latest_version', null);
+  state.updatePending = loadFromCache('updatePending', false) === true;
+  state.newVersion = loadFromCache('newVersion', null);
   state.theme = loadTheme();
 }

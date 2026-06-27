@@ -16,6 +16,23 @@ export const updateVersionDisplay = () => {
   }
 };
 
+// Background flags a pending update via chrome.storage.local (updatePending / newVersion).
+// React live so the footer badge appears even if the sidebar is already open.
+export const initUpdateWatcher = () => {
+  try {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local') return;
+      if (!('updatePending' in changes) && !('newVersion' in changes)) return;
+      if ('updatePending' in changes) state.updatePending = changes.updatePending.newValue === true;
+      if ('newVersion' in changes) state.newVersion = changes.newVersion.newValue || null;
+      updateVersionDisplay();
+      updateListeners.forEach(fn => fn());
+    });
+  } catch (err) {
+    console.log('Update watcher init failed:', err);
+  }
+};
+
 export const checkForUpdates = (force = false) => {
   const lastCheckMs = loadFromCache('ss_last_update_check', 0);
   const now = Date.now();

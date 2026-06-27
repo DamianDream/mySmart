@@ -28,6 +28,7 @@
   --accent:      #0a84ff;
   --accent2:     #5e5ce6;
   --accent-bg:   rgba(10, 132, 255, 0.15);
+  --accent-text: #fff;
 
   /* ─── Status colors ─── */
   --success-rgb: 48, 209, 88;
@@ -111,7 +112,7 @@
   right: 0;
 }
 
-/* ─── NOTICE / TOAST ───────────────────────────────────── */
+/* ─── NOTICE / TOAST (errors only) ─────────────────────── */
 #ss-toast-container {
   position: fixed;
   bottom: 24px;
@@ -124,17 +125,19 @@
 }
 
 .ss-toast {
-  position: relative;
-  overflow: hidden;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-family: var(--font-main);
-  font-weight: 500;
-  font-size: 14px;
-  background: #ffffff !important;
-  color: #111111 !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
   pointer-events: auto;
+  cursor: pointer;
+  max-width: 320px;
+  padding: 10px 14px;
+  border-radius: 11px;
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  background: var(--bg-solid);
+  border: 1px solid rgba(var(--error-rgb), 0.4);
+  color: var(--error);
+  box-shadow: 0 4px 16px var(--shadow);
   opacity: 0;
   transform: translateX(100%);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -169,7 +172,7 @@
 
 .ss-panel-search-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.4);
 }
 
 /* ─── RESIZE ───────────────────────────────────────────── */
@@ -801,7 +804,7 @@
 
 .ss-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.4);
 }
 
 .ss-search-row {
@@ -820,7 +823,7 @@
   border: none;
   border-radius: 8px;
   padding: 8px 14px;
-  color: #fff;
+  color: var(--accent-text);
   font-family: var(--font-main);
   font-size: var(--font-size-base);
   font-weight: 600;
@@ -850,7 +853,7 @@
   background: var(--accent);
   border: none;
   border-radius: 11px;
-  color: #fff;
+  color: var(--accent-text);
   font-family: var(--font-main);
   font-size: 15px;
   font-weight: 700;
@@ -1211,7 +1214,7 @@
 .ss-var-value-preview {
   font-family: var(--font-main);
   font-size: var(--font-size-xs);
-  color: var(--success);
+  color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1221,7 +1224,7 @@
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
-  color: var(--success);
+  color: var(--accent);
   word-break: break-all;
 }
 
@@ -1264,7 +1267,7 @@
 
 .ss-var-btn-done:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-text);
 }
 
 .ss-var-btn-reset:hover {
@@ -1658,7 +1661,7 @@
 
 .ss-action-btn.active {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-text);
 }
 
 
@@ -1830,7 +1833,7 @@ input:checked+.ss-slider:before {
 }
 
 input:checked + .ss-mode-slider {
-  background-color: var(--success);
+  background-color: var(--accent);
 }
 
 input:checked + .ss-mode-slider:before {
@@ -2002,7 +2005,7 @@ input:checked + .ss-mode-slider:before {
 
 .ss-var-pill.active {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-text);
   border-color: var(--accent);
 }
 
@@ -2020,9 +2023,66 @@ input:checked + .ss-mode-slider:before {
 
 .ss-var-pill-action:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-text);
   border-color: var(--accent);
 }
+
+/* ─── Info tooltip ("i" badge with hover description) ─── */
+.ss-info-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--text5);
+  color: var(--text4);
+  font-size: 9px;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  cursor: help;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.ss-info-tip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.ss-info-tip-box {
+  position: absolute;
+  top: calc(100% + 8px);
+  width: 190px;
+  background: var(--bg-solid);
+  color: var(--text3);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.45;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  box-shadow: 0 8px 24px var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+  z-index: 200;
+  pointer-events: none;
+}
+.ss-info-tip:hover .ss-info-tip-box {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.ss-info-tip-box.is-left { left: -6px; }
+.ss-info-tip-box.is-center { left: 50%; margin-left: -95px; }
+.ss-info-tip-box.is-right { right: -6px; }
 
 /* Reset SVGs for aggressive cross-site isolation */
 #ss-sidebar svg {

@@ -53,7 +53,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
           <input class="ss-input" id="ss-var-input" type="text" placeholder="name1, name2, name3" autocomplete="off" style="width:100%;box-sizing:border-box;" />
           <div style="display:flex;gap:8px;align-items:center;">
-            <button class="ss-btn-search" id="ss-var-btn" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:#fff;">Search</button>
+            <button class="ss-btn-search" id="ss-var-btn" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:var(--accent-text);">Search</button>
             <button class="ss-btn-search" id="ss-var-reset-btn" title="Reset Search" style="width:auto;padding:8px 12px;justify-content:center;background:var(--bg3);color:var(--text2);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
           </div>
         </div>

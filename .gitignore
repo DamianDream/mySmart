@@ -8,10 +8,14 @@
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+cloudflare/
+extension-feedback-api.js
 *.iml
 node_modules/
 build/
+ui_example/
 out/
+dist/
 logs/
 *.log
 *.class

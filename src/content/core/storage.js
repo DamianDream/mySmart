@@ -144,3 +144,66 @@ export const saveVarFavorites = (f) => saveToStorage(K_VAR_FAVORITES, f.slice(0,
 
 export const loadLogs = () => loadFromCache(K_ACTION_LOGS, []);
 export const saveLogs = (logs) => saveToStorage(K_ACTION_LOGS, logs);
+
+// ─── PROFILE PRESET (export / import) ──────────────────────────────────────
+// A preset carries the working profile only: connected projects + API keys,
+// extension settings, favorites and global settings. It deliberately excludes
+// logs, search history and request/value history.
+const PRESET_EXACT_KEYS = [
+  K_PRESETS,             // projects + API keys
+  K_GLOBAL_SETTINGS,     // global settings (accent, cache, autofetch…)
+  K_THEME,               // appearance
+  K_CONTACT_SETTINGS,    // contact display settings
+  K_SIDEBAR_WIDTH,       // layout
+  K_CONTACT_FAVORITES,   // favorites
+  K_TAG_FAVORITES,
+  K_VAR_FAVORITES,
+];
+const PRESET_KEY_PREFIXES = [
+  'ms_var_presets_',          // saved variable presets per project
+  'ss_contact_priority_vars_', // contact priority vars per project
+];
+
+export function isPresetKey(key) {
+  return PRESET_EXACT_KEYS.includes(key) || PRESET_KEY_PREFIXES.some(p => key.startsWith(p));
+}
+
+// Build the data map for an exported preset (installId stripped so the import
+// does not clone one machine's identity onto another).
+export function buildPresetExport() {
+  const data = {};
+  for (const [key, val] of Object.entries(__localCache)) {
+    if (!isPresetKey(key)) continue;
+    if (key === K_GLOBAL_SETTINGS) {
+      let gs = val;
+      try { gs = typeof val === 'string' ? JSON.parse(val) : val; } catch { /* keep raw */ }
+      if (gs && typeof gs === 'object') {
+        const { installId, ...rest } = gs;
+        data[key] = JSON.stringify(rest);
+        continue;
+      }
+    }
+    data[key] = val;
+  }
+  return data;
+}
+
+// Turn an imported data map into the keys to persist. Only preset keys are kept
+// (so importing an older full backup never restores logs/history), and the local
+// installId is preserved across the merge of global settings.
+export function applyPresetImport(incoming) {
+  const localGs = loadGlobalSettings();
+  const toSave = {};
+  for (const [key, val] of Object.entries(incoming || {})) {
+    if (!isPresetKey(key)) continue;
+    let value = val;
+    if (key === K_GLOBAL_SETTINGS) {
+      let gs = val;
+      try { gs = typeof val === 'string' ? JSON.parse(val) : val; } catch { /* keep raw */ }
+      if (gs && typeof gs === 'object') value = JSON.stringify({ ...gs, installId: localGs.installId });
+    }
+    toSave[key] = value;
+    __localCache[key] = value;
+  }
+  return toSave;
+}

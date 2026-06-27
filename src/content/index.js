@@ -1,3 +1,4 @@
+/* global history */
 import styles from '../sidebar.css?inline';
 import { setShadowRoot } from './utils/dom.js';
 import {
@@ -23,7 +24,8 @@ import { updateModeUI, renderProjectSwitcherPanel } from './ui/settings.js';
 import { switchProject, setProjectMode } from './models/project.js';
 import { closeAllExtraPanels } from './tabs/vars.js';
 import { getProjectFromUrl, getFullProjectFromUrl, isSmartsender } from './utils/url.js';
-import { checkForUpdates, updateVersionDisplay } from './core/updater.js';
+import { checkForUpdates, updateVersionDisplay, initUpdateWatcher } from './core/updater.js';
+import { checkActiveContactUrl } from './tabs/info.js';
 
 export * from './tabs/vars.js';
 export * from './tabs/tags.js';
@@ -81,6 +83,26 @@ async function init() {
       switchProject(pid);
     }
   }
+
+  // ─── SPA navigation watcher ───────────────────────────────────────────
+  // SmartSender changes the URL via the History API without a full reload,
+  // so patch pushState/replaceState and listen to popstate to react live.
+  let lastUrl = location.href;
+  const onUrlChange = () => {
+    if (location.href === lastUrl) return;
+    lastUrl = location.href;
+    refreshProjectContext();
+    checkActiveContactUrl();
+  };
+  ['pushState', 'replaceState'].forEach((m) => {
+    const orig = history[m];
+    history[m] = function (...args) {
+      const ret = orig.apply(this, args);
+      onUrlChange();
+      return ret;
+    };
+  });
+  window.addEventListener('popstate', onUrlChange);
 
   listenForTokens();
 
@@ -161,6 +183,26 @@ async function init() {
     toggleSidePanel('ss-nav');
   });
 
+  // ─── Close (×) buttons inside extra panels (delegated) ────────────────
+  const panelStateReset = {
+    'ss-contact-search-hist': () => { state.contactShowSearchHist = false; },
+    'ss-contact-fav-panel': () => { state.contactShowFavorites = false; },
+    'ss-contact-settings-panel': () => { state.contactSettingsOpen = false; },
+    'ss-info-panel': () => { state.contactInfoOpen = false; },
+    'ss-var-search-hist': () => { state.varShowSearchHist = false; },
+    'ss-var-presets-panel': () => { state.varPresetsOpen = false; }
+  };
+  shadowRoot.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('.ss-close-extra-panel');
+    if (!closeBtn) return;
+    const panel = closeBtn.closest('.ss-info-panel, .ss-extra-panel');
+    if (!panel) return;
+    e.stopPropagation();
+    panel.classList.remove('open');
+    panelStateReset[panel.id]?.();
+    shadowRoot.querySelectorAll('.ss-action-btn, .ss-var-btn').forEach(b => b.classList.remove('active'));
+  });
+
   // ─── Outside-click handling (scoped to shadow root) ───────────────────
   shadowRoot.addEventListener('click', (e) => {
     const nav = shadowRoot.getElementById('ss-nav');
@@ -185,6 +227,7 @@ async function init() {
     });
   });
 
+  initUpdateWatcher();
   checkForUpdates();
 }
 
