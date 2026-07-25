@@ -1,17 +1,50 @@
-// Set session storage access level for content scripts
+// Allow extension pages (side panel, pop-up) to read session storage.
 chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' }).catch(() => {});
 
-// Toggle sidebar on icon click
-chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.id) return;
-  chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_SIDEBAR' }).catch(() => {
-    // Content script might not be loaded (e.g. on chrome:// pages or before reload)
-    console.log('Content script not detected on this page.');
+// Clicking the toolbar icon opens the native Chrome side panel.
+chrome.sidePanel?.setPanelBehavior?.({ openPanelOnActionClick: true }).catch(() => {});
+
+// ─── Contact pop-up window ────────────────────────────────────────────────
+const POPUP_QUEUE = 'ss_popup_queue';
+const POPUP_WIN = 'ss_popup_window_id';
+
+async function openContactPopup(req) {
+  // Queue the requested contact; the pop-up drains the queue on load and on ping.
+  const got = await chrome.storage.session.get([POPUP_QUEUE, POPUP_WIN]);
+  const queue = got[POPUP_QUEUE] || [];
+  queue.push(req);
+  await chrome.storage.session.set({ [POPUP_QUEUE]: queue });
+
+  let winId = got[POPUP_WIN];
+  if (winId != null) {
+    try {
+      await chrome.windows.get(winId);
+      await chrome.windows.update(winId, { focused: true });
+      chrome.runtime.sendMessage({ type: 'SS_POPUP_DRAIN' }).catch(() => {});
+      return;
+    } catch { winId = null; }
+  }
+
+  const win = await chrome.windows.create({
+    url: chrome.runtime.getURL('contact-popup.html'),
+    type: 'popup',
+    width: 460,
+    height: 720
   });
+  await chrome.storage.session.set({ [POPUP_WIN]: win.id });
+}
+
+chrome.windows.onRemoved.addListener(async (windowId) => {
+  const got = await chrome.storage.session.get(POPUP_WIN);
+  if (got[POPUP_WIN] === windowId) await chrome.storage.session.remove(POPUP_WIN);
 });
 
 // CORS-free API requests
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'OPEN_CONTACT_POPUP') {
+    openContactPopup({ contactId: message.contactId, projectSlug: message.projectSlug });
+    return;
+  }
   if (message.type === 'API_REQUEST') {
     handleApiRequest(message).then(sendResponse).catch(err => {
       sendResponse({ ok: false, error: err.message });

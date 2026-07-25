@@ -1,12 +1,15 @@
 /* global URL */
-export const getXsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
-export const getXsrfCookie = () => decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
+// URL source. Content scripts read the page's own location; the side panel
+// overrides this with the active tab's URL via setUrlSource().
+let _href = () => location.href;
+export const setUrlSource = (fn) => { _href = fn; };
+const curUrl = () => new URL(_href());
 
 export const getProjectFromUrl = () => {
-  const url = new URL(location.href);
+  const url = curUrl();
   const path = url.pathname.toLowerCase();
-  
+
   if (path.includes('/project/')) {
     const parts = path.split('/');
     const pidx = parts.indexOf('project');
@@ -18,9 +21,9 @@ export const getProjectFromUrl = () => {
 };
 
 export const getUrlContactId = () => {
-  const url = new URL(location.href);
+  const url = curUrl();
   const path = url.pathname.toLowerCase();
-  
+
   if (path.includes('/contacts/')) {
     const parts = path.split('/');
     const pidx = parts.indexOf('contacts');
@@ -35,12 +38,14 @@ export const getUrlContactId = () => {
 export const getFullProjectFromUrl = () => {
   const pid = getProjectFromUrl();
   if (pid) return pid;
-  
-  const m = location.pathname.match(/^\/([^/]+)/);
+
+  const m = curUrl().pathname.match(/^\/([^/]+)/);
   if (m && m[1] && m[1] !== 'home' && m[1] !== 'dashboard' && m[1] !== 'projects') {
     return m[1];
   }
   return null;
 };
 
-export const isSmartsender = () => location.hostname.endsWith('smartsender.com');
+export const isSmartsender = () => {
+  try { return curUrl().hostname.endsWith('smartsender.com'); } catch { return false; }
+};

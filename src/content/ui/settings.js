@@ -291,12 +291,9 @@ const infoTip = (text, pos = 'center') =>
     p.querySelectorAll('.ss-project-select-trigger').forEach(el => {
       el.onclick = () => {
         setProjectMode('MANUAL');
+        // Collapse the panel and show the selected project's content (same as Presets).
+        p.classList.remove('open');
         switchProject(el.dataset.pid);
-        if (state.view !== 'settings') {
-          toggleSidePanel('ss-project-switcher-panel');
-        } else {
-          renderProjectSwitcherPanel(); // Update active state highlight
-        }
       };
     });
 

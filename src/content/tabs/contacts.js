@@ -35,12 +35,12 @@ import { closeAllExtraPanels } from './vars.js';
     return results;
   }
 
-  async function fetchContactInfo(id) {
+  export async function fetchContactInfo(id) {
     const h = authHeaders(); if (!h) throw new Error('No API token.');
     return bgFetch(`https://api.smartsender.com/v1/contacts/${id}/info`, 'GET', h);
   }
 
-  async function updateContactVar(contactId, key, value) {
+  export async function updateContactVar(contactId, key, value) {
     const h = authHeaders(); if (!h) throw new Error('No API token.');
     return bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}`, 'PUT', h, {
       values: { [key]: value }

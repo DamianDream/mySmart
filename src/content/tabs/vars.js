@@ -6,7 +6,7 @@ import { showNotice, copyToClipboard, esc, shadowRootRef, debounce } from '../ut
 import { logAction, clearLogs } from '../core/logger.js';
 import { bgFetch } from '../core/api.js';
 import { checkForUpdates } from '../core/updater.js';
-import { countContacts, searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags, verifyDefinition } from '../models/smartsender.js';
+import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags, verifyDefinition } from '../models/smartsender.js';
 import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear, iPlus } from '../icons.js';
 /* global Event */
 
@@ -304,6 +304,10 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
             const pi = parseInt(b.dataset.loadPi);
             const ps = loadVarPresets(pid);
             const preset = ps[pi]; if (!preset) return;
+            // Collapse the presets panel and show results immediately (same as History)
+            state.varPresetsOpen = false;
+            presetsPanel.classList.remove('open');
+            shadowRootRef.getElementById('ss-var-preset-btn')?.classList.remove('active');
             state.varPresetConfigPanelId = null;
             btn.disabled = true; btn.textContent = '...'; loadEl.style.display = 'flex';
             listEl.innerHTML = ''; state.varResults = []; state.varEditingId = null; state.varShowHistoryId = null;

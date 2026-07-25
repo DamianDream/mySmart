@@ -1,4 +1,4 @@
-import { iMenu, iBack, iX, iVariable, iTag, iUsers, iLog, iInfo, iExternal, iGear, iFunnel, iChat, iMonitor } from '../icons.js';
+import { iMenu, iX, iVariable, iTag, iUsers, iLog, iInfo, iExternal, iGear, iFunnel, iChat, iMonitor } from '../icons.js';
 import { shadowRootRef } from '../utils/dom.js';
 import { state } from '../core/state.js';
 import { getPreset, saveLastTab } from '../core/storage.js';
@@ -35,25 +35,29 @@ export function renderNav() {
       <button class="ss-close" id="ss-nav-close">${iX}</button>
     </div>
     <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Menu</div>
-    <button class="ss-nav-item ${state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
       <span class="ss-nav-icon">${iVariable}</span>
       <span>Variables</span>
     </button>
-    <button class="ss-nav-item ${state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags">
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'tags' ? 'active' : ''}" data-tab="tags">
       <span class="ss-nav-icon">${iTag}</span>
       <span>Tags</span>
     </button>
-    <button class="ss-nav-item ${state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts">
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts">
       <span class="ss-nav-icon">${iUsers}</span>
       <span>Contacts</span>
     </button>
-    <button class="ss-nav-item ${state.activeTab === 'log' ? 'active' : ''}" data-tab="log">
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'log' ? 'active' : ''}" data-tab="log">
       <span class="ss-nav-icon">${iLog}</span>
       <span>Action Logs</span>
     </button>
-    <button class="ss-nav-item ${state.activeTab === 'info' ? 'active' : ''}" data-tab="info">
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'info' ? 'active' : ''}" data-tab="info">
       <span class="ss-nav-icon">${iInfo}</span>
       <span>About</span>
+    </button>
+    <button class="ss-nav-item ${state.view === 'settings' ? 'active' : ''}" data-view="settings">
+      <span class="ss-nav-icon">${iGear}</span>
+      <span>Preference</span>
     </button>
 
     <div class="ss-divider" style="margin: 8px 0;"></div>
@@ -79,7 +83,8 @@ export function renderNav() {
     btn.addEventListener('click', () => {
       state.navOpen = false;
       nav.classList.remove('open');
-      switchTab(btn.dataset.tab);
+      if (btn.dataset.view === 'settings') switchView('settings');
+      else switchTab(btn.dataset.tab);
     });
   });
 
@@ -104,12 +109,6 @@ export function switchView(view) {
 
     renderProjectSwitcherPanel();
     renderSettings();
-
-    // Auto-open project switcher
-    setTimeout(() => {
-      const p = shadowRootRef.getElementById('ss-project-switcher-panel');
-      if (p) p.classList.add('open');
-    }, 0);
   } else {
     // Close project switcher when leaving settings
     const p = shadowRootRef.getElementById('ss-project-switcher-panel');
@@ -218,8 +217,6 @@ export const toggleSidePanel = (id) => {
   export function buildSidebar() {
     const s = document.createElement('div'); s.id = 'ss-sidebar';
     s.innerHTML = `
-      <div id="ss-resize-handle"></div>
-      <div id="ss-extra-resize-handle"></div>
       <div class="ss-header">
         <div class="ss-header-top" style="align-items:center;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:12px;">
@@ -232,11 +229,6 @@ export const toggleSidePanel = (id) => {
                 ${iExternal.replace('width="16" height="16"', 'width="22" height="22"')}
               </a>
             </div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button class="ss-icon-btn" id="ss-back-btn" title="Back to Tabs" style="display:none;">${iBack}</button>
-            <button id="ss-settings-btn" title="Settings" style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;color:var(--text4);transition:color 0.2s;">${iGear.replace('width="24" height="24"', 'width="20" height="20"')}</button>
-            <button class="ss-close" id="ss-close" title="Close Workspace">${iX}</button>
           </div>
         </div>
       </div>
@@ -253,11 +245,7 @@ export const toggleSidePanel = (id) => {
       <div id="ss-project-switcher-panel" class="ss-extra-panel"></div>
       <div class="ss-body" id="ss-body"></div>
       <div class="ss-footer" style="padding:10px 16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-           <div style="display:flex;align-items:center;gap:8px;">
-             <div class="ss-title" style="margin:0;">my<span>Sender</span></div>
-             <div id="ss-footer-version" style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;margin-top:4px;">v${chrome.runtime.getManifest().version}</div>
-           </div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;">
            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
              <div id="ss-mode-toggle-container" style="display:flex;align-items:center;gap:6px;">
                 <span id="ss-mode-text" style="font-size:11px;font-weight:700;text-transform:uppercase;">AUTO</span>

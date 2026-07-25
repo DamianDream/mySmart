@@ -8,7 +8,6 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        content: resolve(__dirname, 'src/content/index.js'),
         background: resolve(__dirname, 'src/background.js')
       },
       output: {
@@ -22,9 +21,7 @@ export default defineConfig({
     copy({
       targets: [
         { src: 'src/manifest.json', dest: 'dist' },
-        { src: 'src/icons', dest: 'dist' },
-        { src: 'src/sidebar.css', dest: 'dist' },
-        { src: 'src/interceptor.js', dest: 'dist' }
+        { src: 'src/icons', dest: 'dist' }
       ],
       hook: 'writeBundle'
     })

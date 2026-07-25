@@ -5,7 +5,7 @@ import { showNotice, copyToClipboard, esc, shadowRootRef, debounce } from '../ut
 import { logAction, clearLogs } from '../core/logger.js';
 import { bgFetch } from '../core/api.js';
 import { checkForUpdates } from '../core/updater.js';
-import { countContacts, searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
+import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
 import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear } from '../icons.js';
 
 

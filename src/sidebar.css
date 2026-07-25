@@ -701,6 +701,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* Normalize every menu icon to one size regardless of the SVG's own width/height */
+.ss-nav-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .ss-nav-item.disabled {

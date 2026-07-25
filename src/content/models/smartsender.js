@@ -1,9 +1,7 @@
 /* global URLSearchParams */
 import { state } from '../core/state.js';
-import { bgFetch, authHeaders, getApiCache, setApiCache, buildHeaders } from '../core/api.js';
+import { bgFetch, authHeaders, getApiCache, setApiCache } from '../core/api.js';
 import { getPreset } from '../core/storage.js';
-import { isSmartsender } from '../utils/url.js';
-import { showNotice } from '../utils/dom.js';
 
   export async function searchTags(pid, term) {
     const cacheKey = `tags_${pid}_${term}`;
@@ -24,21 +22,6 @@ import { showNotice } from '../utils/dom.js';
     return result;
   }
 
-  export async function countContacts(pid, tags, dv, dop) {
-    if (!isSmartsender()) {
-      showNotice('This feature is only available on console.smartsender.com', 'error');
-      throw new Error('Unsupported domain');
-    }
-    const scopes = tags.map(tag => ({ resource: { name: tag.name, referable: tag.id, operator: dv ? dop : '=', value: dv || tag.createdAt.split('T')[0] }, type: 'tags', condition: 'includes' }));
-    const apiOrigin = location.origin;
-    const res = await fetch(`${apiOrigin}/api/i/projects/${pid}/contacts`, {
-      method: 'POST', credentials: 'include',
-      headers: buildHeaders({ 'Content-Type': 'application/json;charset=UTF-8', 'Accept': 'application/json, text/plain, */*' }),
-      body: JSON.stringify({ scopes, page: 1, sort: 'ASC', limitation: 1 }),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  }
 
   export async function searchDefinitions(term) {
     const cacheKey = `defs_${state.projectId}_${term}`;

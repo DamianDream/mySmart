@@ -18,7 +18,6 @@ export const state = {
   globalSettings: {},
   contactSettings: {},
   activeTab: 'vars',
-  xsrfToken: null,
   activePreset: null,
   editingProjectId: null,
   systemicNameLocked: true,

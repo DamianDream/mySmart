@@ -6,8 +6,9 @@ import { showNotice, copyToClipboard, esc, shadowRootRef, debounce } from '../ut
 import { logAction, clearLogs } from '../core/logger.js';
 import { bgFetch, authHeaders } from '../core/api.js';
 import { checkForUpdates } from '../core/updater.js';
-import { countContacts, searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
+import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
 import { findContacts, renderContactInfoPanel } from './contacts.js';
+import { openContactInPopup } from '../core/contactPopup.js';
 import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear, iExternal } from '../icons.js';
 
 
@@ -548,7 +549,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       const card = document.createElement('div'); card.className = 'ss-var-card';
       card.style.padding = '12px';
       if (isUrlContact) card.style.border = '1px solid var(--accent)';
-      card.onclick = () => renderContactInfoPanel(c.id);
+      card.onclick = () => openContactInPopup(c.id);
 
       const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>`;
 

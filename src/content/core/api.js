@@ -1,6 +1,5 @@
 import { state } from './state.js';
 import { getPreset } from './storage.js';
-import { getXsrfToken, getXsrfCookie } from '../utils/url.js';
 import { logAction } from './logger.js';
 
 const __apiCache = new Map();
@@ -15,13 +14,6 @@ export const getApiCache = (key) => {
 export const setApiCache = (key, data) => {
   __apiCache.set(key, { data, ts: Date.now() });
 };
-
-export const buildHeaders = (extra = {}) => ({
-  'x-requested-with': 'XMLHttpRequest',
-  'X-CSRF-TOKEN': getXsrfToken(),
-  'X-XSRF-TOKEN': state.xsrfToken || getXsrfCookie(),
-  ...extra,
-});
 
 export const authHeaders = () => {
   const t = getPreset(state.projectId)?.apiToken;
