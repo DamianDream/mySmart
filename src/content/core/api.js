@@ -34,8 +34,10 @@ export function bgFetch(url, method = 'GET', headers = {}, body = null) {
           return reject(new Error(m));
         }
         if (!res?.ok) {
-          logAction('API Error', `${method} ${cleanUrl} - HTTP ${res?.status}`, { url, method, body, status: res?.status, error: res?.error });
-          return reject(new Error(res?.error || `HTTP ${res?.status}`));
+          const validationMsg = res?.data?.errors ? Object.values(res.data.errors).flat().join(', ') : '';
+          const errMsg = validationMsg || res?.data?.message || res?.error || `HTTP ${res?.status}`;
+          logAction('API Error', `${method} ${cleanUrl} - HTTP ${res?.status}`, { url, method, body, status: res?.status, error: errMsg, data: res?.data });
+          return reject(new Error(errMsg));
         }
         logAction('API Request', `${method} ${cleanUrl} - Success`, { url, method, body, status: res.status, response: res.data });
         resolve(res.data);

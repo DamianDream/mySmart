@@ -123,7 +123,8 @@ import { getFullProjectFromUrl } from '../utils/url.js';
           const found = projectsList.find(p =>
             String(p.id) === String(pid) ||
             (p.slug && p.slug.toLowerCase() === String(pid).toLowerCase()) ||
-            (p.name && p.name.toLowerCase() === String(pid).toLowerCase())
+            (p.name && p.name.toLowerCase() === String(pid).toLowerCase()) ||
+            (p.title && p.title.toLowerCase() === String(pid).toLowerCase())
           );
           numericProjectId = found ? found.id : projectsList[0].id;
         }
@@ -137,10 +138,14 @@ import { getFullProjectFromUrl } from '../utils/url.js';
     const all = [];
     let page = 1;
     let totalPages = 1;
-    const limitation = 50;
+    const limitation = 15;
 
     while (page <= totalPages) {
-      const params = new URLSearchParams({ page, limitation });
+      const params = new URLSearchParams({
+        page,
+        limitation,
+        withFolders: 'true'
+      });
       if (term && term.trim()) params.set('term', term.trim());
       const res = await bgFetch(`https://messenger.smartsender.com/api/i/projects/${numericProjectId}/funnels/match?${params}`, 'GET', {
         'Accept': 'application/json',
@@ -149,9 +154,16 @@ import { getFullProjectFromUrl } from '../utils/url.js';
 
       const collection = res?.collection || (Array.isArray(res) ? res : []);
       all.push(...collection);
-      totalPages = res?.cursor?.pages ?? (collection.length === limitation ? page + 1 : page);
+      
+      const total = res?.total ?? res?.cursor?.total ?? res?.info?.total;
+      if (total) {
+        totalPages = Math.ceil(total / limitation);
+      } else {
+        totalPages = res?.cursor?.pages ?? (collection.length === limitation ? page + 1 : page);
+      }
+      
       page++;
-      if (page > 20) break;
+      if (page > 30) break; // safety guard
     }
 
     if (!all.length) return null;
