@@ -99,15 +99,15 @@ const infoTip = (text, pos = 'center') =>
       <div class="ss-divider"></div>
       <div style="margin-top:14px;">
         <div class="ss-section-label" style="display:flex;align-items:center;justify-content:space-between;">
-          <span>Project Data Transfer</span>
-          <span style="font-size:10px;color:var(--text4);text-transform:none;font-weight:normal;">Variables & Tags</span>
+          <span>Project Variables Transfer</span>
+          <span style="font-size:10px;color:var(--text4);text-transform:none;font-weight:normal;">Variables</span>
         </div>
         <div style="font-size:12px;color:var(--text4);margin-bottom:10px;line-height:1.4;">
-          Export and import custom variables and tags between SmartSender projects.
+          Export and import custom variables between SmartSender projects.
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="ss-btn-primary" id="ss-data-export-btn" style="min-width:0;height:38px;justify-content:center;font-size:12px;">Export Data</button>
-          <button class="ss-btn-search" id="ss-data-import-btn" style="min-width:0;height:38px;justify-content:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;">Import Data</button>
+          <button class="ss-btn-primary" id="ss-data-export-btn" style="min-width:0;height:38px;justify-content:center;font-size:12px;">Export Variables</button>
+          <button class="ss-btn-search" id="ss-data-import-btn" style="min-width:0;height:38px;justify-content:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;">Import Variables</button>
         </div>
         <input type="file" id="ss-data-import-file" accept=".json" style="display:none;" />
       </div>
@@ -228,7 +228,7 @@ const infoTip = (text, pos = 'center') =>
         dataExportBtn.innerHTML = '<span class="ss-spinner" style="width:12px;height:12px;border-width:1.5px;"></span> Exporting...';
         try {
           const res = await exportProjectData(pid);
-          showNotice(`Exported ${res.definitions.length} vars and ${res.tags.length} tags`, 'info');
+          showNotice(`Exported ${res.definitions.length} variables`, 'info');
         } catch (err) {
           showNotice(err.message || 'Export failed', 'error');
         } finally {
