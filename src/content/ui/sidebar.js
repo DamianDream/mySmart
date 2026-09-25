@@ -9,7 +9,6 @@ import { renderTagsTab } from '../tabs/tags.js';
 import { renderContactsTab, renderInfoTab } from '../tabs/info.js';
 import { renderLogsTab } from '../tabs/logs.js';
 import { renderEventsTab } from '../tabs/events.js';
-import { renderFunnelsTab } from '../tabs/funnels.js';
 
 // ─── HEADER ───────────────────────────────────────────────────────────────
 export function renderHeader() {
@@ -51,10 +50,6 @@ export function renderNav() {
     <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts">
       <span class="ss-nav-icon">${iUsers}</span>
       <span>Contacts</span>
-    </button>
-    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'funnels' ? 'active' : ''}" data-tab="funnels">
-      <span class="ss-nav-icon">${iFunnel}</span>
-      <span>Funnels</span>
     </button>
     <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'events' ? 'active' : ''}" data-tab="events">
       <span class="ss-nav-icon">${iZap}</span>
@@ -150,7 +145,6 @@ export function switchTab(tab) {
   let label = 'Variables';
   if (tab === 'tags') label = 'Tags';
   if (tab === 'contacts') label = 'Contacts';
-  if (tab === 'funnels') label = 'Funnels';
   if (tab === 'events') label = 'Event';
   if (tab === 'log') label = 'Action Logs';
   if (tab === 'info') label = 'About';
@@ -160,7 +154,6 @@ export function switchTab(tab) {
   updateExternalLink(tab);
   if (tab === 'tags') renderTagsTab();
   else if (tab === 'contacts') renderContactsTab();
-  else if (tab === 'funnels') renderFunnelsTab();
   else if (tab === 'events') renderEventsTab();
   else if (tab === 'log') renderLogsTab();
   else if (tab === 'info') renderInfoTab();
@@ -179,14 +172,6 @@ export function updateExternalLink(tab) {
   link.style.display = 'inline-flex';
 
   if (isActive) {
-    if (tab === 'funnels') {
-      link.href = `https://messenger.smartsender.com/funnels?project=${pid}`;
-      link.style.opacity = '1';
-      link.style.pointerEvents = 'auto';
-      link.style.cursor = 'pointer';
-      link.title = 'Open Funnels in SmartSender';
-      return;
-    }
     let path = 'definitions';
     if (tab === 'tags') path = 'tags';
     if (tab === 'contacts') path = 'contacts';

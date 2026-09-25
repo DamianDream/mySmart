@@ -17,11 +17,7 @@ export const K_TAG_FAVORITES = 'ss_tag_favorites';
 export const K_CONTACT_PRIORITY_VARS = (pid) => `ss_contact_priority_vars_${pid}`;
 export const K_VAR_FAVORITES = 'ms_var_favorites';
 export const K_EVENT_HISTORY = (pid) => `ss_event_history_${pid}`;
-export const K_FUNNEL_SNAPSHOT = (pid) => `ss_funnel_snapshot_${pid}`;
 export const K_ACTION_LOGS = 'ss_action_logs';
-
-export const loadFunnelSnapshot = (pid) => loadFromCache(K_FUNNEL_SNAPSHOT(pid), null);
-export const saveFunnelSnapshot = (pid, snapshot) => saveToStorage(K_FUNNEL_SNAPSHOT(pid), snapshot);
 
 export let __localCache = {};
 

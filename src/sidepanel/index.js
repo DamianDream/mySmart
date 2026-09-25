@@ -34,7 +34,6 @@ export * from '../content/tabs/tags.js';
 export * from '../content/tabs/contacts.js';
 export * from '../content/tabs/events.js';
 export * from '../content/tabs/logs.js';
-export * from '../content/tabs/funnels.js';
 export * from '../content/tabs/info.js';
 
 let shadowRoot = null;

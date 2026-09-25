@@ -68,11 +68,6 @@ export const state = {
   contactVarEditingKey: null,
   activeUrlContact: null,
 
-  // Funnels
-  funnelResults: [],
-  funnelSearchTerm: '',
-  isSearchingFunnels: false,
-
   theme: 'dark'
 };
 
