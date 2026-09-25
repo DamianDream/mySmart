@@ -73,6 +73,15 @@ export const getPreset = (id) => loadPresets().find(p => p.projectId === id) || 
 export const loadTheme = () => loadFromCache(K_THEME, 'dark');
 export const saveTheme = (t) => saveToStorage(K_THEME, t);
 
+export const K_THEME_COLORS = 'ms_theme_colors';
+export const DEFAULT_THEME_COLORS = {
+  bg: '#282828',
+  button: '#0a84ff',
+  text: '#ffffff',
+};
+export const loadThemeColors = () => loadFromCache(K_THEME_COLORS, DEFAULT_THEME_COLORS);
+export const saveThemeColors = (c) => saveToStorage(K_THEME_COLORS, c);
+
 export const loadLastTab = (pid) => loadFromCache(K_LAST_TAB(pid), 'vars');
 export const saveLastTab = (pid, tab) => { if (pid) saveToStorage(K_LAST_TAB(pid), tab); };
 
@@ -174,6 +183,7 @@ const PRESET_EXACT_KEYS = [
   K_PRESETS,             // projects + API keys
   K_GLOBAL_SETTINGS,     // global settings (accent, cache, autofetch…)
   K_THEME,               // appearance
+  K_THEME_COLORS,        // custom 3 color parameters (bg, button, text)
   K_CONTACT_SETTINGS,    // contact display settings
   K_SIDEBAR_WIDTH,       // layout
   K_CONTACT_FAVORITES,   // favorites

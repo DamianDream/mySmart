@@ -4,7 +4,7 @@ import { getPreset, savePresets, loadPresets, saveGlobalSettings, buildPresetExp
 import { shadowRootRef, esc, showNotice } from '../utils/dom.js';
 import { setProjectMode, switchProject } from '../models/project.js';
 import { isSmartsender } from '../utils/url.js';
-import { applyTheme, applyAccent, defaultAccent, ACCENT_PRESETS, THEMES, THEME_LIST } from './themes.js';
+import { applyThemeColors, COLOR_PRESETS, isValidHex, DEFAULT_THEME_COLORS } from './themes.js';
 import { switchView, toggleSidePanel, renderHeader } from './sidebar.js';
 import { logAction } from '../core/logger.js';
 import { iMenu, iTune, iSave, iBack, iPlus, iPen, iTrash, iX, iLock, iUnlock } from '../icons.js';
@@ -21,43 +21,102 @@ const infoTip = (text, pos = 'center') =>
     const sysName = ep ? ep.projectId : (state.projectId || '');
     const dispName = ep ? (ep.customName || '') : '';
     const token = ep ? (ep.apiToken || '') : '';
-    const curAccent = (state.globalSettings.accentColor || defaultAccent(state.theme)).toLowerCase();
-    const accentIsCustom = !!state.globalSettings.accentColor;
-    const currentTheme = THEMES[state.theme] ? state.theme : 'dark';
+    const colors = state.themeColors || DEFAULT_THEME_COLORS;
+    const activePreset = COLOR_PRESETS.find(p =>
+      p.bg.toLowerCase() === colors.bg.toLowerCase() &&
+      p.button.toLowerCase() === colors.button.toLowerCase() &&
+      p.text.toLowerCase() === colors.text.toLowerCase()
+    );
+    const activePresetId = activePreset ? activePreset.id : null;
 
     body.innerHTML = `
       <div style="margin-bottom:14px;">
-        <div class="ss-section-label" style="margin-bottom:10px;">Appearance</div>
+        <div class="ss-section-label" style="margin-bottom:10px;">Appearance &amp; Colors</div>
         
+        <!-- Presets -->
         <div style="margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Theme</span>
-            <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;">${THEME_LIST.find(x => x.id === currentTheme)?.name || 'Dark'}</span>
+            <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Presets</span>
+            <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;">${activePreset ? activePreset.name : 'Custom'}</span>
           </div>
           <div class="ss-theme-grid">
-            ${THEME_LIST.map(item => `
-              <button type="button" class="ss-theme-option-btn${currentTheme === item.id ? ' active' : ''}" data-theme="${item.id}" title="${esc(item.name)} (${esc(item.desc)})">
-                <span style="width:14px;height:14px;border-radius:50%;background:${item.bg};border:1px solid ${item.border};display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <span style="width:5px;height:5px;border-radius:50%;background:${item.accent};"></span>
+            ${COLOR_PRESETS.map(p => `
+              <button type="button" class="ss-theme-option-btn${activePresetId === p.id ? ' active' : ''}" data-preset="${p.id}" title="${esc(p.name)} (${esc(p.desc)})">
+                <span style="width:14px;height:14px;border-radius:50%;background:${p.bg};border:1px solid ${p.button};display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="width:5px;height:5px;border-radius:50%;background:${p.button};"></span>
                 </span>
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;">${esc(item.name)}</span>
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;">${esc(p.name)}</span>
               </button>
             `).join('')}
           </div>
         </div>
 
-        <div style="margin-bottom:14px;">
-          <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Accent Color</span>
-          <div style="position:relative;margin-top:6px;">
-            <select id="ss-accent-select" class="ss-input" style="appearance:none;cursor:pointer;width:100%;padding-left:34px;">
-              <option value=""${accentIsCustom ? '' : ' selected'}>Default (theme)</option>
-              ${ACCENT_PRESETS.map(c => `<option value="${c.value}"${accentIsCustom && curAccent === c.value.toLowerCase() ? ' selected' : ''}>${c.name}</option>`).join('')}
-            </select>
-            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:${curAccent};pointer-events:none;box-shadow:0 0 0 1px var(--border2);"></span>
-            <svg style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text4);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        <!-- 3 Color Parameters: Background, Buttons, Text -->
+        <div style="margin-bottom:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Custom Colors (3 Parameters)</span>
+            <button type="button" id="ss-colors-reset-btn" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;">Reset</button>
+          </div>
+
+          <!-- Parameter 1: Background Color -->
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                1. Background Color ${infoTip('Main background and canvas color.', 'left')}
+              </span>
+              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-bg-val">${colors.bg}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="color" id="ss-color-bg-picker" value="${colors.bg}" class="ss-color-input" title="Choose background color" />
+              <input type="text" id="ss-color-bg-hex" value="${colors.bg}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#282828" />
+              <div style="display:flex;gap:4px;">
+                ${['#282828', '#000000', '#0f172a', '#f0f2f5', '#ffffff'].map(c => `
+                  <button type="button" class="ss-color-swatch" data-param="bg" data-color="${c}" style="background:${c};" title="${c}"></button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Parameter 2: Button Color -->
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                2. Button Color ${infoTip('Color of primary buttons, active highlights and markers.', 'left')}
+              </span>
+              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-button-val">${colors.button}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="color" id="ss-color-button-picker" value="${colors.button}" class="ss-color-input" title="Choose button color" />
+              <input type="text" id="ss-color-button-hex" value="${colors.button}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#0A84FF" />
+              <div style="display:flex;gap:4px;">
+                ${['#0a84ff', '#30d158', '#ff9f0a', '#bf5af2', '#ffffff', '#000000'].map(c => `
+                  <button type="button" class="ss-color-swatch" data-param="button" data-color="${c}" style="background:${c};" title="${c}"></button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Parameter 3: Text Color -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                3. Text Color ${infoTip('Primary typography color for text, headers and labels.', 'left')}
+              </span>
+              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-text-val">${colors.text}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="color" id="ss-color-text-picker" value="${colors.text}" class="ss-color-input" title="Choose text color" />
+              <input type="text" id="ss-color-text-hex" value="${colors.text}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#FFFFFF" />
+              <div style="display:flex;gap:4px;">
+                ${['#ffffff', '#f2f2f7', '#000000', '#0f172a', '#94a3b8'].map(c => `
+                  <button type="button" class="ss-color-swatch" data-param="text" data-color="${c}" style="background:${c};" title="${c}"></button>
+                `).join('')}
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Toggles: API Cache & Auto Fetch -->
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:10px;border-top:1px solid var(--border);">
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
             <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">API Cache ${infoTip('Caches SmartSender API responses locally so repeated lookups load instantly and use fewer API calls. Turn off if you always need fresh data.', 'left')}</span>
@@ -67,7 +126,7 @@ const infoTip = (text, pos = 'center') =>
             </label>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">Auto Fetch ${infoTip('Runs the search automatically as you type, so you do not need to press the Search button.', 'right')}</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">Auto Fetch ${infoTip('Runs search automatically as you type, without pressing Search button.', 'right')}</span>
             <label class="ss-theme-switch" title="Search as you type" style="flex-shrink:0;">
               <input type="checkbox" id="ss-autofetch-toggle-input"${state.globalSettings.autoFetch ? ' checked' : ''}>
               <span class="ss-slider"></span>
@@ -126,16 +185,78 @@ const infoTip = (text, pos = 'center') =>
       </div>
     `;
 
+    // 1. Presets click
     shadowRootRef.querySelectorAll('.ss-theme-option-btn').forEach(btn => {
       btn.onclick = () => {
-        const theme = btn.dataset.theme;
-        if (theme && THEMES[theme]) {
-          applyTheme(theme);
-          logAction('Change Theme', `Theme changed to ${theme}`);
+        const presetId = btn.dataset.preset;
+        const preset = COLOR_PRESETS.find(p => p.id === presetId);
+        if (preset) {
+          applyThemeColors({ bg: preset.bg, button: preset.button, text: preset.text });
+          logAction('Color Scheme', `Preset applied: ${preset.name}`);
           renderSettings();
         }
       };
     });
+
+    // 2. Custom color update helper
+    const updateCustomColor = (param, val) => {
+      if (!isValidHex(val)) return;
+      const newColors = { ...(state.themeColors || DEFAULT_THEME_COLORS), [param]: val };
+      applyThemeColors(newColors);
+      logAction('Color Scheme', `Updated ${param} to ${val}`);
+      renderSettings();
+    };
+
+    // Color pickers & hex inputs
+    ['bg', 'button', 'text'].forEach(param => {
+      const picker = shadowRootRef.getElementById(`ss-color-${param}-picker`);
+      const hex = shadowRootRef.getElementById(`ss-color-${param}-hex`);
+      if (picker) {
+        picker.oninput = (e) => {
+          if (hex) hex.value = e.target.value.toUpperCase();
+          const valEl = shadowRootRef.getElementById(`ss-color-${param}-val`);
+          if (valEl) valEl.textContent = e.target.value;
+          const newColors = { ...(state.themeColors || DEFAULT_THEME_COLORS), [param]: e.target.value };
+          applyThemeColors(newColors);
+        };
+        picker.onchange = () => {
+          renderSettings();
+        };
+      }
+      if (hex) {
+        hex.onchange = (e) => {
+          let val = e.target.value.trim();
+          if (!val.startsWith('#')) val = '#' + val;
+          if (isValidHex(val)) {
+            updateCustomColor(param, val);
+          } else {
+            hex.value = state.themeColors?.[param] || '';
+          }
+        };
+      }
+    });
+
+    // Swatches
+    shadowRootRef.querySelectorAll('.ss-color-swatch').forEach(btn => {
+      btn.onclick = () => {
+        const param = btn.dataset.param;
+        const color = btn.dataset.color;
+        if (param && color) {
+          updateCustomColor(param, color);
+        }
+      };
+    });
+
+    // Reset button
+    const resetBtn = shadowRootRef.getElementById('ss-colors-reset-btn');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        applyThemeColors(DEFAULT_THEME_COLORS);
+        logAction('Color Scheme', 'Reset to default colors');
+        renderSettings();
+      };
+    }
+
     shadowRootRef.getElementById('ss-cache-toggle-input').onchange = (e) => { 
       state.globalSettings.useApiCache = e.target.checked;
       saveGlobalSettings(state.globalSettings);
@@ -150,27 +271,6 @@ const infoTip = (text, pos = 'center') =>
       if (e.target.checked) showNotice('Auto Fetch enabled', 'info');
       else showNotice('Auto Fetch disabled', 'info');
     };
-
-    // ─── Accent color ─────────────────────────────────────────────
-    const accentSelect = shadowRootRef.getElementById('ss-accent-select');
-    if (accentSelect) {
-      // Auto-apply the chosen color the moment it changes.
-      accentSelect.onchange = () => {
-        const val = accentSelect.value;
-        if (!val) {
-          delete state.globalSettings.accentColor;
-          saveGlobalSettings(state.globalSettings);
-          applyTheme(state.theme); // re-applies the theme's default accent
-          logAction('Settings', 'Accent color reset to default');
-        } else {
-          state.globalSettings.accentColor = val;
-          saveGlobalSettings(state.globalSettings);
-          applyAccent(val);
-          logAction('Settings', `Accent color set to ${val}`);
-        }
-        renderSettings();
-      };
-    }
 
     shadowRootRef.getElementById('ss-lock-toggle').onclick = () => {
       state.systemicNameLocked = !state.systemicNameLocked;

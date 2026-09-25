@@ -6,7 +6,9 @@ import {
   loadContactFavorites,
   loadVarFavorites,
   loadTagFavorites,
-  loadTheme
+  loadTheme,
+  loadThemeColors,
+  DEFAULT_THEME_COLORS
 } from './storage.js';
 
 export const state = {
@@ -68,7 +70,8 @@ export const state = {
   contactVarEditingKey: null,
   activeUrlContact: null,
 
-  theme: 'dark'
+  theme: 'dark',
+  themeColors: DEFAULT_THEME_COLORS
 };
 
 export function initState() {
@@ -84,4 +87,5 @@ export function initState() {
   state.updatePending = loadFromCache('updatePending', false) === true;
   state.newVersion = loadFromCache('newVersion', null);
   state.theme = loadTheme();
+  state.themeColors = loadThemeColors();
 }
