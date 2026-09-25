@@ -62,4 +62,34 @@ import { getPreset } from '../core/storage.js';
     } catch { return false; }
   }
 
-  // ─── HEADER ───────────────────────────────────────────────────────────────
+  export async function fetchFunnels(term = '') {
+    const h = authHeaders();
+    if (!h) throw new Error('No API token. Open Settings ⚙');
+    const all = [];
+    let page = 1;
+    let totalPages = 1;
+    const limitation = 20;
+
+    while (page <= totalPages) {
+      const params = new URLSearchParams({ page, limitation });
+      if (term && term.trim()) params.set('term', term.trim());
+      const res = await bgFetch(`https://api.smartsender.com/v1/funnels?${params}`, 'GET', h);
+      const collection = res?.collection || (Array.isArray(res) ? res : []);
+      all.push(...collection);
+      totalPages = res?.cursor?.pages ?? (collection.length === limitation ? page + 1 : page);
+      page++;
+      if (page > 20) break; // safety guard
+    }
+
+    return all.map(f => {
+      const flow = f.flow || {};
+      return {
+        id: f.id,
+        name: flow.name || f.name || `Funnel #${f.id}`,
+        runs: flow.runsQuantity ?? f.runsQuantity ?? f.runs ?? 0,
+        active: flow.active !== undefined ? flow.active : (f.active !== undefined ? f.active : !f.isDraft),
+        isDraft: flow.isDraft !== undefined ? flow.isDraft : (f.isDraft || false),
+        updatedAt: f.updatedAt || flow.updatedAt || null
+      };
+    });
+  }
