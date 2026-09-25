@@ -57,6 +57,27 @@ import { openFireEventModal } from '../ui/eventModal.js';
     });
   }
 
+  export async function attachContactTag(contactId, tagId, tagName = '', pid = null) {
+    const h = authHeaders(pid); if (!h) throw new Error('No API token. Open Settings ⚙');
+    if (!contactId) throw new Error('Contact ID is required');
+    if (!tagId) throw new Error('Tag ID is required');
+    try {
+      return await bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}/tags/${tagId}`, 'POST', h);
+    } catch {
+      return await bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}/tags`, 'POST', h, {
+        id: tagId,
+        name: tagName
+      });
+    }
+  }
+
+  export async function detachContactTag(contactId, tagId, pid = null) {
+    const h = authHeaders(pid); if (!h) throw new Error('No API token. Open Settings ⚙');
+    if (!contactId) throw new Error('Contact ID is required');
+    if (!tagId) throw new Error('Tag ID is required');
+    return bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}/tags/${tagId}`, 'DELETE', h);
+  }
+
   export function renderContactInfoPanel(id) {
     const panel = shadowRootRef.getElementById('ss-info-panel');
     if (!panel) return;

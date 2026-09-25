@@ -7,7 +7,7 @@ import { logAction, clearLogs } from '../core/logger.js';
 import { bgFetch, authHeaders } from '../core/api.js';
 import { checkForUpdates } from '../core/updater.js';
 import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
-import { findContacts, renderContactInfoPanel, fetchContactInfo, updateContactVar } from './contacts.js';
+import { findContacts, renderContactInfoPanel, fetchContactInfo, updateContactVar, attachContactTag, detachContactTag } from './contacts.js';
 import { mountContactCard } from '../ui/contactCard.js';
 import { openContactInPopup } from '../core/contactPopup.js';
 import { openFireEventModal } from '../ui/eventModal.js';
@@ -343,6 +343,14 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           await updateContactVar(contactId, key, val);
           const fresh = await fetchContactInfo(contactId);
           return fresh;
+        },
+        onAttachTag: async (cid, tid, tname) => {
+          await attachContactTag(cid, tid, tname);
+          return await fetchContactInfo(cid);
+        },
+        onDetachTag: async (cid, tid) => {
+          await detachContactTag(cid, tid);
+          return await fetchContactInfo(cid);
         }
       });
     } catch (err) {

@@ -6,7 +6,7 @@ import { setShadowRoot } from '../content/utils/dom.js';
 import { initStorage, loadContactSettings, loadContactPriorityVars } from '../content/core/storage.js';
 import { initState, state } from '../content/core/state.js';
 import { applyTheme } from '../content/ui/themes.js';
-import { fetchContactInfo, updateContactVar } from '../content/tabs/contacts.js';
+import { fetchContactInfo, updateContactVar, attachContactTag, detachContactTag } from '../content/tabs/contacts.js';
 import { mountContactCard } from '../content/ui/contactCard.js';
 import { esc } from '../content/utils/dom.js';
 import { iReset, iX } from '../content/icons.js';
@@ -109,6 +109,20 @@ function renderContent() {
         tab.data = fresh;                            // keep the tab cache in sync
         tab.name = fresh.fullName || fresh.name || tab.contactId;
         renderTabs();
+        return fresh;
+      },
+      onAttachTag: async (contactId, tagId, tagName) => {
+        state.projectId = tab.projectSlug;
+        await attachContactTag(contactId, tagId, tagName, tab.projectSlug);
+        const fresh = await fetchContactInfo(contactId);
+        tab.data = fresh;
+        return fresh;
+      },
+      onDetachTag: async (contactId, tagId) => {
+        state.projectId = tab.projectSlug;
+        await detachContactTag(contactId, tagId, tab.projectSlug);
+        const fresh = await fetchContactInfo(contactId);
+        tab.data = fresh;
         return fresh;
       }
     });

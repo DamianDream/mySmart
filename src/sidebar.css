@@ -700,6 +700,7 @@
 .ss-info-tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
@@ -711,6 +712,116 @@
   padding: 3px 8px;
   border-radius: 6px;
   font-family: var(--font-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  line-height: 1.2;
+}
+
+.ss-tag-remove-btn {
+  background: none;
+  border: none;
+  color: var(--text4);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  width: 14px;
+  height: 14px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.ss-tag-remove-btn:hover {
+  color: var(--error);
+  background: rgba(255, 69, 58, 0.18);
+}
+
+.ss-btn-add-tag-trigger {
+  font-size: var(--font-size-xs);
+  background: transparent;
+  border: 1px dashed var(--border2);
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+  transition: all 0.15s;
+}
+
+.ss-btn-add-tag-trigger:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(10, 132, 255, 0.08);
+}
+
+.ss-tag-suggestion-item {
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ss-tag-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.ss-tag-suggestion-item:hover, .ss-tag-suggestion-item.active {
+  background: var(--bg2);
+  color: var(--accent);
+}
+
+/* ─── DATA TRANSFER & PROGRESS BAR ───────────────────────── */
+.ss-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ss-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+.ss-diff-badge-new {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.ss-diff-badge-skip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg3);
+  color: var(--text4);
+  border: 1px solid var(--border);
 }
 
 .ss-info-vars {

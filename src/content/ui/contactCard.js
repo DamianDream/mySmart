@@ -1,8 +1,11 @@
+/* global alert */
 // Reusable contact-card renderer (used by the contact pop-up window). Mirrors
 // the slide-panel card layout, with inline variable editing.
 import { esc, copyToClipboard } from '../utils/dom.js';
 import { iCopy, iDone, iEdit, iExternal, iX, iZap } from '../icons.js';
 import { openFireEventModal } from './eventModal.js';
+import { searchTags, createTag } from '../models/smartsender.js';
+import { attachContactTag, detachContactTag, fetchContactInfo } from '../tabs/contacts.js';
 
 const STANDARD_KEYS = ['id', 'name', 'firstName', 'lastName', 'fullName', 'email', 'phone', 'photo', 'createdAt', 'notes', 'tags', 'values', 'thumb', 'updatedAt', 'system_city', 'system_country', 'system_continent', 'system_timezone', 'system_os', 'system_browser', 'is_active', 'userId', 'projectId'];
 
@@ -90,7 +93,26 @@ function bodyHTML(data, vars, { settings, priorityKeys, projectSlug, filter, edi
       <div class="ss-info-accordion" id="ss-tags-accordion">
         <div class="ss-info-accordion-header"><span>Tags (${filteredTags.length})</span><span class="ss-info-accordion-icon">▾</span></div>
         <div class="ss-info-accordion-content">
-          <div class="ss-info-tags">${filteredTags.map(t => `<span class="ss-info-tag">${esc(t.name)}</span>`).join('') || '<div class="ss-hint">No tags matched</div>'}</div>
+          <div class="ss-info-tags">
+            ${filteredTags.map(t => `
+              <span class="ss-info-tag ss-tag-chip" data-id="${esc(String(t.id))}" data-name="${esc(t.name)}">
+                <span>${esc(t.name)}</span>
+                ${editable ? `<button class="ss-tag-remove-btn" data-id="${esc(String(t.id))}" data-name="${esc(t.name)}" title="Remove tag">${iX}</button>` : ''}
+              </span>
+            `).join('') || '<div class="ss-hint">No tags matched</div>'}
+            ${editable ? `<button class="ss-btn-add-tag-trigger" id="ss-btn-add-tag-trigger" title="Attach tag">+ Tag</button>` : ''}
+          </div>
+          ${editable ? `
+            <div class="ss-add-tag-popover" id="ss-add-tag-popover" style="display:none;margin-top:8px;position:relative;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input type="text" class="ss-input ss-add-tag-input" id="ss-add-tag-input" placeholder="Search or type tag name..." autocomplete="off" style="font-size:12px;padding:4px 8px;height:26px;flex:1;" />
+                <button class="ss-btn-search ss-add-tag-confirm" id="ss-add-tag-confirm" style="padding:4px 10px;height:26px;font-size:12px;background:var(--accent);color:var(--accent-text);border-radius:6px;cursor:pointer;">Add</button>
+                <button class="ss-btn-search ss-add-tag-cancel" id="ss-add-tag-cancel" style="padding:4px 8px;height:26px;font-size:12px;background:var(--bg3);color:var(--text3);border-radius:6px;cursor:pointer;">${iX}</button>
+              </div>
+              <div class="ss-add-tag-suggestions" id="ss-add-tag-suggestions" style="display:none;position:absolute;top:32px;left:0;right:0;max-height:160px;overflow-y:auto;background:var(--bg-solid,#282828);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);z-index:100;padding:4px 0;"></div>
+              <div class="ss-add-tag-error" id="ss-add-tag-error" style="display:none;color:var(--error);font-size:11px;margin-top:4px;"></div>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -168,6 +190,218 @@ export function mountContactCard(container, data, opts) {
     });
 
     if (!editable) return;
+
+    // ─── Tag Removal ──────────────────────────────────────────────────────────
+    body.querySelectorAll('.ss-tag-remove-btn').forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        const tagId = btn.dataset.id;
+        if (!tagId) return;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="ss-spinner" style="width:8px;height:8px;border-width:1px;"></span>';
+        try {
+          if (opts.onDetachTag) {
+            const fresh = await opts.onDetachTag(current.id, tagId);
+            if (fresh) current = fresh;
+          } else {
+            await detachContactTag(current.id, tagId, opts.projectSlug);
+            current.tags = (current.tags || []).filter(t => String(t.id) !== String(tagId));
+          }
+          expanded.add('ss-tags-accordion');
+          render();
+        } catch (err) {
+          btn.disabled = false;
+          btn.innerHTML = iX;
+          alert('Failed to remove tag: ' + (err.message || 'Error'));
+        }
+      };
+    });
+
+    // ─── Tag Addition ─────────────────────────────────────────────────────────
+    const addTagTrigger = body.querySelector('#ss-btn-add-tag-trigger');
+    const addTagPopover = body.querySelector('#ss-add-tag-popover');
+    const addTagInput = body.querySelector('#ss-add-tag-input');
+    const addTagConfirm = body.querySelector('#ss-add-tag-confirm');
+    const addTagCancel = body.querySelector('#ss-add-tag-cancel');
+    const addTagSuggestions = body.querySelector('#ss-add-tag-suggestions');
+    const addTagError = body.querySelector('#ss-add-tag-error');
+
+    const showTagError = (msg) => {
+      if (!addTagError) return;
+      if (msg) {
+        addTagError.textContent = msg;
+        addTagError.style.display = 'block';
+      } else {
+        addTagError.textContent = '';
+        addTagError.style.display = 'none';
+      }
+    };
+
+    const doAttachTag = async (tagId, tagName) => {
+      showTagError('');
+      if (addTagConfirm) {
+        addTagConfirm.disabled = true;
+        addTagConfirm.innerHTML = '<span class="ss-spinner" style="width:10px;height:10px;border-width:1px;"></span>';
+      }
+      try {
+        if (opts.onAttachTag) {
+          const fresh = await opts.onAttachTag(current.id, tagId, tagName);
+          if (fresh) current = fresh;
+        } else {
+          await attachContactTag(current.id, tagId, tagName, opts.projectSlug);
+          if (!current.tags) current.tags = [];
+          if (!current.tags.some(t => String(t.id) === String(tagId))) {
+            current.tags.push({ id: tagId, name: tagName });
+          }
+        }
+        expanded.add('ss-tags-accordion');
+        render();
+      } catch (err) {
+        showTagError(err.message || 'Failed to attach tag');
+        if (addTagConfirm) {
+          addTagConfirm.disabled = false;
+          addTagConfirm.textContent = 'Add';
+        }
+      }
+    };
+
+    const doAttachNewTag = async (name) => {
+      const trimmed = (name || '').trim();
+      if (!trimmed) return;
+      showTagError('');
+      if (addTagConfirm) {
+        addTagConfirm.disabled = true;
+        addTagConfirm.innerHTML = '<span class="ss-spinner" style="width:10px;height:10px;border-width:1px;"></span>';
+      }
+      try {
+        const created = await createTag(opts.projectSlug, { name: trimmed });
+        const newTagId = created?.id || created?.data?.id;
+        if (!newTagId) throw new Error('Tag created without ID');
+        await doAttachTag(newTagId, trimmed);
+      } catch (err) {
+        showTagError(err.message || 'Failed to create tag');
+        if (addTagConfirm) {
+          addTagConfirm.disabled = false;
+          addTagConfirm.textContent = 'Add';
+        }
+      }
+    };
+
+    const loadSuggestions = async (term = '') => {
+      if (!addTagSuggestions) return;
+      try {
+        const res = await searchTags(opts.projectSlug, term);
+        const allTags = res?.collection || [];
+        const existingIds = new Set((current.tags || []).map(t => String(t.id)));
+        const existingNames = new Set((current.tags || []).map(t => t.name.toLowerCase().trim()));
+        const available = allTags.filter(t => !existingIds.has(String(t.id)) && !existingNames.has(t.name.toLowerCase().trim()));
+
+        let itemsHtml = '';
+        const trimmed = term.trim();
+        const hasExactMatch = available.some(t => t.name.toLowerCase().trim() === trimmed.toLowerCase());
+
+        if (trimmed && !hasExactMatch && !existingNames.has(trimmed.toLowerCase())) {
+          itemsHtml += `
+            <div class="ss-tag-suggestion-item ss-tag-create-item" data-create="true" data-name="${esc(trimmed)}">
+              <span>+ Create & attach "<b>${esc(trimmed)}</b>"</span>
+            </div>
+          `;
+        }
+
+        itemsHtml += available.slice(0, 15).map(t => `
+          <div class="ss-tag-suggestion-item" data-id="${esc(String(t.id))}" data-name="${esc(t.name)}">
+            <span>${esc(t.name)}</span>
+            <span style="font-size:10px;color:var(--text5);">ID: ${t.id}</span>
+          </div>
+        `).join('');
+
+        if (!itemsHtml) {
+          itemsHtml = '<div style="padding:8px 10px;font-size:11px;color:var(--text4);">No matching tags</div>';
+        }
+
+        addTagSuggestions.innerHTML = itemsHtml;
+        addTagSuggestions.style.display = 'block';
+
+        addTagSuggestions.querySelectorAll('.ss-tag-suggestion-item').forEach(item => {
+          item.onclick = async (e) => {
+            e.stopPropagation();
+            if (item.dataset.create === 'true') {
+              await doAttachNewTag(item.dataset.name);
+            } else {
+              await doAttachTag(item.dataset.id, item.dataset.name);
+            }
+          };
+        });
+      } catch (err) {
+        console.warn('Failed to load tag suggestions:', err.message);
+      }
+    };
+
+    if (addTagTrigger && addTagPopover) {
+      addTagTrigger.onclick = (e) => {
+        e.stopPropagation();
+        const isOpen = addTagPopover.style.display !== 'none';
+        if (isOpen) {
+          addTagPopover.style.display = 'none';
+          if (addTagSuggestions) addTagSuggestions.style.display = 'none';
+        } else {
+          addTagPopover.style.display = 'block';
+          if (addTagInput) {
+            addTagInput.value = '';
+            addTagInput.focus();
+            loadSuggestions('');
+          }
+        }
+      };
+    }
+
+    if (addTagCancel && addTagPopover) {
+      addTagCancel.onclick = (e) => {
+        e.stopPropagation();
+        addTagPopover.style.display = 'none';
+        if (addTagSuggestions) addTagSuggestions.style.display = 'none';
+        showTagError('');
+      };
+    }
+
+    if (addTagInput) {
+      let debTimer = null;
+      addTagInput.oninput = (e) => {
+        clearTimeout(debTimer);
+        const q = e.target.value;
+        debTimer = setTimeout(() => loadSuggestions(q), 180);
+      };
+      addTagInput.onkeydown = async (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const q = addTagInput.value.trim();
+          if (!q) return;
+          const existingItem = addTagSuggestions?.querySelector(`.ss-tag-suggestion-item:not(.ss-tag-create-item)`);
+          if (existingItem && existingItem.dataset.name.toLowerCase() === q.toLowerCase()) {
+            await doAttachTag(existingItem.dataset.id, existingItem.dataset.name);
+          } else {
+            await doAttachNewTag(q);
+          }
+        }
+        if (e.key === 'Escape') {
+          addTagCancel?.click();
+        }
+      };
+    }
+
+    if (addTagConfirm && addTagInput) {
+      addTagConfirm.onclick = async (e) => {
+        e.stopPropagation();
+        const q = addTagInput.value.trim();
+        if (!q) return;
+        const existingItem = addTagSuggestions?.querySelector(`.ss-tag-suggestion-item:not(.ss-tag-create-item)`);
+        if (existingItem && existingItem.dataset.name.toLowerCase() === q.toLowerCase()) {
+          await doAttachTag(existingItem.dataset.id, existingItem.dataset.name);
+        } else {
+          await doAttachNewTag(q);
+        }
+      };
+    }
 
     body.querySelectorAll('.ss-cvar-edit').forEach(btn => {
       btn.onclick = (e) => {

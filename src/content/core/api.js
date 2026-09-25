@@ -15,8 +15,8 @@ export const setApiCache = (key, data) => {
   __apiCache.set(key, { data, ts: Date.now() });
 };
 
-export const authHeaders = () => {
-  const t = getPreset(state.projectId)?.apiToken;
+export const authHeaders = (pid = null) => {
+  const t = getPreset(pid || state.projectId)?.apiToken;
   return t ? { 'Accept': 'application/json', 'Authorization': `Bearer ${t}` } : null;
 };
 

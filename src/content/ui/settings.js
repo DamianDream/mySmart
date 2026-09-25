@@ -8,6 +8,7 @@ import { applyTheme, applyAccent, defaultAccent, ACCENT_PRESETS } from './themes
 import { switchView, toggleSidePanel, renderHeader } from './sidebar.js';
 import { logAction } from '../core/logger.js';
 import { iMenu, iTune, iSave, iBack, iPlus, iPen, iTrash, iX, iLock, iUnlock } from '../icons.js';
+import { exportProjectData, openDataTransferModal } from './dataTransferModal.js';
 
 // Small "i" badge that reveals a description box on hover. `pos` controls the
 // horizontal anchor so edge tooltips stay inside the scrollable panel.
@@ -94,6 +95,21 @@ const infoTip = (text, pos = 'center') =>
           <button class="ss-btn-search" id="ss-export-btn" style="min-width:0;height:38px;box-sizing:border-box;justify-content:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);">Export</button>
         </div>
         <input type="file" id="ss-import-file" accept=".json" style="display:none;" />
+      </div>
+      <div class="ss-divider"></div>
+      <div style="margin-top:14px;">
+        <div class="ss-section-label" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>Project Data Transfer</span>
+          <span style="font-size:10px;color:var(--text4);text-transform:none;font-weight:normal;">Variables & Tags</span>
+        </div>
+        <div style="font-size:12px;color:var(--text4);margin-bottom:10px;line-height:1.4;">
+          Export and import custom variables and tags between SmartSender projects.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="ss-btn-primary" id="ss-data-export-btn" style="min-width:0;height:38px;justify-content:center;font-size:12px;">Export Data</button>
+          <button class="ss-btn-search" id="ss-data-import-btn" style="min-width:0;height:38px;justify-content:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;">Import Data</button>
+        </div>
+        <input type="file" id="ss-data-import-file" accept=".json" style="display:none;" />
       </div>
     `;
 
@@ -197,6 +213,52 @@ const infoTip = (text, pos = 'center') =>
       reader.readAsText(file);
       e.target.value = '';
     };
+
+    // ─── Project Data Transfer: Export ────────────────────────────
+    const dataExportBtn = shadowRootRef.getElementById('ss-data-export-btn');
+    if (dataExportBtn) {
+      dataExportBtn.onclick = async () => {
+        const pid = state.projectId;
+        if (!pid) {
+          showNotice('No active project selected', 'error');
+          return;
+        }
+        const oldText = dataExportBtn.innerHTML;
+        dataExportBtn.disabled = true;
+        dataExportBtn.innerHTML = '<span class="ss-spinner" style="width:12px;height:12px;border-width:1.5px;"></span> Exporting...';
+        try {
+          const res = await exportProjectData(pid);
+          showNotice(`Exported ${res.definitions.length} vars and ${res.tags.length} tags`, 'info');
+        } catch (err) {
+          showNotice(err.message || 'Export failed', 'error');
+        } finally {
+          dataExportBtn.disabled = false;
+          dataExportBtn.innerHTML = oldText;
+        }
+      };
+    }
+
+    // ─── Project Data Transfer: Import ────────────────────────────
+    const dataImportBtn = shadowRootRef.getElementById('ss-data-import-btn');
+    const dataImportFile = shadowRootRef.getElementById('ss-data-import-file');
+    if (dataImportBtn && dataImportFile) {
+      dataImportBtn.onclick = () => dataImportFile.click();
+      dataImportFile.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(ev.target.result);
+            openDataTransferModal(parsed, state.projectId);
+          } catch (err) {
+            showNotice('Invalid JSON file', 'error');
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      };
+    }
 
     shadowRootRef.getElementById('ss-preset-save').onclick = () => {
       const pid = shadowRootRef.getElementById('ss-preset-name').value.trim();
