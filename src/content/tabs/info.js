@@ -37,12 +37,9 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
 
     body.innerHTML = `
       <div style="background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin-bottom:16px; text-align:left;">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <div style="width:36px;height:36px;border-radius:8px;background:#09090b;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;letter-spacing:-0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.2);flex-shrink:0;">mS</div>
-          <div>
-            <div style="font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.3px;">mySmart</div>
-            <div style="font-size:12px;color:var(--text3);">mySender Tools for SmartSender</div>
-          </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.3px;">mySmart</div>
+          <div style="font-size:12px;color:var(--text3);">mySender Tools for SmartSender</div>
         </div>
         <div style="font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px;">
           Local Version: v${currentVer}
