@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function handleApiRequest({ url, method = 'GET', headers = {}, body = null }) {
   try {
-    const options = { method, headers: { ...headers } };
+    const options = { method, headers: { ...headers }, credentials: 'include' };
     if (body && typeof body === 'object') {
       options.body = JSON.stringify(body);
     } else {

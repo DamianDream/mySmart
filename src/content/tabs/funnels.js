@@ -118,8 +118,10 @@ async function loadFunnelsData(forceRefresh = false, manualResetBaseline = false
 
   const isExpired = snapshot && snapshot.timestamp && (now - snapshot.timestamp >= ONE_DAY_MS);
   const isFirstTime = !snapshot || !snapshot.counts;
+  const snapshotHasOnlyZeros = snapshot && snapshot.counts && Object.values(snapshot.counts).length > 0 && Object.values(snapshot.counts).every(c => c === 0);
+  const hasRealData = state.funnelResults.some(f => (f.runs || 0) > 0);
 
-  if (isFirstTime || manualResetBaseline) {
+  if (isFirstTime || manualResetBaseline || (snapshotHasOnlyZeros && hasRealData)) {
     const counts = {};
     state.funnelResults.forEach(f => { counts[f.id] = f.runs; });
     snapshot = {
