@@ -16,8 +16,10 @@ It seamlessly integrates into the SmartSender interface to provide quick access 
 
 Key Features:
 - Quick access to project variables and tags directly from the SmartSender interface.
+- Inline contact tag management: attach, detach, or create tags on the fly.
+- Project Variables Transfer: export and import custom variables between projects with automated diff checks.
 - Action logs to monitor API requests and errors in real-time.
-- Advanced search and filtering tools for contacts.
+- Advanced search and filtering tools for contacts with a centered popup view.
 - Quick project switching and authorization management.
 
 How to use: Simply install the extension and navigate to smartsender.com. Click the extension icon to toggle the sidebar.

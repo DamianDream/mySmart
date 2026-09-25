@@ -43,18 +43,19 @@
         "operatingSystem": "Google Chrome",
         "applicationCategory": "BrowserExtension",
         "applicationSubCategory": "DeveloperApplication",
-        "softwareVersion": "0.3.0",
+        "softwareVersion": "0.4.0",
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "Chrome-расширение для ускорения работы с платформой SmartSender: запуск триггерных событий, управление контактами, переменными и тегами.",
+        "description": "Chrome-расширение для ускорения работы с платформой SmartSender: запуск триггерных событий, управление контактами, переменными и тегами, экспорт и импорт переменных между проектами.",
         "featureList": [
           "Запуск триггерных событий SmartSender (Fire Event)",
           "Нативная боковая панель Chrome Side Panel",
-          "Мгновенный поиск и детальные карточки контактов",
-          "Управление переменными и тегами в один клик",
+          "Мгновенный поиск и детальные карточки контактов с центрированным окном",
+          "Управление переменными и тегами прямо в карточке контакта",
+          "Экспорт и импорт переменных между проектами с diff-анализом",
           "Локальное безопасное кэширование без задержек"
         ]
       },
@@ -1533,7 +1534,7 @@
             </p>
             <ul class="feature-specs-list">
               <li>Поиск по имени, номеру и Contact ID</li>
-              <li>Отдельное всплывающее окно (Popup Window)</li>
+              <li>Центрированное всплывающее окно (Popup Window)</li>
               <li>Очередь вызова карточек без подвисаний</li>
               <li>Прямой переход в SmartSender Console</li>
             </ul>
@@ -1550,13 +1551,13 @@
             </div>
             <h3 class="feature-card-title">Редактор переменных</h3>
             <p class="feature-card-text">
-              Просмотр и изменение значений глобальных и пользовательских переменных контакта. Проверка корректности записи (PUT) и верификация ответа сервера.
+              Просмотр и изменение значений переменных контакта, а также экспорт и импорт определений переменных между проектами с diff-анализом.
             </p>
             <ul class="feature-specs-list">
               <li>Мгновенное копирование синтаксиса {{variable}}</li>
-              <li>Фильтрация и группировка переменных</li>
-              <li>Поддержка числовых, строковых и boolean типов</li>
-              <li>История локальных изменений</li>
+              <li>Экспорт и импорт переменных (Project Variables Transfer)</li>
+              <li>Автоматический расчёт диффа (+new / exist) при импорте</li>
+              <li>История локальных изменений и верификация записи</li>
             </ul>
           </div>
 
@@ -1570,11 +1571,11 @@
             </div>
             <h3 class="feature-card-title">Менеджер тегов</h3>
             <p class="feature-card-text">
-              Назначение и удаление тегов прямо из боковой панели. Вы мгновенно видите актуальный список назначенных меток контакта и можете переключать их в реальном времени.
+              Управление тегами контакта прямо в сайдбаре и поп-ап окне: снятие тега в один клик (×), прикрепление (+ Tag) и создание новых тегов на лету.
             </p>
             <ul class="feature-specs-list">
-              <li>Быстрое назначение и снятие тегов</li>
-              <li>Подсветка тегов в профиле</li>
+              <li>Добавление и снятие тегов контакта на лету</li>
+              <li>Создание нового тега проекта из строки поиска</li>
               <li>Фильтрация контактов по тегам</li>
               <li>Синхронизация с API за миллисекунды</li>
             </ul>
@@ -1590,12 +1591,12 @@
             </div>
             <h3 class="feature-card-title">Мультипроектность и пресеты</h3>
             <p class="feature-card-text">
-              Работайте с несколькими проектами SmartSender без постоянного повторного ввода API-токенов. Расширение автоматически сопоставляет активную вкладку с нужным пресетом.
+              Работайте с несколькими проектами SmartSender без постоянного повторного ввода API-токенов. Удобный перенос переменных и бэкап настроек.
             </p>
             <ul class="feature-specs-list">
               <li>Изолированные токены проектов</li>
               <li>Автоматическое переключение контекста</li>
-              <li>Быстрое ручное переключение проектов</li>
+              <li>Быстрый перенос переменных между ботами</li>
               <li>Безопасное хранилище chrome.storage</li>
             </ul>
           </div>
@@ -1679,14 +1680,69 @@
 
         <div class="timeline-container">
 
-          <!-- Release v0.3.0 -->
+          <!-- Release v0.4.0 -->
           <div class="timeline-item latest">
             <div class="timeline-marker"></div>
             <article class="timeline-card">
               <div class="timeline-head">
                 <div class="version-tag">
-                  <span>v0.3.0</span>
+                  <span>v0.4.0</span>
                   <span class="pill-current">Текущая версия</span>
+                </div>
+                <div class="version-date">Сентябрь 2026</div>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Новый функционал (Tags & Variables Transfer)
+                </div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Управление тегами контакта на лету</strong>: прямо в карточке контакта (в сайдбаре и во всплывающем окне) добавлена возможность удалять назначенные теги нажатием кнопки <code>×</code> и прикреплять новые теги через кнопку <code>+ Tag</code>.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Создание тега прямо из поиска</strong>: если введённого названия тега ещё нет в базе проекта, карточка предлагает создать и сразу привязать его к контакту в один клик.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Экспорт и импорт переменных (Project Variables Transfer)</strong>: выгрузка всех пользовательских переменных проекта в структурированный JSON и импорт в другой проект с автоматическим анализом диффа (<code>+N new</code>, <code>N exist</code>) и визуальным прогресс-баром.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Эргономичное центрирование поп-ап окна</strong>: всплывающее окно карточки контакта теперь всегда открывается строго по центру экрана, а не в углу.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Оптимизация и интерфейс
+                </div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Удалены избыточные логотипы в блоках настроек и раздела About.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Улучшена обработка ошибок API (валидация 422 возвращает подробные сообщения полей).</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <!-- Release v0.3.0 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <article class="timeline-card">
+              <div class="timeline-head">
+                <div class="version-tag">
+                  <span>v0.3.0</span>
                 </div>
                 <div class="version-date">Сентябрь 2026</div>
               </div>

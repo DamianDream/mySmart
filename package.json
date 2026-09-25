@@ -1,6 +1,6 @@
 {
   "name": "mysmart",
-  "version": "0.3",
+  "version": "0.4.0",
   "description": "A premium Chrome extension designed to supercharge your `console.smartsender.com` workflow. Manage variables, tags, and contacts from a powerful, resizable sidebar on any website.",
   "main": "background.js",
   "scripts": {
