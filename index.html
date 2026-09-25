@@ -631,13 +631,110 @@
       background: var(--bg-subtle);
       border: 1px solid var(--border-base);
       border-radius: var(--radius-md);
-      padding: 24px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 280px;
+      min-height: 320px;
       position: relative;
       overflow: hidden;
+    }
+
+    .screenshot-frame {
+      width: 100%;
+      max-width: 440px;
+      background: #18181b;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.14);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+    }
+
+    .screenshot-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.22);
+    }
+
+    .screenshot-img {
+      width: 100%;
+      height: auto;
+      max-height: 480px;
+      object-fit: contain;
+      display: block;
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    .editorial-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+      margin-bottom: 22px;
+    }
+
+    .editorial-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .editorial-feature-item .feat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      font-size: 11px;
+      font-weight: 700;
+      color: #22c55e;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .showcase-header {
+      text-align: center;
+      max-width: 740px;
+      margin: 60px auto 44px auto;
+    }
+
+    .showcase-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      color: var(--text-main);
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .showcase-lead {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .editorial-row,
+      .editorial-row.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        padding: 24px;
+        gap: 28px;
+      }
+      .showcase-title {
+        font-size: 28px;
+      }
     }
 
     /* Mock Extension UI inside visuals */
@@ -1483,6 +1580,194 @@
           </a>
         </div>
       </div>
+
+      <!-- ВТОРОЙ ЭКРАН: СКРИНШОТЫ ПРИЛОЖЕНИЯ И ОПИСАНИЯ РАЗДЕЛОВ -->
+      <div class="section-wrap editorial-section" id="overview-showcase">
+        <div class="showcase-header">
+          <div class="badge-tag">Интерфейс и разделы</div>
+          <h2 class="showcase-title">Полный контроль над SmartSender в одном сайдбаре</h2>
+          <p class="showcase-lead">
+            Наглядный обзор всех ключевых рабочих пространств mySmart: контакты, запуск событий, управление переменными, тегами и настройками проектов.
+          </p>
+        </div>
+
+        <div class="editorial-grid">
+          <!-- Раздел 1: Контакты и CRM -->
+          <div class="editorial-row">
+            <div class="editorial-content">
+              <div class="editorial-num">01</div>
+              <h3 class="editorial-heading">Управление контактами & CRM</h3>
+              <p class="editorial-text">
+                Мгновенный поиск подписчиков по ID, имени, телефону или email. Разворачивание карточки контакта с приоритетными переменными, инлайн-управлением тегами (удаление по <code>×</code>, прикрепление по <code>+ Tag</code>) и прямым вызовом Fire Event.
+              </p>
+              <div class="editorial-feature-list">
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Интерактивные чипы тегов с мгновенным удалением и прикреплением</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Приоритетные переменные (Priority Variables) в топе профиля</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Открытие в отдельном всплывающем окне по центру экрана</span>
+                </div>
+              </div>
+              <div class="editorial-badges">
+                <span class="badge-tag">Contacts</span>
+                <span class="badge-tag">Tag Management</span>
+                <span class="badge-tag">Popup Window</span>
+              </div>
+            </div>
+            <div class="editorial-visual">
+              <div class="screenshot-frame">
+                <img src="screenshots/contacts.png" alt="Карточка контакта и теги" loading="lazy" class="screenshot-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Раздел 2: Модуль событий (Fire Event) -->
+          <div class="editorial-row reverse">
+            <div class="editorial-content">
+              <div class="editorial-num">02</div>
+              <h3 class="editorial-heading">Модуль событий (Fire Event)</h3>
+              <p class="editorial-text">
+                Запуск любых триггерных событий SmartSender по официальному API за доли секунды. Незаменимо для тестирования воронок, списания баллов в программах лояльности, имитации вебхуков и ручного перезапуска сценариев.
+              </p>
+              <div class="editorial-feature-list">
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Быстрый ввод Contact ID и названия события (Event Name)</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>История недавних событий с быстрым повтором в один клик</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Очистка истории и подробный статус ответа сервера</span>
+                </div>
+              </div>
+              <div class="editorial-badges">
+                <span class="badge-tag">POST /fire</span>
+                <span class="badge-tag">Event History</span>
+                <span class="badge-tag">Automation Testing</span>
+              </div>
+            </div>
+            <div class="editorial-visual">
+              <div class="screenshot-frame">
+                <img src="screenshots/events.png" alt="Модуль событий Fire Event" loading="lazy" class="screenshot-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Раздел 3: Переменные и перенос между ботами -->
+          <div class="editorial-row">
+            <div class="editorial-content">
+              <div class="editorial-num">03</div>
+              <h3 class="editorial-heading">Редактор переменных & Экспорт / Импорт</h3>
+              <p class="editorial-text">
+                Поиск, редактирование и копирование синтаксиса <code>{{variable}}</code> прямо во время работы. Функция <strong>Project Variables Transfer</strong> позволяет выгружать определения переменных в JSON и импортировать их в новые проекты с автоматическим diff-превью и защитой от перезаписи.
+              </p>
+              <div class="editorial-feature-list">
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Прямое редактирование значений переменных (PUT) с историей отката</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Пользовательские пресеты (Presets) для группировки переменных</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Экспорт и импорт переменных между проектами с diff-анализом</span>
+                </div>
+              </div>
+              <div class="editorial-badges">
+                <span class="badge-tag">Variables</span>
+                <span class="badge-tag">Diff Preview</span>
+                <span class="badge-tag">Transfer JSON</span>
+              </div>
+            </div>
+            <div class="editorial-visual">
+              <div class="screenshot-frame">
+                <img src="screenshots/variables.png" alt="Редактор переменных" loading="lazy" class="screenshot-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Раздел 4: Теги и каталогизация -->
+          <div class="editorial-row reverse">
+            <div class="editorial-content">
+              <div class="editorial-num">04</div>
+              <h3 class="editorial-heading">Менеджер тегов & Избранное</h3>
+              <p class="editorial-text">
+                Каталог всех тегов вашего проекта с мгновенным поиском, копированием Tag ID для внешних интеграций и боков воронок, а также быстрым добавлением в раздел избранных тегов (Favorites).
+              </p>
+              <div class="editorial-feature-list">
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Мгновенный поиск тега по названию с пагинацией</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Копирование Tag ID в один клик с визуальным подтверждением</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Список избранных тегов (Favorites) для быстрого доступа</span>
+                </div>
+              </div>
+              <div class="editorial-badges">
+                <span class="badge-tag">Tags Catalog</span>
+                <span class="badge-tag">Favorites</span>
+                <span class="badge-tag">Tag ID Copy</span>
+              </div>
+            </div>
+            <div class="editorial-visual">
+              <div class="screenshot-frame">
+                <img src="screenshots/tags.png" alt="Каталог тегов" loading="lazy" class="screenshot-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Раздел 5: Мультипроектность и системные настройки -->
+          <div class="editorial-row">
+            <div class="editorial-content">
+              <div class="editorial-num">05</div>
+              <h3 class="editorial-heading">Мультипроектность & Настройки</h3>
+              <p class="editorial-text">
+                Переключайтесь между проектами SmartSender без повторной авторизации. Настраивайте умное локальное кэширование ответов API, автопоиск при вводе, акцентные цвета и темную тему.
+              </p>
+              <div class="editorial-feature-list">
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Auto/Manual распознавание проекта по URL в SmartSender</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Умный локальный API-кэш для мгновенной скорости и экономии лимитов</span>
+                </div>
+                <div class="editorial-feature-item">
+                  <span class="feat-icon">✓</span>
+                  <span>Полный бэкап и восстановление пресетов расширения в один файл</span>
+                </div>
+              </div>
+              <div class="editorial-badges">
+                <span class="badge-tag">Multi-Project</span>
+                <span class="badge-tag">Smart Cache</span>
+                <span class="badge-tag">Profile Backup</span>
+              </div>
+            </div>
+            <div class="editorial-visual">
+              <div class="screenshot-frame">
+                <img src="screenshots/settings.png" alt="Настройки и проекты" loading="lazy" class="screenshot-img" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ========================================================================
@@ -1617,6 +1902,70 @@
               <li>Отсутствие сторонних трекеров и аналитики</li>
               <li>Полная поддержка Manifest V3 Content Security Policy</li>
               <li>Локальный кэш без утечек памяти</li>
+            </ul>
+          </div>
+
+          <!-- Feature 7: Action Logs -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Журнал действий & Диагностика (Logs)</h3>
+            <p class="feature-card-text">
+              Сквозной аудит всех запросов к SmartSender REST API в режиме реального времени. Точная расшифровка ошибок валидации 422 с перечислением проблемных параметров.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Логирование запросов, статусов и тел ответов</li>
+              <li>Детализированный вывод ошибок валидации 422</li>
+              <li>Фильтрация и очистка истории в один клик</li>
+              <li>Быстрое обнаружение проблем с авторизацией</li>
+            </ul>
+          </div>
+
+          <!-- Feature 8: Centered Popup View -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Всплывающее окно контактов (Popup)</h3>
+            <p class="feature-card-text">
+              Автономное окно с поддержкой нескольких вкладок для параллельной работы с контактами. Открывается строго по центру экрана, не загораживая рабочую область.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Многовкладочный интерфейс (Multi-tab Contact View)</li>
+              <li>Эргономичное центрирование по экрану браузера</li>
+              <li>Полная поддержка инлайн-редактирования и тегов</li>
+              <li>Кнопка принудительного обновления данных</li>
+            </ul>
+          </div>
+
+          <!-- Feature 9: Smart Cache & Themes -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Кастомизация & Smart Cache</h3>
+            <p class="feature-card-text">
+              Настройте расширение под свой стиль: темная и светлая темы, богатая палитра акцентных цветов, настраиваемый кэш API и автопоиск при вводе без нажатия Enter.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Умное кэширование повторных запросов на 5 минут</li>
+              <li>Поиск на лету (Search as you type / Auto Fetch)</li>
+              <li>Выбор акцентного цвета (Blue, Purple, Emerald и др.)</li>
+              <li>Встроенная проверка обновлений (Update Checker)</li>
             </ul>
           </div>
 
