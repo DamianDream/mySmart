@@ -25,11 +25,26 @@ async function openContactPopup(req) {
     } catch { winId = null; }
   }
 
+  const width = 480;
+  const height = 760;
+  let left = 200;
+  let top = 100;
+  try {
+    const curWin = await chrome.windows.getLastFocused({ populate: false }).catch(() => null)
+                || await chrome.windows.getCurrent().catch(() => null);
+    if (curWin && curWin.width && curWin.height) {
+      left = Math.max(0, Math.round(curWin.left + (curWin.width - width) / 2));
+      top = Math.max(0, Math.round(curWin.top + (curWin.height - height) / 2));
+    }
+  } catch {}
+
   const win = await chrome.windows.create({
     url: chrome.runtime.getURL('contact-popup.html'),
     type: 'popup',
-    width: 460,
-    height: 720
+    width,
+    height,
+    left,
+    top
   });
   await chrome.storage.session.set({ [POPUP_WIN]: win.id });
 }

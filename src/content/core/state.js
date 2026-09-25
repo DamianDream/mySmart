@@ -53,6 +53,8 @@ export const state = {
 
   // Contacts
   contactResults: [],
+  contactSearchTerm: '',
+  selectedContactId: null,
   isSearchingContact: false,
   contactSearchPerformed: false,
   contactShowSearchHist: false,

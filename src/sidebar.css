@@ -1272,6 +1272,10 @@
   }
 }
 
+.ss-spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
 /* ─── VAR CARDS ────────────────────────────────────────── */
 .ss-var-card {
   background: var(--bg2);

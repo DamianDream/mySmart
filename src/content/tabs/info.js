@@ -7,7 +7,8 @@ import { logAction, clearLogs } from '../core/logger.js';
 import { bgFetch, authHeaders } from '../core/api.js';
 import { checkForUpdates } from '../core/updater.js';
 import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
-import { findContacts, renderContactInfoPanel } from './contacts.js';
+import { findContacts, renderContactInfoPanel, fetchContactInfo, updateContactVar } from './contacts.js';
+import { mountContactCard } from '../ui/contactCard.js';
 import { openContactInPopup } from '../core/contactPopup.js';
 import { openFireEventModal } from '../ui/eventModal.js';
 import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear, iExternal, iZap } from '../icons.js';
@@ -234,6 +235,10 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
   }
 
   export function renderContactsTab() {
+    if (state.selectedContactId) {
+      renderContactDetailsView(state.selectedContactId);
+      return;
+    }
     const body = shadowRootRef.getElementById('ss-body');
     body.innerHTML = `
       <div style="margin-bottom:12px;">
@@ -243,7 +248,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
           <span class="ss-text-link" id="ss-contact-fav-btn" style="${state.contactFavorites.length > 0 ? '' : 'display:none;'}">FAVORITE</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
-          <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" style="width:100%;box-sizing:border-box;" />
+          <input class="ss-input" id="ss-contact-input" type="text" placeholder="Email or User ID" autocomplete="off" value="${esc(state.contactSearchTerm || '')}" style="width:100%;box-sizing:border-box;" />
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="ss-btn-search" id="ss-contact-btn" title="Search" style="flex:1;justify-content:center;background:var(--accent);color:var(--accent-text);">Search</button>
             <button class="ss-btn-search" id="ss-contact-reset-btn" title="Reset Search" style="width:auto;padding:8px 12px;justify-content:center;background:var(--bg3);color:var(--text2);">${iReset.replace('width="24" height="24"', 'width="16" height="16"')}</button>
@@ -257,6 +262,99 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
     renderContacts();
     bindContactsEvents();
     checkActiveContactUrl();
+  }
+
+  export function renderContactDetailsView(contactId) {
+    const body = shadowRootRef.getElementById('ss-body');
+    if (!body) return;
+    state.selectedContactId = contactId;
+
+    body.innerHTML = `
+      <div class="ss-contact-detail-view" style="display:flex;flex-direction:column;min-height:100%;">
+        <div class="ss-contact-toolbar" style="display:flex;align-items:center;justify-content:space-between;padding:0 0 10px 0;margin-bottom:8px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;">
+            <button class="ss-var-btn" id="ss-contact-back-btn" title="Back to contacts list" style="display:inline-flex;align-items:center;justify-content:center;padding:0;width:30px;height:30px;border-radius:8px;background:var(--bg3);color:var(--text);border:none;cursor:pointer;flex-shrink:0;">
+              ${iBack}
+            </button>
+            <div id="ss-contact-detail-title" style="font-weight:700;font-size:15px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              Contact #${contactId}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <button class="ss-var-btn" id="ss-contact-refresh-btn" title="Refresh contact data" style="display:inline-flex;align-items:center;justify-content:center;padding:0;width:30px;height:30px;border-radius:8px;background:var(--bg3);color:var(--text2);border:none;cursor:pointer;">
+              ${iReset.replace('width="24" height="24"', 'width="15" height="15"')}
+            </button>
+            <button class="ss-var-btn" id="ss-contact-popout-btn" title="Open in separate popup window" style="display:inline-flex;align-items:center;justify-content:center;padding:0;width:30px;height:30px;border-radius:8px;background:var(--bg3);color:var(--text2);border:none;cursor:pointer;">
+              ${iExternal.replace('width="16" height="16"', 'width="15" height="15"')}
+            </button>
+          </div>
+        </div>
+        <div id="ss-contact-detail-container" style="flex:1;"></div>
+      </div>
+    `;
+
+    const backBtn = shadowRootRef.getElementById('ss-contact-back-btn');
+    if (backBtn) {
+      backBtn.onclick = () => {
+        state.selectedContactId = null;
+        renderContactsTab();
+      };
+    }
+
+    const refreshBtn = shadowRootRef.getElementById('ss-contact-refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.onclick = () => loadContactDetailsData(contactId, true);
+    }
+
+    const popoutBtn = shadowRootRef.getElementById('ss-contact-popout-btn');
+    if (popoutBtn) {
+      popoutBtn.onclick = () => openContactInPopup(contactId);
+    }
+
+    loadContactDetailsData(contactId);
+  }
+
+  async function loadContactDetailsData(contactId, isRefresh = false) {
+    const container = shadowRootRef.getElementById('ss-contact-detail-container');
+    const titleEl = shadowRootRef.getElementById('ss-contact-detail-title');
+    const refreshBtn = shadowRootRef.getElementById('ss-contact-refresh-btn');
+
+    if (!container) return;
+
+    if (isRefresh && refreshBtn) {
+      refreshBtn.classList.add('ss-spinning');
+    } else {
+      container.innerHTML = `<div class="ss-loading" style="display:flex;padding:32px 0;"><div class="ss-spinner"></div><span class="ss-loading-text">Loading details...</span></div>`;
+    }
+
+    try {
+      const data = await fetchContactInfo(contactId);
+      if (state.selectedContactId != contactId) return;
+      if (titleEl) {
+        titleEl.textContent = data.fullName || data.name || `Contact #${contactId}`;
+      }
+      container.innerHTML = '';
+      mountContactCard(container, data, {
+        settings: state.contactSettings || loadContactSettings(),
+        priorityKeys: (loadContactPriorityVars(state.projectId) || '')
+          .split(',')
+          .map(s => s.trim().toLowerCase())
+          .filter(Boolean),
+        projectSlug: state.projectId || getFullProjectFromUrl() || '',
+        editable: true,
+        onSave: async (key, val) => {
+          await updateContactVar(contactId, key, val);
+          const fresh = await fetchContactInfo(contactId);
+          return fresh;
+        }
+      });
+    } catch (err) {
+      if (state.selectedContactId == contactId) {
+        container.innerHTML = `<div class="ss-error visible" style="margin:16px 0;">⚠ ${esc(err.message || 'Failed to load contact')}</div>`;
+      }
+    } finally {
+      if (refreshBtn) refreshBtn.classList.remove('ss-spinning');
+    }
   }
 
   export async function checkActiveContactUrl() {
@@ -376,6 +474,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
 
     const doReset = () => {
       input.value = '';
+      state.contactSearchTerm = '';
       state.contactResults = [];
       state.contactSearchPerformed = false;
       renderContacts();
@@ -384,6 +483,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
 
     const doSearch = async (termOverride = null) => {
       const term = termOverride || input.value.trim(); if (!term) return;
+      state.contactSearchTerm = term;
       if (!termOverride) saveContactSearchHist(state.projectId, term);
       logAction('Search Contacts', `Query: "${term}"`);
 
@@ -468,12 +568,10 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
 
       p.querySelectorAll('.ss-hist-term[data-id]').forEach(el => {
         el.onclick = () => {
-          shadowRootRef.getElementById('ss-contact-input').value = el.dataset.id;
           state.contactShowFavorites = false;
           p.classList.remove('open');
-          shadowRootRef.getElementById('ss-contact-fav-btn').classList.remove('active');
-          const btn = shadowRootRef.getElementById('ss-contact-btn');
-          if (btn) btn.click();
+          shadowRootRef.getElementById('ss-contact-fav-btn')?.classList.remove('active');
+          renderContactDetailsView(el.dataset.id);
         };
       });
     };
@@ -528,6 +626,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       const inp = p.querySelector('#ss-priority-vars-input');
       const val = inp?.value || '';
       saveContactPriorityVars(pid, val);
+      if (state.selectedContactId) loadContactDetailsData(state.selectedContactId);
       if (state.contactInfoId) renderContactInfoPanel(state.contactInfoId);
 
       const btn = p.querySelector('#ss-priority-vars-save');
@@ -552,8 +651,9 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         state.contactSettings[type] = !state.contactSettings[type];
         saveContactSettings(state.contactSettings);
         renderContactSettingsPanel();
+        if (state.selectedContactId) loadContactDetailsData(state.selectedContactId);
         if (state.contactInfoId) renderContactInfoPanel(state.contactInfoId);
-        renderContacts();
+        if (!state.selectedContactId) renderContacts();
       };
     });
   }
@@ -569,7 +669,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       const card = document.createElement('div'); card.className = 'ss-var-card';
       card.style.padding = '12px';
       if (isUrlContact) card.style.border = '1px solid var(--accent)';
-      card.onclick = () => openContactInPopup(c.id);
+      card.onclick = () => renderContactDetailsView(c.id);
 
       const thumb = c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>`;
 
@@ -581,6 +681,9 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
             <div style="font-size:13px;color:var(--text4);">ID: <span style="color:var(--accent);font-weight:600;">${c.id}</span></div>
           </div>
           <div style="display:flex;gap:4px;align-items:center;">
+            <button class="ss-var-btn ss-popout-btn" data-id="${c.id}" title="Open in separate popup window" style="color:var(--text4);display:inline-flex;align-items:center;justify-content:center;padding:0;width:28px;height:28px;">
+              ${iExternal.replace('width="16" height="16"', 'width="13" height="13"')}
+            </button>
             <button class="ss-var-btn ss-fav-btn" data-id="${c.id}" title="${state.contactFavorites.some(f => f.id == c.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.contactFavorites.some(f => f.id == c.id) ? 'var(--accent)' : 'var(--text4)'};">
               ${state.contactFavorites.some(f => f.id == c.id) ? iStarFill : iStar}
             </button>
@@ -601,6 +704,14 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">✉</span> ${esc(c.email)}</div>` : ''}
         ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:12px;">📞</span> ${esc(c.phone)}</div>` : ''}
       `;
+
+      const popoutBtn = card.querySelector('.ss-popout-btn');
+      if (popoutBtn) {
+        popoutBtn.onclick = (e) => {
+          e.stopPropagation();
+          openContactInPopup(c.id);
+        };
+      }
 
       const fireBtn = card.querySelector('.ss-fire-btn');
       if (fireBtn) {
