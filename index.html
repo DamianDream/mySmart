@@ -431,8 +431,13 @@
        VIEW: OVERVIEW (HERO & EDITORIAL CARDS)
        ========================================================================== */
     .hero-section {
-      padding-top: 50px;
-      padding-bottom: 70px;
+      min-height: calc(100vh - var(--header-h) - 180px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 60px;
+      padding-bottom: 80px;
       text-align: center;
     }
 
@@ -1473,19 +1478,10 @@
          ======================================================================== -->
     <section class="tab-view active-view" id="view-overview" aria-labelledby="overview-title">
       <div class="section-wrap hero-section">
-        <div class="hero-pill-badge">
-          <span class="dot"></span>
-          <span>Google Chrome Extension · MV3 Ready</span>
-        </div>
-
         <h1 class="hero-title" id="overview-title">
           Crafted for Speed.
           <span class="sub-title">Engineered for SmartSender.</span>
         </h1>
-
-        <p class="hero-description">
-          Профессиональная боковая панель для маркетологов, разработчиков и операторов чат-ботов. Запускайте триггерные события в один клик, редактируйте переменные и управляйте контактами без переключения вкладок.
-        </p>
 
         <div class="hero-cta-group">
           <a href="mysmart-chrome.zip" download class="btn-pill btn-pill-primary">
@@ -1496,152 +1492,7 @@
             </svg>
             Скачать mysmart-chrome.zip
           </a>
-          <button class="btn-pill btn-pill-secondary" onclick="switchTab('install')">
-            Инструкция по установке →
-          </button>
         </div>
-
-        <!-- Technical Specifications Bar -->
-        <div class="specs-bar-wrap">
-          <div class="specs-grid">
-            <div class="spec-item">
-              <span class="spec-label">Браузер</span>
-              <span class="spec-val">Google Chrome 116+</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Архитектура</span>
-              <span class="spec-val">Manifest V3</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Скорость кэша</span>
-              <span class="spec-val">&lt; 40 ms Local</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Интеграция</span>
-              <span class="spec-val">SmartSender REST v1</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Безопасность</span>
-              <span class="spec-val">Zero-Telemetry</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Numbered Editorial Rows (01, 02, 03) -->
-        <div class="editorial-section">
-          <div class="editorial-grid">
-
-            <!-- Card 01: Fire Event -->
-            <article class="editorial-row">
-              <div class="editorial-content">
-                <div class="editorial-num">01</div>
-                <h2 class="editorial-heading">Мгновенный запуск триггерных событий</h2>
-                <p class="editorial-text">
-                  Вызывайте любые внутренние события SmartSender прямо по Contact ID. Новая вкладка Events позволяет запускать кастомные триггеры, проверять ответы API и вести историю выполненных действий с мгновенной очисткой.
-                </p>
-                <div class="editorial-badges">
-                  <span class="badge-tag">POST /v1/contacts/{id}/fire</span>
-                  <span class="badge-tag">История вызовов</span>
-                  <span class="badge-tag">1-Click из карточки</span>
-                </div>
-              </div>
-              <div class="editorial-visual">
-                <div class="mock-panel">
-                  <div class="mock-header">
-                    <span>MYSENDER TOOLS · EVENTS</span>
-                    <span>ACTIVE</span>
-                  </div>
-                  <div class="mock-tabs">
-                    <div class="mock-tab">Vars</div>
-                    <div class="mock-tab">Tags</div>
-                    <div class="mock-tab">Contacts</div>
-                    <div class="mock-tab active">Event</div>
-                  </div>
-                  <div class="mock-body">
-                    <div class="mock-input-row">
-                      <span class="mock-label">Contact ID</span>
-                      <div class="mock-input">94821049281</div>
-                    </div>
-                    <div class="mock-input-row">
-                      <span class="mock-label">Event Name</span>
-                      <div class="mock-input">order_paid_webhook</div>
-                    </div>
-                    <div class="mock-btn">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                      Fire Event
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 02: Contacts & Popup -->
-            <article class="editorial-row reverse">
-              <div class="editorial-content">
-                <div class="editorial-num">02</div>
-                <h2 class="editorial-heading">Интеллектуальная работа с контактами</h2>
-                <p class="editorial-text">
-                  Находите клиентов по имени, телефону или ID за миллисекунды. Открывайте выносные карточки в независимом окне, просматривайте назначенные теги, изменяйте системные переменные и переходите в консоль без лишних кликов.
-                </p>
-                <div class="editorial-badges">
-                  <span class="badge-tag">Popup Card Window</span>
-                  <span class="badge-tag">Поиск в реальном времени</span>
-                  <span class="badge-tag">Управление тегами</span>
-                </div>
-              </div>
-              <div class="editorial-visual">
-                <div class="mock-panel">
-                  <div class="mock-header">
-                    <span>CONTACT PROFILE</span>
-                    <span>#94821049281</span>
-                  </div>
-                  <div class="mock-body">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                      <div>
-                        <div style="font-weight:700; font-size:14px;">Александр Мельник</div>
-                        <div style="font-size:11px; color:#71717a;">+380 97 123 45 67</div>
-                      </div>
-                      <span style="font-size:11px; background:#f4f4f6; border:1px solid #e4e4e7; padding:2px 8px; border-radius:999px;">VIP Client</span>
-                    </div>
-                    <div style="display:flex; gap:6px; margin-top:6px;">
-                      <button class="mock-btn" style="flex:1; background:#ffffff; color:#09090b; border:1px solid #e4e4e7;">Теги (4)</button>
-                      <button class="mock-btn" style="flex:1;">⚡ Fire Event</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 03: Architecture -->
-            <article class="editorial-row">
-              <div class="editorial-content">
-                <div class="editorial-num">03</div>
-                <h2 class="editorial-heading">Нативная Chrome Side Panel & MV3</h2>
-                <p class="editorial-text">
-                  Никаких тормозящих iframe или перегруженных скриптов контента. Расширение использует нативный Chrome Side Panel API, работает в отдельном фоновом процессе и надежно изолирует ваши токены доступа в локальном хранилище.
-                </p>
-                <div class="editorial-badges">
-                  <span class="badge-tag">Chrome Side Panel API</span>
-                  <span class="badge-tag">chrome.storage.local</span>
-                  <span class="badge-tag">0% Overhead</span>
-                </div>
-              </div>
-              <div class="editorial-visual">
-                <div class="mock-panel" style="background:#09090b; color:#ffffff; padding:20px; font-family:var(--font-mono); font-size:12px;">
-                  <div style="color:#71717a; margin-bottom:8px;">// Chrome Service Worker Architecture</div>
-                  <div style="color:#a1a1aa;"><span style="color:#ffffff;">await</span> chrome.sidePanel.setOptions({</div>
-                  <div style="padding-left:16px; color:#e4e4e7;">path: 'sidepanel.html',</div>
-                  <div style="padding-left:16px; color:#e4e4e7;">enabled: true</div>
-                  <div style="color:#a1a1aa;">});</div>
-                  <div style="margin-top:12px; color:#10b981;">✓ Background latency: 1.2ms</div>
-                  <div style="color:#10b981;">✓ Local storage synchronized</div>
-                </div>
-              </div>
-            </article>
-
-          </div>
-        </div>
-
       </div>
     </section>
 
