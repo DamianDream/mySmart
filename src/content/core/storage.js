@@ -17,6 +17,7 @@ export const K_TAG_FAVORITES = 'ss_tag_favorites';
 export const K_CONTACT_PRIORITY_VARS = (pid) => `ss_contact_priority_vars_${pid}`;
 export const K_VAR_FAVORITES = 'ms_var_favorites';
 export const K_ACTION_LOGS = 'ss_action_logs';
+export const K_EVENT_HISTORY = (pid) => `ss_event_history_${pid}`;
 
 export let __localCache = {};
 
@@ -112,6 +113,26 @@ export const saveContactSearchHist = (pid, term) => {
     arr.unshift(term);
     saveToStorage(K_CONTACT_SEARCH_HIST(pid), arr.slice(0, 100));
   } catch { }
+};
+
+export const loadEventHistory = (pid) => {
+  if (!pid) return [];
+  const list = loadFromCache(K_EVENT_HISTORY(pid), []);
+  return Array.isArray(list) ? list : [];
+};
+
+export const saveEventHistory = (pid, item) => {
+  if (!pid) return;
+  try {
+    const list = loadEventHistory(pid).filter(e => !(e.contactId == item.contactId && e.name === item.name));
+    list.unshift({ ...item, timestamp: Date.now() });
+    saveToStorage(K_EVENT_HISTORY(pid), list.slice(0, 50));
+  } catch { }
+};
+
+export const clearEventHistory = (pid) => {
+  if (!pid) return;
+  saveToStorage(K_EVENT_HISTORY(pid), []);
 };
 
 export const loadVarPresets = (pid) => loadFromCache(K_VAR_PRESETS(pid), []);

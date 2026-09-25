@@ -4,7 +4,7 @@
    DESIGN TOKENS — единая точка настройки цветов и шрифтов
    Тема по умолчанию: Dark. Меняется через applyTheme() в JS.
    ═══════════════════════════════════════════════════════════ */
-#ss-sidebar {
+:host, #ss-sidebar {
   /* ─── Backgrounds ─── */
   --bg-solid: #282828;
   --bg:       rgba(40, 40, 40, 0.85);
@@ -146,6 +146,99 @@
 .ss-toast.visible {
   opacity: 1;
   transform: translateX(0);
+}
+
+.ss-toast.success {
+  border: 1px solid rgba(var(--success-rgb), 0.5);
+  color: var(--success);
+}
+
+.ss-toast.info {
+  border: 1px solid rgba(var(--accent-rgb), 0.5);
+  color: var(--accent);
+}
+
+/* ─── MODAL OVERLAY & BOX ───────────────────────────────── */
+.ss-modal-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.78) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999999 !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  animation: ss-fade-in 0.15s ease-out;
+}
+
+@keyframes ss-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ss-modal-box {
+  width: 100%;
+  max-width: 360px;
+  background: #242426 !important;
+  background: var(--bg-solid, #242426) !important;
+  border: 1px solid var(--border2, rgba(255, 255, 255, 0.2)) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 100000000 !important;
+  color: var(--text, #ffffff) !important;
+  animation: ss-scale-in 0.15s ease-out;
+}
+
+@keyframes ss-scale-in {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.ss-modal-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-solid, #242426);
+}
+
+.ss-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text, #ffffff);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ss-modal-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-solid, #242426);
+}
+
+.ss-modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  background: var(--bg-solid, #242426);
 }
 
 /* ─── PANEL SEARCH ─────────────────────────────────────── */
@@ -314,6 +407,11 @@
 }
 
 .ss-text-link {
+  background: none;
+  border: none;
+  padding: 0;
+  outline: none;
+  font-family: inherit;
   font-size: 11px;
   font-weight: 600;
   color: var(--text4);

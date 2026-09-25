@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mySmart — Профессиональное Chrome-расширение для SmartSender</title>
+  <meta name="description" content="mySmart (mySender Tools) — сверхбыстрое расширение Google Chrome для платформы SmartSender. Запуск триггерных событий (Fire Event), управление переменными, тегами и карточками контактов в нативной боковой панели.">
+  <meta name="keywords" content="SmartSender, Google Chrome extension, Chrome sidepanel, SmartSender API, Fire Event, автоматизация мессенджеров, чат-боты, mySmart, mySender Tools">
+  <meta name="author" content="mySmart Team">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mysmart.app/">
+  <link rel="icon" type="image/png" href="icon-128.png">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mysmart.app/">
+  <meta property="og:site_name" content="mySmart">
+  <meta property="og:title" content="mySmart — Интеллектуальное Chrome-расширение для SmartSender">
+  <meta property="og:description" content="Управляйте переменными, тегами, контактами и запускайте триггерные события в SmartSender прямо из нативной боковой панели Chrome.">
+  <meta property="og:image" content="icon-128.png">
+  <meta property="og:locale" content="ru_RU">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mySmart — SmartSender Chrome Extension">
+  <meta name="twitter:description" content="Сверхбыстрая нативная боковая панель для SmartSender: запуск событий, мгновенный поиск контактов, правка переменных.">
+  <meta name="twitter:image" content="icon-128.png">
+
+  <!-- Structured Data: SoftwareApplication & WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "mySmart",
+        "alternateName": "mySender Tools",
+        "operatingSystem": "Google Chrome",
+        "applicationCategory": "BrowserExtension",
+        "applicationSubCategory": "DeveloperApplication",
+        "softwareVersion": "0.3.0",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Chrome-расширение для ускорения работы с платформой SmartSender: запуск триггерных событий, управление контактами, переменными и тегами.",
+        "featureList": [
+          "Запуск триггерных событий SmartSender (Fire Event)",
+          "Нативная боковая панель Chrome Side Panel",
+          "Мгновенный поиск и детальные карточки контактов",
+          "Управление переменными и тегами в один клик",
+          "Локальное безопасное кэширование без задержек"
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "name": "mySmart — Профессиональное Chrome-расширение для SmartSender",
+        "url": "https://mysmart.app/",
+        "description": "Официальная страница скачивания, описания функционала и хронологии версий расширения mySmart для Google Chrome."
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & TOKENS
+       Neutral monochrome palette by default (high-end editorial minimal).
+       To add or switch accent color, update --accent-primary and related tokens below.
+       ========================================================================== */
+    :root {
+      /* ACCENT COLOR SYSTEM (Currently Neutral Monochrome. Ready for instant color swap) */
+      --accent-primary: #111111;         /* <-- CHANGE ACCENT HERE, e.g. #0066FF, #FF3366 */
+      --accent-hover: #27272a;           /* Hover state for accent buttons */
+      --accent-active: #000000;          /* Active/pressed state */
+      --accent-contrast: #ffffff;        /* Text on accent surface */
+      --accent-subtle: #f4f4f5;          /* Subtle tinted background */
+      --accent-border: #e4e4e7;          /* Accent border */
+      --accent-glow: rgba(0, 0, 0, 0.06);/* Soft shadow/ring */
+
+      /* Neutral Palette (Light Luxury / High Contrast) */
+      --bg-page: #fafafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f4f4f6;
+      --bg-muted: #eef0f2;
+      --bg-dark: #09090b;
+      --bg-dark-surface: #18181b;
+
+      --border-light: #ececee;
+      --border-base: #e2e2e6;
+      --border-dark: #27272a;
+
+      --text-main: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --text-subtle: #a1a1aa;
+      --text-light: #ffffff;
+      --text-light-muted: #a1a1aa;
+
+      /* Metrics & Radius */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --container-max: 1200px;
+      --header-h: 70px;
+
+      /* Typography */
+      --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", "Inter", "Helvetica Neue", sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+      /* Transition */
+      --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-smooth: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.55;
+      font-size: 15px;
+      overflow-x: hidden;
+      background-color: var(--bg-page);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      outline: none;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: rgba(250, 250, 252, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .header-container {
+      max-width: var(--container-max);
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-text {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-base);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-subtle);
+      padding: 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-light);
+    }
+
+    .nav-tab-btn {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 7px 18px;
+      border-radius: var(--radius-full);
+      transition: all var(--transition-fast);
+      letter-spacing: -0.2px;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .nav-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 20px;
+      border-radius: var(--radius-full);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-pill-primary {
+      background: var(--accent-primary);
+      color: var(--accent-contrast);
+      border: 1px solid var(--accent-primary);
+    }
+
+    .btn-pill-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-pill-secondary {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-base);
+    }
+
+    .btn-pill-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: var(--text-muted);
+    }
+
+    /* Mobile Nav Toggle */
+    .mobile-menu-btn {
+      display: none;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-base);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT CONTAINER & TAB VIEWS
+       ========================================================================== */
+    main {
+      flex: 1;
+      width: 100%;
+    }
+
+    .tab-view {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .tab-view.active-view {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-wrap {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    /* ==========================================================================
+       VIEW: OVERVIEW (HERO & EDITORIAL CARDS)
+       ========================================================================== */
+    .hero-section {
+      padding-top: 50px;
+      padding-bottom: 70px;
+      text-align: center;
+    }
+
+    .hero-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-pill-badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981; /* system live indicator */
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: var(--text-main);
+      max-width: 900px;
+      margin: 0 auto 20px;
+    }
+
+    .hero-title span.sub-title {
+      display: block;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .hero-cta-group .btn-pill {
+      font-size: 15px;
+      padding: 13px 30px;
+    }
+
+    /* Specs Bar (Inspired by Screenshot 2) */
+    .specs-bar-wrap {
+      max-width: 1040px;
+      margin: 0 auto 60px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 14px 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      padding: 6px 12px;
+      border-right: 1px solid var(--border-light);
+    }
+
+    .spec-item:last-child {
+      border-right: none;
+    }
+
+    .spec-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .spec-val {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+    }
+
+    /* Editorial Numbered Cards (01, 02, 03 - Inspired by Screenshot 1) */
+    .editorial-section {
+      margin-top: 40px;
+      margin-bottom: 80px;
+    }
+
+    .editorial-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .editorial-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 44px;
+      transition: box-shadow var(--transition-smooth);
+    }
+
+    .editorial-row:hover {
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+    }
+
+    .editorial-row.reverse {
+      direction: rtl;
+    }
+
+    .editorial-row.reverse .editorial-content,
+    .editorial-row.reverse .editorial-visual {
+      direction: ltr;
+    }
+
+    .editorial-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .editorial-num {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -2px;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .editorial-heading {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .editorial-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .editorial-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-base);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+    }
+
+    .editorial-visual {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Mock Extension UI inside visuals */
+    .mock-panel {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .mock-header {
+      background: #09090b;
+      color: #ffffff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .mock-tabs {
+      display: flex;
+      background: #f4f4f6;
+      border-bottom: 1px solid var(--border-base);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .mock-tab {
+      padding: 8px 14px;
+      color: var(--text-muted);
+      border-right: 1px solid var(--border-light);
+    }
+
+    .mock-tab.active {
+      background: #ffffff;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--accent-primary);
+    }
+
+    .mock-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mock-input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mock-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .mock-input {
+      background: #fafafc;
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    .mock-btn {
+      background: #09090b;
+      color: #ffffff;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ==========================================================================
+       VIEW: FEATURES (ФУНКЦИОНАЛ)
+       ========================================================================== */
+    .features-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+
+    .page-lead {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .features-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      transition: all var(--transition-smooth);
+    }
+
+    .feature-card:hover {
+      border-color: var(--text-muted);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    .feature-card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .feature-card-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .feature-specs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--border-light);
+      padding-top: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .feature-specs-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-specs-list li::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    /* Comparison / Architecture table */
+    .specs-table-wrap {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-top: 40px;
+    }
+
+    .table-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .data-table th, .data-table td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .data-table th {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      background: var(--bg-subtle);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: var(--bg-subtle);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-base);
+    }
+
+    /* ==========================================================================
+       VIEW: CHANGELOG (ХРОНОЛОГИЯ ИЗМЕНЕНИЙ)
+       ========================================================================== */
+    .timeline-container {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 18px;
+      width: 2px;
+      background: var(--border-base);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 56px;
+      margin-bottom: 48px;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: 10px;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 3px solid var(--text-main);
+      z-index: 2;
+    }
+
+    .timeline-item.latest .timeline-marker {
+      background: var(--text-main);
+      box-shadow: 0 0 0 4px var(--accent-subtle);
+    }
+
+    .timeline-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+    }
+
+    .timeline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 16px;
+    }
+
+    .version-tag {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .version-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .pill-current {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #09090b;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .change-group {
+      margin-bottom: 16px;
+    }
+
+    .change-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .change-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .change-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .change-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .change-list li span.bullet {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       VIEW: INSTALLATION (УСТАНОВКА В GOOGLE CHROME)
+       ========================================================================== */
+    .install-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .install-steps-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 50px;
+    }
+
+    .install-step-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      transition: border-color var(--transition-fast);
+    }
+
+    .install-step-card:hover {
+      border-color: var(--text-muted);
+    }
+
+    .step-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .code-action-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-main);
+      max-width: 480px;
+    }
+
+    .copy-chip-btn {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .copy-chip-btn:hover {
+      background: var(--bg-dark);
+      color: #ffffff;
+      border-color: var(--bg-dark);
+    }
+
+    /* FAQ Box */
+    .faq-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-base);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 40px;
+    }
+
+    .faq-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 24px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border-light);
+      padding: 18px 0;
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .faq-q {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-dark);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       FOOTER (Minimal Editorial)
+       ========================================================================== */
+    .site-footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-light);
+      padding: 48px 24px 36px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .footer-nav a:hover {
+      color: var(--text-main);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-light);
+      padding-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .spec-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
+        padding-bottom: 12px;
+      }
+      .editorial-row, .editorial-row.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        padding: 30px;
+      }
+      .features-card-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: 42px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-tabs {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .mobile-nav-panel {
+        display: none;
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--border-base);
+        padding: 16px;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 99;
+      }
+      .mobile-nav-panel.open {
+        display: flex;
+      }
+      .mobile-nav-btn {
+        text-align: left;
+        padding: 12px 16px;
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        color: var(--text-main);
+      }
+      .mobile-nav-btn.active {
+        background: var(--bg-subtle);
+      }
+      .install-step-card {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SITE HEADER
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="header-container">
+      <div class="brand-wrap">
+        <div class="brand-icon">mS</div>
+        <div class="brand-text">
+          <span class="brand-name">mySmart</span>
+          <span class="brand-badge">v0.3.0 · MV3</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Monochrome Minimalist) -->
+      <nav class="nav-tabs" role="tablist" aria-label="Main Navigation">
+        <button class="nav-tab-btn active" role="tab" aria-selected="true" data-tab="overview">Обзор</button>
+        <button class="nav-tab-btn" role="tab" aria-selected="false" data-tab="features">Функционал</button>
+        <button class="nav-tab-btn" role="tab" aria-selected="false" data-tab="changelog">Хронология</button>
+        <button class="nav-tab-btn" role="tab" aria-selected="false" data-tab="install">Установка</button>
+      </nav>
+
+      <div class="header-actions">
+        <a href="mysmart-chrome.zip" download class="btn-pill btn-pill-primary" id="headerDownloadBtn" title="Скачать zip архив">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Скачать для Chrome
+        </a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Открыть меню">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Dropdown -->
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <button class="mobile-nav-btn active" data-tab="overview">Обзор</button>
+      <button class="mobile-nav-btn" data-tab="features">Функционал</button>
+      <button class="mobile-nav-btn" data-tab="changelog">Хронология версий</button>
+      <button class="mobile-nav-btn" data-tab="install">Инструкция по установке</button>
+    </div>
+  </header>
+
+  <main role="main">
+
+    <!-- ========================================================================
+         TAB VIEW 1: OVERVIEW (ГЛАВНАЯ СТРАНИЦА)
+         ======================================================================== -->
+    <section class="tab-view active-view" id="view-overview" aria-labelledby="overview-title">
+      <div class="section-wrap hero-section">
+        <div class="hero-pill-badge">
+          <span class="dot"></span>
+          <span>Google Chrome Extension · MV3 Ready</span>
+        </div>
+
+        <h1 class="hero-title" id="overview-title">
+          Crafted for Speed.
+          <span class="sub-title">Engineered for SmartSender.</span>
+        </h1>
+
+        <p class="hero-description">
+          Профессиональная боковая панель для маркетологов, разработчиков и операторов чат-ботов. Запускайте триггерные события в один клик, редактируйте переменные и управляйте контактами без переключения вкладок.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="mysmart-chrome.zip" download class="btn-pill btn-pill-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Скачать mysmart-chrome.zip
+          </a>
+          <button class="btn-pill btn-pill-secondary" onclick="switchTab('install')">
+            Инструкция по установке →
+          </button>
+        </div>
+
+        <!-- Technical Specifications Bar (Inspired by Screenshot 2) -->
+        <div class="specs-bar-wrap">
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Браузер</span>
+              <span class="spec-val">Google Chrome 116+</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Архитектура</span>
+              <span class="spec-val">Manifest V3</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Скорость кэша</span>
+              <span class="spec-val">&lt; 40 ms Local</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Интеграция</span>
+              <span class="spec-val">SmartSender REST v1</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Безопасность</span>
+              <span class="spec-val">Zero-Telemetry</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numbered Editorial Rows (01, 02, 03 - Inspired by Screenshot 1) -->
+        <div class="editorial-section">
+          <div class="editorial-grid">
+
+            <!-- Card 01: Fire Event -->
+            <article class="editorial-row">
+              <div class="editorial-content">
+                <div class="editorial-num">01</div>
+                <h2 class="editorial-heading">Мгновенный запуск триггерных событий</h2>
+                <p class="editorial-text">
+                  Вызывайте любые внутренние события SmartSender прямо по Contact ID. Новая вкладка Events позволяет запускать кастомные триггеры, проверять ответы API и вести историю выполненных действий с мгновенной очисткой.
+                </p>
+                <div class="editorial-badges">
+                  <span class="badge-tag">POST /v1/contacts/{id}/fire</span>
+                  <span class="badge-tag">История вызовов</span>
+                  <span class="badge-tag">1-Click из карточки</span>
+                </div>
+              </div>
+              <div class="editorial-visual">
+                <!-- Mockup Extension Card for Event Firing -->
+                <div class="mock-panel">
+                  <div class="mock-header">
+                    <span>MYSENDER TOOLS · EVENTS</span>
+                    <span>ACTIVE</span>
+                  </div>
+                  <div class="mock-tabs">
+                    <div class="mock-tab">Vars</div>
+                    <div class="mock-tab">Tags</div>
+                    <div class="mock-tab">Contacts</div>
+                    <div class="mock-tab active">Event</div>
+                  </div>
+                  <div class="mock-body">
+                    <div class="mock-input-row">
+                      <span class="mock-label">Contact ID</span>
+                      <div class="mock-input">94821049281</div>
+                    </div>
+                    <div class="mock-input-row">
+                      <span class="mock-label">Event Name</span>
+                      <div class="mock-input">order_paid_webhook</div>
+                    </div>
+                    <div class="mock-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                      Fire Event
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 02: Contacts & Popup -->
+            <article class="editorial-row reverse">
+              <div class="editorial-content">
+                <div class="editorial-num">02</div>
+                <h2 class="editorial-heading">Интеллектуальная работа с контактами</h2>
+                <p class="editorial-text">
+                  Находите клиентов по имени, телефону или ID за миллисекунды. Открывайте выносные карточки в независимом окне, просматривайте назначенные теги, изменяйте системные переменные и переходите в консоль без лишних кликов.
+                </p>
+                <div class="editorial-badges">
+                  <span class="badge-tag">Popup Card Window</span>
+                  <span class="badge-tag">Поиск в реальном времени</span>
+                  <span class="badge-tag">Управление тегами</span>
+                </div>
+              </div>
+              <div class="editorial-visual">
+                <div class="mock-panel">
+                  <div class="mock-header">
+                    <span>CONTACT PROFILE</span>
+                    <span>#94821049281</span>
+                  </div>
+                  <div class="mock-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div>
+                        <div style="font-weight:700; font-size:14px;">Александр Мельник</div>
+                        <div style="font-size:11px; color:#71717a;">+380 97 123 45 67</div>
+                      </div>
+                      <span style="font-size:11px; background:#f4f4f6; border:1px solid #e4e4e7; padding:2px 8px; border-radius:999px;">VIP Client</span>
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                      <button class="mock-btn" style="flex:1; background:#ffffff; color:#09090b; border:1px solid #e4e4e7;">Теги (4)</button>
+                      <button class="mock-btn" style="flex:1;">⚡ Fire Event</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 03: Architecture -->
+            <article class="editorial-row">
+              <div class="editorial-content">
+                <div class="editorial-num">03</div>
+                <h2 class="editorial-heading">Нативная Chrome Side Panel & MV3</h2>
+                <p class="editorial-text">
+                  Никаких тормозящих iframe или перегруженных скриптов контента. Расширение использует нативный Chrome Side Panel API, работает в отдельном фоновом процессе и надежно изолирует ваши токены доступа в локальном хранилище.
+                </p>
+                <div class="editorial-badges">
+                  <span class="badge-tag">Chrome Side Panel API</span>
+                  <span class="badge-tag">chrome.storage.local</span>
+                  <span class="badge-tag">0% Overhead</span>
+                </div>
+              </div>
+              <div class="editorial-visual">
+                <div class="mock-panel" style="background:#09090b; color:#ffffff; padding:20px; font-family:var(--font-mono); font-size:12px;">
+                  <div style="color:#71717a; margin-bottom:8px;">// Chrome Service Worker Architecture</div>
+                  <div style="color:#a1a1aa;"><span style="color:#ffffff;">await</span> chrome.sidePanel.setOptions({</div>
+                  <div style="padding-left:16px; color:#e4e4e7;">path: 'sidepanel.html',</div>
+                  <div style="padding-left:16px; color:#e4e4e7;">enabled: true</div>
+                  <div style="color:#a1a1aa;">});</div>
+                  <div style="margin-top:12px; color:#10b981;">✓ Background latency: 1.2ms</div>
+                  <div style="color:#10b981;">✓ Local storage synchronized</div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB VIEW 2: FEATURES (ПОЛНЫЙ ФУНКЦИОНАЛ)
+         ======================================================================== -->
+    <section class="tab-view" id="view-features" aria-labelledby="features-title">
+      <div class="section-wrap">
+        <div class="features-header">
+          <h1 class="page-title" id="features-title">Функциональные возможности</h1>
+          <p class="page-lead">
+            Полный обзор инструментов и модулей mySmart для ускорения ежедневной работы в SmartSender.
+          </p>
+        </div>
+
+        <div class="features-card-grid">
+
+          <!-- Feature 1: Fire Event -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Модуль событий (Fire Event)</h3>
+            <p class="feature-card-text">
+              Запуск триггерных событий для контактов в один клик. Идеально для тестирования воронок, списания баллов, интеграционных вебхуков и ручного перезапуска логики сценариев.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Отдельная вкладка меню "Events"</li>
+              <li>Кнопка вызова прямо в карточке контакта</li>
+              <li>История последних запусков с кнопкой повтора</li>
+              <li>Очистка истории (Clear History)</li>
+            </ul>
+          </div>
+
+          <!-- Feature 2: Contacts -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Управление контактами</h3>
+            <p class="feature-card-text">
+              Интеллектуальный поиск по всей базе подписчиков. Моментальное открытие карточки с отображением мессенджера, статуса, телефона и пользовательских параметров.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Поиск по имени, номеру и Contact ID</li>
+              <li>Отдельное всплывающее окно (Popup Window)</li>
+              <li>Очередь вызова карточек без подвисаний</li>
+              <li>Прямой переход в SmartSender Console</li>
+            </ul>
+          </div>
+
+          <!-- Feature 3: Variables -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 7 4 4 20 4 20 7"/>
+                <line x1="9" y1="20" x2="15" y2="20"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Редактор переменных</h3>
+            <p class="feature-card-text">
+              Просмотр и изменение значений глобальных и пользовательских переменных контакта. Проверка корректности записи (PUT) и верификация ответа сервера.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Мгновенное копирование синтаксиса {{variable}}</li>
+              <li>Фильтрация и группировка переменных</li>
+              <li>Поддержка числовых, строковых и boolean типов</li>
+              <li>История локальных изменений</li>
+            </ul>
+          </div>
+
+          <!-- Feature 4: Tags -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Менеджер тегов</h3>
+            <p class="feature-card-text">
+              Назначение и удаление тегов прямо из боковой панели. Вы мгновенно видите актуальный список назначенных меток контакта и можете переключать их в реальном времени.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Быстрое назначение и снятие тегов</li>
+              <li>Подсветка тегов в профиле</li>
+              <li>Фильтрация контактов по тегам</li>
+              <li>Синхронизация с API за миллисекунды</li>
+            </ul>
+          </div>
+
+          <!-- Feature 5: Projects & Presets -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Мультипроектность и пресеты</h3>
+            <p class="feature-card-text">
+              Работайте с несколькими проектами SmartSender без постоянного повторного ввода API-токенов. Расширение автоматически сопоставляет активную вкладку с нужным пресетом.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Изолированные токены проектов</li>
+              <li>Автоматическое переключение контекста</li>
+              <li>Быстрое ручное переключение проектов</li>
+              <li>Безопасное хранилище chrome.storage</li>
+            </ul>
+          </div>
+
+          <!-- Feature 6: Privacy & Speed -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Приватность и безопасность</h3>
+            <p class="feature-card-text">
+              Все API-запросы выполняются строго напрямую между вашим браузером и официальным сервером SmartSender. Ваши токены и данные подписчиков никогда не передаются третьим лицам.
+            </p>
+            <ul class="feature-specs-list">
+              <li>Прямые HTTPS-запросы к api.smartsender.com</li>
+              <li>Отсутствие сторонних трекеров и аналитики</li>
+              <li>Полная поддержка Manifest V3 Content Security Policy</li>
+              <li>Локальный кэш без утечек памяти</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Technical Specification Table -->
+        <div class="specs-table-wrap">
+          <h2 class="table-title">Архитектурные спецификации</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Значение</th>
+                <th>Описание</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Браузер</strong></td>
+                <td><code>Google Chrome 116+</code></td>
+                <td>Требуется поддержка Chrome Side Panel API</td>
+              </tr>
+              <tr>
+                <td><strong>Спецификация манифеста</strong></td>
+                <td><code>Manifest V3 (MV3)</code></td>
+                <td>Современный фоновый Service Worker без фонового перерасхода ресурсов</td>
+              </tr>
+              <tr>
+                <td><strong>Эндпоинт событий</strong></td>
+                <td><code>POST /v1/contacts/{id}/fire</code></td>
+                <td>Официальный эндпоинт запуска триггеров SmartSender REST API</td>
+              </tr>
+              <tr>
+                <td><strong>Хранилище данных</strong></td>
+                <td><code>chrome.storage.local</code></td>
+                <td>Безопасное изолированное кэширование токенов и пользовательских настроек</td>
+              </tr>
+              <tr>
+                <td><strong>Сборка</strong></td>
+                <td><code>Vite + Rollup (ES Modules)</code></td>
+                <td>Минимальный размер бандла (~69 KB), моментальный отклик интерфейса</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB VIEW 3: CHANGELOG (ХРОНОЛОГИЯ ИЗМЕНЕНИЙ)
+         ======================================================================== -->
+    <section class="tab-view" id="view-changelog" aria-labelledby="changelog-title">
+      <div class="section-wrap">
+        <div class="features-header">
+          <h1 class="page-title" id="changelog-title">Хронология изменений</h1>
+          <p class="page-lead">
+            История релизов, добавленных функций и архитектурных улучшений проекта mySmart.
+          </p>
+        </div>
+
+        <div class="timeline-container">
+
+          <!-- Release v0.3.0 -->
+          <div class="timeline-item latest">
+            <div class="timeline-marker"></div>
+            <article class="timeline-card">
+              <div class="timeline-head">
+                <div class="version-tag">
+                  <span>v0.3.0</span>
+                  <span class="pill-current">Текущая версия</span>
+                </div>
+                <div class="version-date">Сентябрь 2026</div>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Новый функционал (Events Module)
+                </div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Запуск триггерных событий (Fire Event)</strong>: интеграция с официальным API SmartSender (<code>POST https://api.smartsender.com/v1/contacts/{contactId}/fire</code>).</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Отдельная страница меню "Event"</strong>: удобная форма с полями <code>contactId</code> и <code>name</code> для быстрого запуска любого события.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>Кнопка "Fire Event" в карточке контакта</strong>: запуск события с автоматической подстановкой идентификатора выбранного контакта.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span><strong>История выполненных событий</strong>: сохранение последних вызовов с кнопкой повтора и кнопкой очистки "Clear History".</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Исправления и оптимизация
+                </div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Устранен конфликт наложения модального окна (overlay z-index) поверх контактов внутри сайдбара.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Исправлена видимость кнопки "Clear History" при темных и светлых темах оформления.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Создан новый ультра-минималистичный монохромный сайт скачивания с мгновенной загрузкой и SEO-разметкой.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Добавлена автоматизированная сборка и упаковка релизных архивов: <code>npm run pack</code>.</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <!-- Release v0.2.5 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <article class="timeline-card">
+              <div class="timeline-head">
+                <div class="version-tag">
+                  <span>v0.2.5</span>
+                </div>
+                <div class="version-date">Август 2026</div>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">Улучшения и мультипроектность</div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Автоматическое распознавание ID проекта по URL активной вкладки Chrome.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Изолированное сохранение токенов в защищенном кэше <code>chrome.storage.local</code>.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Оптимизация сетевых запросов: добавление локального TTL-кэша для списка переменных и тегов.</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <!-- Release v0.2.0 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <article class="timeline-card">
+              <div class="timeline-head">
+                <div class="version-tag">
+                  <span>v0.2.0</span>
+                </div>
+                <div class="version-date">Июль 2026</div>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">Модульный рефакторинг и UI</div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Переход на современную модульную структуру кода с бандлером Vite (ES Modules).</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Внедрение выносного модального окна контакта (Contact Popup Window) с очередью запросов.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Добавлены интерактивные чипы быстрого копирования синтаксиса переменных и ID контактов.</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <!-- Release v0.1.0 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <article class="timeline-card">
+              <div class="timeline-head">
+                <div class="version-tag">
+                  <span>v0.1.0</span>
+                </div>
+                <div class="version-date">Июнь 2026</div>
+              </div>
+
+              <div class="change-group">
+                <div class="change-title">Первоначальный релиз</div>
+                <ul class="change-list">
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Запуск первой версии mySmart (mySender Tools) на базе Chrome Manifest V3.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Поддержка Chrome Side Panel API для постоянного доступа к панели управления.</span>
+                  </li>
+                  <li>
+                    <span class="bullet">•</span>
+                    <span>Базовый просмотр переменных, тегов и контактов из SmartSender API.</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB VIEW 4: INSTALL (ИНСТРУКЦИЯ ПО УСТАНОВКЕ)
+         ======================================================================== -->
+    <section class="tab-view" id="view-install" aria-labelledby="install-title">
+      <div class="section-wrap install-container">
+        <div class="features-header">
+          <h1 class="page-title" id="install-title">Установка в Google Chrome</h1>
+          <p class="page-lead">
+            Пошаговая инструкция по ручной установке расширения в режиме разработчика за 60 секунд.
+          </p>
+        </div>
+
+        <div class="install-steps-grid">
+
+          <!-- Step 1 -->
+          <div class="install-step-card">
+            <div class="step-badge">1</div>
+            <div class="step-body">
+              <h2 class="step-title">Скачайте и распакуйте архив</h2>
+              <p class="step-desc">
+                Загрузите готовый пакет расширения <code>mysmart-chrome.zip</code> и распакуйте его в любую удобную папку на вашем компьютере (например, в <code>Загрузки</code> или <code>Документы</code>). Не удаляйте распакованную папку после установки.
+              </p>
+              <a href="mysmart-chrome.zip" download class="btn-pill btn-pill-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Скачать mysmart-chrome.zip
+              </a>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="install-step-card">
+            <div class="step-badge">2</div>
+            <div class="step-body">
+              <h2 class="step-title">Откройте страницу расширений Chrome</h2>
+              <p class="step-desc">
+                Вставьте адрес <code>chrome://extensions</code> в адресную строку вашего браузера Google Chrome и нажмите Enter.
+              </p>
+              <div class="code-action-box">
+                <code>chrome://extensions</code>
+                <button class="copy-chip-btn" onclick="copyToClipboard('chrome://extensions')">
+                  Копировать
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="install-step-card">
+            <div class="step-badge">3</div>
+            <div class="step-body">
+              <h2 class="step-title">Включите «Режим разработчика»</h2>
+              <p class="step-desc">
+                В правом верхнем углу страницы расширений переведите переключатель <strong>«Режим разработчика» (Developer mode)</strong> в активное положение. В панели инструментов появятся дополнительные кнопки управления.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="install-step-card">
+            <div class="step-badge">4</div>
+            <div class="step-body">
+              <h2 class="step-title">Загрузите распакованное расширение</h2>
+              <p class="step-desc">
+                Нажмите на кнопку <strong>«Загрузить распакованное расширение» (Load unpacked)</strong> в левом верхнем углу и выберите распакованную папку (где находится файл <code>manifest.json</code>).
+              </p>
+              <p class="step-desc" style="margin-bottom:0; font-size:13px; color:var(--text-muted);">
+                💡 <strong>Совет:</strong> Нажмите на значок пазла в правом верхнем углу Chrome и закрепите (Pin) иконку mySmart, чтобы боковая панель открывалась по клику или горячим клавишам.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+          <h2 class="faq-title">Часто задаваемые вопросы</h2>
+          
+          <div class="faq-item">
+            <div class="faq-q">Безопасно ли устанавливать расширение вручную?</div>
+            <div class="faq-a">
+              Да, абсолютно. Расширение mySmart не содержит скомпилированного бинарного кода, все исходные скрипты открыты для аудита, а сетевые запросы отправляются напрямую в SmartSender без передачи ваших токенов на сторонние серверы.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Как обновлять mySmart до новых версий?</div>
+            <div class="faq-a">
+              При выходе новой версии скачайте свежий архив, замените файлы в вашей папке расширения и нажмите кнопку «Обновить» (иконка круговой стрелки) на карточке расширения в <code>chrome://extensions</code>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Где взять API токен SmartSender?</div>
+            <div class="faq-a">
+              Перейдите в личный кабинет SmartSender в раздел «Настройки» → «Токены API», создайте новый токен с правами на контакты и переменные, после чего вставьте его в настройки mySmart.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       SITE FOOTER
+       ========================================================================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="brand-wrap">
+          <div class="brand-icon">mS</div>
+          <span class="brand-name">mySmart</span>
+          <span class="brand-badge">Chrome Extension</span>
+        </div>
+
+        <nav class="footer-nav">
+          <a href="#overview" onclick="switchTab('overview')">Обзор</a>
+          <a href="#features" onclick="switchTab('features')">Функционал</a>
+          <a href="#changelog" onclick="switchTab('changelog')">Хронология</a>
+          <a href="#install" onclick="switchTab('install')">Установка</a>
+          <a href="https://smartsendereu.atlassian.net/wiki/spaces/docsru/pages/1686175767/Contacts+API+-+ua" target="_blank" rel="noopener">Документация API ↗</a>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 mySmart (mySender Tools). All rights reserved.</div>
+        <div style="font-family:var(--font-mono);">Manifest V3 · Production Ready · Google Chrome</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification element -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    Скопировано в буфер обмена
+  </div>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Tab Switching Logic
+    const tabButtons = document.querySelectorAll('.nav-tab-btn, .mobile-nav-btn');
+    const tabViews = document.querySelectorAll('.tab-view');
+    const mobilePanel = document.getElementById('mobileNavPanel');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const toast = document.getElementById('toast');
+
+    function switchTab(tabId) {
+      if (!tabId) tabId = 'overview';
+      
+      tabButtons.forEach(btn => {
+        const matches = btn.getAttribute('data-tab') === tabId;
+        btn.classList.toggle('active', matches);
+        if (btn.classList.contains('nav-tab-btn')) {
+          btn.setAttribute('aria-selected', matches ? 'true' : 'false');
+        }
+      });
+
+      tabViews.forEach(view => {
+        const targetViewId = 'view-' + tabId;
+        view.classList.toggle('active-view', view.id === targetViewId);
+      });
+
+      if (mobilePanel) {
+        mobilePanel.classList.remove('open');
+      }
+
+      // Smooth scroll to top of content
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Update URL hash without reload
+      if (history.pushState) {
+        history.pushState(null, null, '#' + tabId);
+      } else {
+        location.hash = '#' + tabId;
+      }
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        switchTab(tab);
+      });
+    });
+
+    if (mobileMenuBtn && mobilePanel) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobilePanel.classList.toggle('open');
+      });
+    }
+
+    // Handle hash on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = location.hash.replace('#', '');
+      if (hash && ['overview', 'features', 'changelog', 'install'].includes(hash)) {
+        switchTab(hash);
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = location.hash.replace('#', '');
+      if (hash && ['overview', 'features', 'changelog', 'install'].includes(hash)) {
+        switchTab(hash);
+      }
+    });
+
+    // Copy to clipboard helper
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`Скопировано: ${text}`);
+        }).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Скопировано: ${text}`);
+      } catch (e) {
+        showToast('Не удалось скопировать');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    let toastTimer = null;
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
+    }
+  </script>
+</body>
+</html>

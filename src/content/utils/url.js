@@ -4,6 +4,7 @@
 // overrides this with the active tab's URL via setUrlSource().
 let _href = () => location.href;
 export const setUrlSource = (fn) => { _href = fn; };
+export const getCurrentUrl = () => _href();
 const curUrl = () => new URL(_href());
 
 export const getProjectFromUrl = () => {

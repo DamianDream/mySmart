@@ -1,4 +1,4 @@
-import { iMenu, iX, iVariable, iTag, iUsers, iLog, iInfo, iExternal, iGear, iFunnel, iChat, iMonitor } from '../icons.js';
+import { iMenu, iX, iVariable, iTag, iUsers, iLog, iInfo, iExternal, iGear, iFunnel, iChat, iMonitor, iZap } from '../icons.js';
 import { shadowRootRef } from '../utils/dom.js';
 import { state } from '../core/state.js';
 import { getPreset, saveLastTab } from '../core/storage.js';
@@ -8,6 +8,7 @@ import { renderVarsTab, closeAllExtraPanels } from '../tabs/vars.js';
 import { renderTagsTab } from '../tabs/tags.js';
 import { renderContactsTab, renderInfoTab } from '../tabs/info.js';
 import { renderLogsTab } from '../tabs/logs.js';
+import { renderEventsTab } from '../tabs/events.js';
 
 // ─── HEADER ───────────────────────────────────────────────────────────────
 export function renderHeader() {
@@ -46,6 +47,10 @@ export function renderNav() {
     <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'contacts' ? 'active' : ''}" data-tab="contacts">
       <span class="ss-nav-icon">${iUsers}</span>
       <span>Contacts</span>
+    </button>
+    <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'events' ? 'active' : ''}" data-tab="events">
+      <span class="ss-nav-icon">${iZap}</span>
+      <span>Event</span>
     </button>
     <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'log' ? 'active' : ''}" data-tab="log">
       <span class="ss-nav-icon">${iLog}</span>
@@ -119,6 +124,7 @@ export function switchView(view) {
       let label = 'Variables';
       if (state.activeTab === 'tags') label = 'Tags';
       if (state.activeTab === 'contacts') label = 'Contacts';
+      if (state.activeTab === 'events') label = 'Event';
       if (state.activeTab === 'log') label = 'Action Logs';
       if (state.activeTab === 'info') label = 'About';
       labelEl.textContent = label;
@@ -126,6 +132,7 @@ export function switchView(view) {
 
     if (state.activeTab === 'tags') renderTagsTab();
     else if (state.activeTab === 'contacts') renderContactsTab();
+    else if (state.activeTab === 'events') renderEventsTab();
     else if (state.activeTab === 'info') renderInfoTab();
     else if (state.activeTab === 'log') renderLogsTab();
     else renderVarsTab();
@@ -140,6 +147,7 @@ export function switchTab(tab) {
   let label = 'Variables';
   if (tab === 'tags') label = 'Tags';
   if (tab === 'contacts') label = 'Contacts';
+  if (tab === 'events') label = 'Event';
   if (tab === 'log') label = 'Action Logs';
   if (tab === 'info') label = 'About';
   const labelEl = shadowRootRef.getElementById('ss-current-tab-label');
@@ -148,6 +156,7 @@ export function switchTab(tab) {
   updateExternalLink(tab);
   if (tab === 'tags') renderTagsTab();
   else if (tab === 'contacts') renderContactsTab();
+  else if (tab === 'events') renderEventsTab();
   else if (tab === 'log') renderLogsTab();
   else if (tab === 'info') renderInfoTab();
   else renderVarsTab();
@@ -157,7 +166,7 @@ export function updateExternalLink(tab) {
   const link = shadowRootRef.getElementById('ss-tab-external-link');
   if (!link) return;
 
-  if (tab === 'log' || tab === 'info') { link.style.display = 'none'; return; }
+  if (tab === 'log' || tab === 'info' || tab === 'events') { link.style.display = 'none'; return; }
 
   const pid = state.projectId;
   const isActive = isSmartsender() && pid;

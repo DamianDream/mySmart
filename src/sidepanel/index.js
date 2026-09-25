@@ -32,6 +32,7 @@ import { checkActiveContactUrl } from '../content/tabs/info.js';
 export * from '../content/tabs/vars.js';
 export * from '../content/tabs/tags.js';
 export * from '../content/tabs/contacts.js';
+export * from '../content/tabs/events.js';
 export * from '../content/tabs/logs.js';
 export * from '../content/tabs/info.js';
 
@@ -42,7 +43,7 @@ let currentUrl = '';
 // off-canvas overlay. (Injected into the shadow root, where the base CSS lives.)
 const OVERRIDE_CSS = `
   #ss-sidebar {
-    position: static !important;
+    position: relative !important;
     inset: auto !important;
     width: 100% !important;
     max-width: none !important;
@@ -50,6 +51,7 @@ const OVERRIDE_CSS = `
     transform: none !important;
     box-shadow: none !important;
     border: none !important;
+    overflow: hidden !important;
   }
   #ss-resize-handle, #ss-extra-resize-handle { display: none !important; }
 

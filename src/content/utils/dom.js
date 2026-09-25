@@ -16,7 +16,7 @@ export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 // Toasts are shown for errors only — info/success calls are ignored.
 // Plain text, no icons; styling lives in .ss-toast (sidebar.css).
 export const showNotice = (msg, type = 'error') => {
-  if (type !== 'error' || !shadowRootRef) return;
+  if (!shadowRootRef) return;
 
   let container = shadowRootRef.getElementById('ss-toast-container');
   if (!container) {
@@ -26,7 +26,7 @@ export const showNotice = (msg, type = 'error') => {
   }
 
   const toast = document.createElement('div');
-  toast.className = 'ss-toast';
+  toast.className = `ss-toast ${type}`;
   toast.textContent = msg;
   container.appendChild(toast);
   void toast.offsetWidth; // force reflow so the transition runs

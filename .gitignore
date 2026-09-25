@@ -23,6 +23,8 @@ logs/
 *.war
 *.ear
 *.zip
+!mysmart-chrome.zip
+!dist.zip
 *.tar.gz
 *.rar
 *.exe

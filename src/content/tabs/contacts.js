@@ -4,8 +4,9 @@ import { bgFetch, authHeaders } from '../core/api.js';
 import { loadContactSettings, saveContactSettings, loadContactPriorityVars } from '../core/storage.js';
 import { getUrlContactId, getFullProjectFromUrl } from '../utils/url.js';
 import { showNotice, copyToClipboard, shadowRootRef, esc } from '../utils/dom.js';
-import { iCopy, iEdit, iDone, iExternal, iX } from '../icons.js';
+import { iCopy, iEdit, iDone, iExternal, iX, iZap } from '../icons.js';
 import { closeAllExtraPanels } from './vars.js';
+import { openFireEventModal } from '../ui/eventModal.js';
 
 
 // ─── CONTACTS TAB ──────────────────────────────────────────────────────────
@@ -44,6 +45,15 @@ import { closeAllExtraPanels } from './vars.js';
     const h = authHeaders(); if (!h) throw new Error('No API token.');
     return bgFetch(`https://api.smartsender.com/v1/contacts/${contactId}`, 'PUT', h, {
       values: { [key]: value }
+    });
+  }
+
+  export async function fireContactEvent(contactId, name) {
+    const h = authHeaders(); if (!h) throw new Error('No API token. Open Settings ⚙');
+    if (!contactId) throw new Error('Contact ID is required');
+    if (!name || !name.trim()) throw new Error('Event name is required');
+    return bgFetch(`https://api.smartsender.com/v1/contacts/${encodeURIComponent(contactId)}/fire`, 'POST', h, {
+      name: name.trim()
     });
   }
 
@@ -128,6 +138,9 @@ import { closeAllExtraPanels } from './vars.js';
                 <div style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
                   <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
                   ${getFullProjectFromUrl() ? `<a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
+                  <button class="ss-info-fire-btn" title="Fire Event" style="color:var(--accent);display:inline-flex;align-items:center;justify-content:center;padding:0;width:24px;height:24px;margin-left:6px;border-radius:6px;background:none;border:none;cursor:pointer;flex-shrink:0;">
+                    ${iZap}
+                  </button>
                 </div>
                 <div style="font-size:13px;color:var(--text4);font-family:Roboto,sans-serif;">ID: ${data.id}</div>
               </div>
@@ -225,6 +238,19 @@ import { closeAllExtraPanels } from './vars.js';
             copyToClipboard(btn.dataset.copy, 'Copy Contact ID', `Copied ID: ${btn.dataset.copy}`);
             const old = btn.innerHTML; btn.innerHTML = iDone;
             setTimeout(() => btn.innerHTML = old, 1500);
+          };
+        });
+
+        // Fire Event button
+        body.querySelectorAll('.ss-info-fire-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            openFireEventModal({
+              contactId: data.id,
+              contactName: data.fullName || data.name || '',
+              customRoot: btn.closest('#ss-sidebar') || shadowRootRef
+            });
           };
         });
 

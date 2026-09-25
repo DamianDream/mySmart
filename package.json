@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build && vite build --config vite.config.sidepanel.js",
+    "pack": "npm run build && (cd dist && zip -rq ../mysmart-chrome.zip . && cp ../mysmart-chrome.zip ../dist.zip)",
     "lint": "eslint src/"
   },
   "keywords": [],

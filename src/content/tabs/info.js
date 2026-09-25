@@ -1,6 +1,6 @@
 import { state } from '../core/state.js';
 import { loadFromCache, saveToStorage, saveVarHistory, loadVarHistory, loadSearchHist, saveSearchHist, loadVarPresets, saveVarPresets, getPreset, loadTagSearchHist, saveTagSearchHist, loadContactSearchHist, saveContactSearchHist, loadContactSettings, saveContactSettings, loadLogs, saveLogs, saveGlobalSettings, loadContactPriorityVars, saveContactPriorityVars, saveContactFavorites } from '../core/storage.js';
-import { getUrlContactId, getFullProjectFromUrl } from '../utils/url.js';
+import { getUrlContactId, getFullProjectFromUrl, getCurrentUrl } from '../utils/url.js';
 import { toggleSidePanel } from '../ui/sidebar.js';
 import { showNotice, copyToClipboard, esc, shadowRootRef, debounce } from '../utils/dom.js';
 import { logAction, clearLogs } from '../core/logger.js';
@@ -9,7 +9,8 @@ import { checkForUpdates } from '../core/updater.js';
 import { searchDefinitions, fetchDefinitionsByIds, updateDefinition, searchTags } from '../models/smartsender.js';
 import { findContacts, renderContactInfoPanel } from './contacts.js';
 import { openContactInPopup } from '../core/contactPopup.js';
-import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear, iExternal } from '../icons.js';
+import { openFireEventModal } from '../ui/eventModal.js';
+import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFill, iSave, iTrash, iPen, iAddToPreset, iBack, iX, iTag, iFunnel, iChat, iGear, iExternal, iZap } from '../icons.js';
 
 
 
@@ -75,7 +76,8 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
 
       <div class="ss-section-label" style="margin-bottom:12px;">Feedback & Support</div>
       
-      <div id="ss-feedback-form-container" style="background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px;">
+      <div id="ss-feedback-form-container" style="background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px; position:relative;">
+        <input type="text" id="ss-feedback-hp" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;pointer-events:none;" />
         <div>
           <label style="display:block;font-size:11px;color:var(--text4);margin-bottom:4px;">Name <span style="color:var(--error);">*</span></label>
           <input type="text" id="ss-feedback-name" class="ss-input" placeholder="Your name" value="${esc(settings.feedbackName || '')}" />
@@ -115,6 +117,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
     const emailIn = shadowRootRef.getElementById('ss-feedback-email');
     const typeIn = shadowRootRef.getElementById('ss-feedback-type');
     const descIn = shadowRootRef.getElementById('ss-feedback-desc');
+    const hpIn = shadowRootRef.getElementById('ss-feedback-hp');
     const btn = shadowRootRef.getElementById('ss-feedback-submit');
     const msgEl = shadowRootRef.getElementById('ss-feedback-msg');
 
@@ -123,6 +126,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       const email = emailIn.value.trim();
       const topic = typeIn.value;
       const desc = descIn.value.trim();
+      const hp = hpIn ? hpIn.value.trim() : '';
 
       // Reset borders
       [nameIn, emailIn, typeIn, descIn].forEach(el => el.style.borderColor = '');
@@ -148,13 +152,15 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       settings.feedbackEmail = emailIn.value.trim();
       saveGlobalSettings(settings);
 
+      const realPageUrl = getCurrentUrl();
       const payload = {
         type: typeIn.value,
         message: desc,
         name: settings.feedbackName,
         email: settings.feedbackEmail,
-        pageUrl: location.href,
-        pageTitle: document.title,
+        hp_field: hp,
+        pageUrl: realPageUrl || location.href,
+        pageTitle: state.projectName ? `SmartSender [${state.projectName}]` : (document.title || 'SmartSender'),
         extensionName: chrome.runtime.getManifest().name,
         extensionVersion: chrome.runtime.getManifest().version,
         browser: 'Chrome',
@@ -164,6 +170,7 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         installId: settings.installId,
         meta: {
           section: 'about-tab',
+          projectId: state.projectId || null,
           severity: typeIn.value === 'bug' ? 'high' : 'medium'
         }
       };
@@ -171,10 +178,16 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
       try {
         const res = await fetch('https://extension-feedback-api.batalshikov-d.workers.dev/api/feedback', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Feedback-Origin': 'mysender-tools-ext'
+          },
           body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Failed to send feedback');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `Server returned ${res.status}`);
+        }
         const formContainer = shadowRootRef.getElementById('ss-feedback-form-container');
         const successContainer = shadowRootRef.getElementById('ss-feedback-success-container');
         formContainer.style.display = 'none';
@@ -564,6 +577,9 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
             <button class="ss-var-btn ss-fav-btn" data-id="${c.id}" title="${state.contactFavorites.some(f => f.id == c.id) ? 'Remove from favorites' : 'Add to favorites'}" style="color:${state.contactFavorites.some(f => f.id == c.id) ? 'var(--accent)' : 'var(--text4)'};">
               ${state.contactFavorites.some(f => f.id == c.id) ? iStarFill : iStar}
             </button>
+            <button class="ss-var-btn ss-fire-btn" data-id="${c.id}" title="Fire Event" style="color:var(--accent);display:inline-flex;align-items:center;justify-content:center;padding:0;width:28px;height:28px;">
+              ${iZap}
+            </button>
             ${getFullProjectFromUrl() ? `
               <a href="https://messenger.smartsender.com/chats?project=${getFullProjectFromUrl()}&selectedContactId=${c.id}" 
                  target="_blank" title="Open chat" class="ss-var-btn" 
@@ -578,6 +594,19 @@ import { iCopy, iEdit, iDone, iReset, iHistory, iSearch, iPreset, iStar, iStarFi
         ${!state.contactSettings.compactCards && c.email ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">✉</span> ${esc(c.email)}</div>` : ''}
         ${!state.contactSettings.compactCards && c.phone ? `<div style="font-size:14px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="font-size:12px;">📞</span> ${esc(c.phone)}</div>` : ''}
       `;
+
+      const fireBtn = card.querySelector('.ss-fire-btn');
+      if (fireBtn) {
+        fireBtn.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          openFireEventModal({
+            contactId: c.id,
+            contactName: c.fullName || c.name || '',
+            customRoot: card.closest('#ss-sidebar') || shadowRootRef
+          });
+        };
+      }
 
       card.querySelector('.ss-copy-btn').onclick = (e) => {
         const btn = e.currentTarget; e.stopPropagation();

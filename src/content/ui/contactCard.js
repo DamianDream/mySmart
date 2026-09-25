@@ -1,7 +1,8 @@
 // Reusable contact-card renderer (used by the contact pop-up window). Mirrors
 // the slide-panel card layout, with inline variable editing.
 import { esc, copyToClipboard } from '../utils/dom.js';
-import { iCopy, iDone, iEdit, iExternal, iX } from '../icons.js';
+import { iCopy, iDone, iEdit, iExternal, iX, iZap } from '../icons.js';
+import { openFireEventModal } from './eventModal.js';
 
 const STANDARD_KEYS = ['id', 'name', 'firstName', 'lastName', 'fullName', 'email', 'phone', 'photo', 'createdAt', 'notes', 'tags', 'values', 'thumb', 'updatedAt', 'system_city', 'system_country', 'system_continent', 'system_timezone', 'system_os', 'system_browser', 'is_active', 'userId', 'projectId'];
 
@@ -54,6 +55,9 @@ function bodyHTML(data, vars, { settings, priorityKeys, projectSlug, filter, edi
           <div style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;">
             <span style="overflow:hidden;text-overflow:ellipsis;">${esc(data.fullName || data.name || 'Unnamed')}</span>
             ${projectSlug ? `<a href="https://messenger.smartsender.com/chats?project=${projectSlug}&selectedContactId=${data.id}" target="_blank" title="Open chat" style="color:var(--text4);text-decoration:none;display:inline-flex;margin-left:8px;flex-shrink:0;">${iExternal}</a>` : ''}
+            <button class="ss-card-fire-btn" title="Fire Event" style="color:var(--accent);display:inline-flex;align-items:center;justify-content:center;padding:0;width:24px;height:24px;margin-left:6px;border-radius:6px;background:none;border:none;cursor:pointer;flex-shrink:0;">
+              ${iZap}
+            </button>
           </div>
           <div style="font-size:13px;color:var(--text4);">ID: <span style="color:var(--accent);font-weight:600;">${data.id}</span></div>
         </div>
@@ -149,6 +153,18 @@ export function mountContactCard(container, data, opts) {
     });
     body.querySelectorAll('.ss-info-detail-row, .ss-info-var').forEach(el => {
       el.onclick = (e) => { if (e.target.closest('button') || e.target.closest('input')) return; el.classList.toggle('expanded'); };
+    });
+
+    body.querySelectorAll('.ss-card-fire-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        openFireEventModal({
+          contactId: current.id,
+          contactName: current.fullName || current.name || '',
+          customRoot: btn.closest('#ss-sidebar') || container.closest?.('#ss-sidebar') || container.getRootNode()
+        });
+      };
     });
 
     if (!editable) return;
