@@ -141,6 +141,10 @@
       background-color: var(--bg-page);
     }
 
+    body.drawer-open {
+      overflow: hidden;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
@@ -156,14 +160,14 @@
     }
 
     /* ==========================================================================
-       TOP NAVIGATION BAR
+       SITE HEADER
        ========================================================================== */
     .site-header {
       position: sticky;
       top: 0;
       z-index: 100;
       height: var(--header-h);
-      background: rgba(250, 250, 252, 0.88);
+      background: rgba(250, 250, 252, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-light);
@@ -182,51 +186,36 @@
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
     }
 
     .brand-icon {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--bg-dark);
-      color: #fff;
+      color: #ffffff;
       font-weight: 800;
       font-size: 14px;
       letter-spacing: -0.5px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .brand-text {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      flex-shrink: 0;
     }
 
     .brand-name {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 19px;
+      font-size: 20px;
       letter-spacing: -0.5px;
       color: var(--text-main);
     }
 
-    .brand-badge {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-base);
-      padding: 2px 7px;
-      border-radius: var(--radius-full);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Nav Tabs */
+    /* Nav Tabs (Desktop) */
     .nav-tabs {
       display: flex;
       align-items: center;
@@ -302,16 +291,112 @@
       border-color: var(--text-muted);
     }
 
-    /* Mobile Nav Toggle */
+    /* Mobile Hamburger Trigger */
     .mobile-menu-btn {
       display: none;
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       align-items: center;
       justify-content: center;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-base);
       color: var(--text-main);
+      background: var(--bg-surface);
+      transition: background var(--transition-fast);
+    }
+
+    .mobile-menu-btn:hover {
+      background: var(--bg-subtle);
+    }
+
+    /* ==========================================================================
+       FULLSCREEN MOBILE SLIDE-IN DRAWER
+       ========================================================================== */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--bg-surface);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 24px 36px;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      visibility: hidden;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 32px;
+    }
+
+    .drawer-close-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-base);
+      color: var(--text-main);
+      background: var(--bg-surface);
+    }
+
+    .drawer-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .drawer-nav-link {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: -0.6px;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+      transition: color var(--transition-fast);
+    }
+
+    .drawer-nav-link.active {
+      color: var(--text-main);
+    }
+
+    .drawer-nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .drawer-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .drawer-bottom .btn-pill {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
     }
 
     /* ==========================================================================
@@ -371,7 +456,7 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #10b981; /* system live indicator */
+      background: #10b981;
     }
 
     .hero-title {
@@ -414,7 +499,7 @@
       padding: 13px 30px;
     }
 
-    /* Specs Bar (Inspired by Screenshot 2) */
+    /* Specs Bar */
     .specs-bar-wrap {
       max-width: 1040px;
       margin: 0 auto 60px;
@@ -461,7 +546,7 @@
       letter-spacing: -0.3px;
     }
 
-    /* Editorial Numbered Cards (01, 02, 03 - Inspired by Screenshot 1) */
+    /* Numbered Editorial Rows */
     .editorial-section {
       margin-top: 40px;
       margin-bottom: 80px;
@@ -502,6 +587,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      text-align: left;
     }
 
     .editorial-num {
@@ -616,6 +702,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      text-align: left;
     }
 
     .mock-label {
@@ -688,6 +775,7 @@
       display: flex;
       flex-direction: column;
       transition: all var(--transition-smooth);
+      text-align: left;
     }
 
     .feature-card:hover {
@@ -759,6 +847,7 @@
       border-radius: var(--radius-lg);
       padding: 32px;
       margin-top: 40px;
+      text-align: left;
     }
 
     .table-title {
@@ -810,6 +899,7 @@
       max-width: 860px;
       margin: 0 auto;
       position: relative;
+      text-align: left;
     }
 
     .timeline-container::before {
@@ -938,6 +1028,7 @@
     .install-container {
       max-width: 900px;
       margin: 0 auto;
+      text-align: left;
     }
 
     .install-steps-grid {
@@ -1081,7 +1172,7 @@
       font-size: 13px;
       font-weight: 600;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      z-index: 1000;
+      z-index: 2000;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
       opacity: 0;
       pointer-events: none;
@@ -1093,7 +1184,7 @@
     }
 
     /* ==========================================================================
-       FOOTER (Minimal Editorial)
+       SITE FOOTER (Flex & Clean on all devices)
        ========================================================================== */
     .site-footer {
       background: var(--bg-surface);
@@ -1108,6 +1199,7 @@
       display: flex;
       flex-direction: column;
       gap: 32px;
+      width: 100%;
     }
 
     .footer-top {
@@ -1116,15 +1208,17 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 20px;
+      width: 100%;
     }
 
     .footer-nav {
       display: flex;
       align-items: center;
       gap: 24px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-secondary);
+      flex-wrap: wrap;
     }
 
     .footer-nav a:hover {
@@ -1137,13 +1231,16 @@
       justify-content: space-between;
       border-top: 1px solid var(--border-light);
       padding-top: 24px;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-muted);
       flex-wrap: wrap;
       gap: 12px;
+      width: 100%;
     }
 
-    /* Responsive */
+    /* ==========================================================================
+       RESPONSIVE ADAPTATIONS
+       ========================================================================== */
     @media (max-width: 960px) {
       .specs-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1168,41 +1265,109 @@
     }
 
     @media (max-width: 768px) {
+      /* Header: Only Logo and Hamburger Menu */
       .nav-tabs {
-        display: none;
+        display: none !important;
+      }
+      #headerDownloadBtn {
+        display: none !important;
       }
       .mobile-menu-btn {
         display: flex;
       }
-      .mobile-nav-panel {
-        display: none;
-        position: fixed;
-        top: var(--header-h);
-        left: 0;
-        right: 0;
-        background: var(--bg-surface);
-        border-bottom: 1px solid var(--border-base);
+
+      /* Hero section mobile padding */
+      .hero-section {
+        padding-top: 32px;
+        padding-bottom: 48px;
+      }
+      .hero-title {
+        font-size: 34px;
+        letter-spacing: -1.2px;
+      }
+      .hero-description {
+        font-size: 16px;
+      }
+      .hero-cta-group .btn-pill {
+        width: 100%;
+      }
+
+      /* Editorial mobile padding */
+      .editorial-row {
+        padding: 24px 20px;
+      }
+      .editorial-num {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+      .editorial-heading {
+        font-size: 24px;
+      }
+      .editorial-visual {
+        min-height: auto;
         padding: 16px;
-        flex-direction: column;
-        gap: 8px;
-        z-index: 99;
       }
-      .mobile-nav-panel.open {
-        display: flex;
-      }
-      .mobile-nav-btn {
-        text-align: left;
-        padding: 12px 16px;
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        color: var(--text-main);
-      }
-      .mobile-nav-btn.active {
-        background: var(--bg-subtle);
-      }
+
+      /* Install steps mobile */
       .install-step-card {
         flex-direction: column;
         gap: 16px;
+        padding: 24px 20px;
+      }
+      .step-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+      .code-action-box {
+        max-width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .code-action-box .copy-chip-btn {
+        width: 100%;
+        padding: 8px;
+        text-align: center;
+      }
+
+      /* Full mobile flex footer */
+      .site-footer {
+        padding: 36px 20px 24px;
+      }
+      .footer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 28px;
+        width: 100%;
+      }
+      .footer-top {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+      }
+      .footer-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        width: 100%;
+      }
+      .footer-nav a {
+        display: block;
+        font-size: 15px;
+        padding: 4px 0;
+      }
+      .footer-bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+        padding-top: 20px;
       }
     }
   </style>
@@ -1211,18 +1376,18 @@
 
   <!-- ==========================================================================
        SITE HEADER
+       Mobile: strictly Logo (left) and Hamburger (right).
+       Desktop: Logo (left), Nav Tabs (center), Download CTA (right).
+       No version badge in header.
        ========================================================================== -->
   <header class="site-header" role="banner">
     <div class="header-container">
-      <div class="brand-wrap">
+      <div class="brand-wrap" onclick="switchTab('overview')">
         <div class="brand-icon">mS</div>
-        <div class="brand-text">
-          <span class="brand-name">mySmart</span>
-          <span class="brand-badge">v0.3.0 · MV3</span>
-        </div>
+        <span class="brand-name">mySmart</span>
       </div>
 
-      <!-- Navigation Tabs (Monochrome Minimalist) -->
+      <!-- Navigation Tabs (Desktop only) -->
       <nav class="nav-tabs" role="tablist" aria-label="Main Navigation">
         <button class="nav-tab-btn active" role="tab" aria-selected="true" data-tab="overview">Обзор</button>
         <button class="nav-tab-btn" role="tab" aria-selected="false" data-tab="features">Функционал</button>
@@ -1248,15 +1413,58 @@
         </button>
       </div>
     </div>
-
-    <!-- Mobile Nav Dropdown -->
-    <div class="mobile-nav-panel" id="mobileNavPanel">
-      <button class="mobile-nav-btn active" data-tab="overview">Обзор</button>
-      <button class="mobile-nav-btn" data-tab="features">Функционал</button>
-      <button class="mobile-nav-btn" data-tab="changelog">Хронология версий</button>
-      <button class="mobile-nav-btn" data-tab="install">Инструкция по установке</button>
-    </div>
   </header>
+
+  <!-- ==========================================================================
+       FULLSCREEN SLIDE-IN MOBILE DRAWER
+       ========================================================================== -->
+  <aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Мобильное меню">
+    <div class="drawer-header">
+      <div class="brand-wrap" onclick="switchTab('overview'); closeMobileDrawer();">
+        <div class="brand-icon">mS</div>
+        <span class="brand-name">mySmart</span>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Закрыть меню">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="drawer-nav-list">
+      <button class="drawer-nav-link active" data-tab="overview">
+        <span>Обзор</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="drawer-nav-link" data-tab="features">
+        <span>Функционал</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="drawer-nav-link" data-tab="changelog">
+        <span>Хронология версий</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="drawer-nav-link" data-tab="install">
+        <span>Инструкция по установке</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </nav>
+
+    <div class="drawer-bottom">
+      <a href="mysmart-chrome.zip" download class="btn-pill btn-pill-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Скачать mysmart-chrome.zip
+      </a>
+      <div style="font-size:12px; color:var(--text-muted); text-align:center; font-family:var(--font-mono);">
+        Google Chrome Extension · MV3
+      </div>
+    </div>
+  </aside>
 
   <main role="main">
 
@@ -1293,7 +1501,7 @@
           </button>
         </div>
 
-        <!-- Technical Specifications Bar (Inspired by Screenshot 2) -->
+        <!-- Technical Specifications Bar -->
         <div class="specs-bar-wrap">
           <div class="specs-grid">
             <div class="spec-item">
@@ -1319,7 +1527,7 @@
           </div>
         </div>
 
-        <!-- Numbered Editorial Rows (01, 02, 03 - Inspired by Screenshot 1) -->
+        <!-- Numbered Editorial Rows (01, 02, 03) -->
         <div class="editorial-section">
           <div class="editorial-grid">
 
@@ -1338,7 +1546,6 @@
                 </div>
               </div>
               <div class="editorial-visual">
-                <!-- Mockup Extension Card for Event Firing -->
                 <div class="mock-panel">
                   <div class="mock-header">
                     <span>MYSENDER TOOLS · EVENTS</span>
@@ -1904,18 +2111,17 @@
   </main>
 
   <!-- ==========================================================================
-       SITE FOOTER
+       SITE FOOTER (Flexible & Clean on all devices)
        ========================================================================== -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-container">
       <div class="footer-top">
-        <div class="brand-wrap">
+        <div class="brand-wrap" onclick="switchTab('overview')">
           <div class="brand-icon">mS</div>
           <span class="brand-name">mySmart</span>
-          <span class="brand-badge">Chrome Extension</span>
         </div>
 
-        <nav class="footer-nav">
+        <nav class="footer-nav" aria-label="Footer Navigation">
           <a href="#overview" onclick="switchTab('overview')">Обзор</a>
           <a href="#features" onclick="switchTab('features')">Функционал</a>
           <a href="#changelog" onclick="switchTab('changelog')">Хронология</a>
@@ -1939,11 +2145,26 @@
   <!-- Interactive Logic -->
   <script>
     // Tab Switching Logic
-    const tabButtons = document.querySelectorAll('.nav-tab-btn, .mobile-nav-btn');
+    const tabButtons = document.querySelectorAll('.nav-tab-btn, .drawer-nav-link');
     const tabViews = document.querySelectorAll('.tab-view');
-    const mobilePanel = document.getElementById('mobileNavPanel');
+    const mobileDrawer = document.getElementById('mobileDrawer');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const drawerCloseBtn = document.getElementById('drawerCloseBtn');
     const toast = document.getElementById('toast');
+
+    function openMobileDrawer() {
+      if (!mobileDrawer) return;
+      mobileDrawer.classList.add('open');
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('drawer-open');
+    }
+
+    function closeMobileDrawer() {
+      if (!mobileDrawer) return;
+      mobileDrawer.classList.remove('open');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('drawer-open');
+    }
 
     function switchTab(tabId) {
       if (!tabId) tabId = 'overview';
@@ -1961,9 +2182,7 @@
         view.classList.toggle('active-view', view.id === targetViewId);
       });
 
-      if (mobilePanel) {
-        mobilePanel.classList.remove('open');
-      }
+      closeMobileDrawer();
 
       // Smooth scroll to top of content
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1983,11 +2202,20 @@
       });
     });
 
-    if (mobileMenuBtn && mobilePanel) {
-      mobileMenuBtn.addEventListener('click', () => {
-        mobilePanel.classList.toggle('open');
-      });
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', openMobileDrawer);
     }
+
+    if (drawerCloseBtn) {
+      drawerCloseBtn.addEventListener('click', closeMobileDrawer);
+    }
+
+    // Close drawer on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('open')) {
+        closeMobileDrawer();
+      }
+    });
 
     // Handle hash on initial load
     window.addEventListener('DOMContentLoaded', () => {

@@ -31,8 +31,11 @@ export function renderHeader() {
 export function renderNav() {
   const nav = shadowRootRef.getElementById('ss-nav'); if (!nav) return;
   nav.innerHTML = `
-    <div class="ss-info-header">
-      <div class="ss-info-title">Workspace</div>
+    <div class="ss-info-header" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:28px;height:28px;border-radius:7px;background:#09090b;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.18);user-select:none;">mS</div>
+        <div class="ss-info-title" style="font-size:17px;font-weight:700;letter-spacing:-0.3px;">mySmart</div>
+      </div>
       <button class="ss-close" id="ss-nav-close">${iX}</button>
     </div>
     <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Menu</div>
@@ -232,10 +235,11 @@ export const toggleSidePanel = (id) => {
             <button class="ss-icon-btn" id="ss-burger" title="Navigation Menu" style="width:44px;height:44px;background:none;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text2);padding:0;">
               ${iMenu}
             </button>
-            <div style="display:flex;align-items:center;">
-              <span id="ss-current-tab-label" style="font-size:24px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
-              <a id="ss-tab-external-link" target="_blank" title="Open in SmartSender" style="display:none;color:var(--text4);margin-left:10px;text-decoration:none;transition:color 0.2s;">
-                ${iExternal.replace('width="16" height="16"', 'width="22" height="22"')}
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="ss-brand-badge" style="width:28px;height:28px;border-radius:7px;background:#09090b;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.18);user-select:none;flex-shrink:0;">mS</div>
+              <span id="ss-current-tab-label" style="font-size:22px;font-weight:700;color:var(--text2);letter-spacing:-0.02em;">Variables</span>
+              <a id="ss-tab-external-link" target="_blank" title="Open in SmartSender" style="display:none;color:var(--text4);margin-left:6px;text-decoration:none;transition:color 0.2s;">
+                ${iExternal.replace('width="16" height="16"', 'width="20" height="20"')}
               </a>
             </div>
           </div>
