@@ -1962,6 +1962,47 @@ input:checked+.ss-slider:hover {
 
 input:checked+.ss-slider:before {
   transform: translateX(18px);
+  background-color: var(--accent-text, #fff);
+}
+
+/* ─── THEME OPTION BUTTONS ──────────────────────────────── */
+.ss-theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.ss-theme-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+  text-align: left;
+  user-select: none;
+}
+
+.ss-theme-option-btn:hover {
+  background: var(--bg2);
+  border-color: var(--border2);
+  color: var(--text);
+}
+
+.ss-theme-option-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 /* ─── EXTRA PANELS (HISTORY, FAVS, OPTIONS) ────────────── */

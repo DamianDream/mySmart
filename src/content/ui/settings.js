@@ -4,7 +4,7 @@ import { getPreset, savePresets, loadPresets, saveGlobalSettings, buildPresetExp
 import { shadowRootRef, esc, showNotice } from '../utils/dom.js';
 import { setProjectMode, switchProject } from '../models/project.js';
 import { isSmartsender } from '../utils/url.js';
-import { applyTheme, applyAccent, defaultAccent, ACCENT_PRESETS } from './themes.js';
+import { applyTheme, applyAccent, defaultAccent, ACCENT_PRESETS, THEMES, THEME_LIST } from './themes.js';
 import { switchView, toggleSidePanel, renderHeader } from './sidebar.js';
 import { logAction } from '../core/logger.js';
 import { iMenu, iTune, iSave, iBack, iPlus, iPen, iTrash, iX, iLock, iUnlock } from '../icons.js';
@@ -23,42 +23,55 @@ const infoTip = (text, pos = 'center') =>
     const token = ep ? (ep.apiToken || '') : '';
     const curAccent = (state.globalSettings.accentColor || defaultAccent(state.theme)).toLowerCase();
     const accentIsCustom = !!state.globalSettings.accentColor;
+    const currentTheme = THEMES[state.theme] ? state.theme : 'dark';
 
     body.innerHTML = `
       <div style="margin-bottom:14px;">
-        <div class="ss-section-label" style="margin-bottom:12px;">Appearance</div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">${state.theme === 'dark' ? 'Dark' : 'Light'} Mode ${infoTip('Switches the panel between a dark and light color theme.', 'left')}</span>
-            <label class="ss-theme-switch" title="Toggle Theme" style="flex-shrink:0;">
-              <input type="checkbox" id="ss-theme-toggle-input"${state.theme === 'dark' ? ' checked' : ''}>
-              <span class="ss-slider"></span>
-            </label>
+        <div class="ss-section-label" style="margin-bottom:10px;">Appearance</div>
+        
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Theme</span>
+            <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;">${THEME_LIST.find(x => x.id === currentTheme)?.name || 'Dark'}</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">API Cache ${infoTip('Caches SmartSender API responses locally so repeated lookups load instantly and use fewer API calls. Turn off if you always need fresh data.', 'center')}</span>
-            <label class="ss-theme-switch" title="Smart API Caching" style="flex-shrink:0;">
-              <input type="checkbox" id="ss-cache-toggle-input"${state.globalSettings.useApiCache ? ' checked' : ''}>
-              <span class="ss-slider"></span>
-            </label>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">Auto Fetch ${infoTip('Runs the search automatically as you type, so you do not need to press the Search button.', 'right')}</span>
-            <label class="ss-theme-switch" title="Search as you type" style="flex-shrink:0;">
-              <input type="checkbox" id="ss-autofetch-toggle-input"${state.globalSettings.autoFetch ? ' checked' : ''}>
-              <span class="ss-slider"></span>
-            </label>
+          <div class="ss-theme-grid">
+            ${THEME_LIST.map(item => `
+              <button type="button" class="ss-theme-option-btn${currentTheme === item.id ? ' active' : ''}" data-theme="${item.id}" title="${esc(item.name)} (${esc(item.desc)})">
+                <span style="width:14px;height:14px;border-radius:50%;background:${item.bg};border:1px solid ${item.border};display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="width:5px;height:5px;border-radius:50%;background:${item.accent};"></span>
+                </span>
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;">${esc(item.name)}</span>
+              </button>
+            `).join('')}
           </div>
         </div>
-        <div style="margin-top:16px;">
+
+        <div style="margin-bottom:14px;">
           <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Accent Color</span>
-          <div style="position:relative;margin-top:10px;">
+          <div style="position:relative;margin-top:6px;">
             <select id="ss-accent-select" class="ss-input" style="appearance:none;cursor:pointer;width:100%;padding-left:34px;">
               <option value=""${accentIsCustom ? '' : ' selected'}>Default (theme)</option>
               ${ACCENT_PRESETS.map(c => `<option value="${c.value}"${accentIsCustom && curAccent === c.value.toLowerCase() ? ' selected' : ''}>${c.name}</option>`).join('')}
             </select>
             <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:${curAccent};pointer-events:none;box-shadow:0 0 0 1px var(--border2);"></span>
             <svg style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text4);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:10px;border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">API Cache ${infoTip('Caches SmartSender API responses locally so repeated lookups load instantly and use fewer API calls. Turn off if you always need fresh data.', 'left')}</span>
+            <label class="ss-theme-switch" title="Smart API Caching" style="flex-shrink:0;">
+              <input type="checkbox" id="ss-cache-toggle-input"${state.globalSettings.useApiCache ? ' checked' : ''}>
+              <span class="ss-slider"></span>
+            </label>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;line-height:1;">Auto Fetch ${infoTip('Runs the search automatically as you type, so you do not need to press the Search button.', 'right')}</span>
+            <label class="ss-theme-switch" title="Search as you type" style="flex-shrink:0;">
+              <input type="checkbox" id="ss-autofetch-toggle-input"${state.globalSettings.autoFetch ? ' checked' : ''}>
+              <span class="ss-slider"></span>
+            </label>
           </div>
         </div>
       </div>
@@ -113,7 +126,16 @@ const infoTip = (text, pos = 'center') =>
       </div>
     `;
 
-    shadowRootRef.getElementById('ss-theme-toggle-input').onchange = (e) => { const theme = e.target.checked ? 'dark' : 'light'; applyTheme(theme); logAction('Change Theme', `Theme changed to ${theme}`); renderSettings(); };
+    shadowRootRef.querySelectorAll('.ss-theme-option-btn').forEach(btn => {
+      btn.onclick = () => {
+        const theme = btn.dataset.theme;
+        if (theme && THEMES[theme]) {
+          applyTheme(theme);
+          logAction('Change Theme', `Theme changed to ${theme}`);
+          renderSettings();
+        }
+      };
+    });
     shadowRootRef.getElementById('ss-cache-toggle-input').onchange = (e) => { 
       state.globalSettings.useApiCache = e.target.checked;
       saveGlobalSettings(state.globalSettings);

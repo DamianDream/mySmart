@@ -33,7 +33,40 @@ export const THEMES = {
     '--shadow': 'rgba(0,0,0,0.06)', '--blur-depth': '24px',
     '--font-main': "'Outfit', sans-serif",
   },
+  'mono-dark': {
+    '--bg-solid': '#000000', '--bg': 'rgba(0, 0, 0, 0.95)', '--bg2': 'rgba(18, 18, 18, 0.95)', '--bg3': 'rgba(255, 255, 255, 0.10)', '--bg4': 'rgba(10, 10, 10, 0.98)',
+    '--border': 'rgba(255, 255, 255, 0.18)', '--border2': 'rgba(255, 255, 255, 0.32)',
+    '--text': '#ffffff', '--text2': '#f5f5f5', '--text3': '#e0e0e0', '--text4': 'rgba(255, 255, 255, 0.70)', '--text5': 'rgba(255, 255, 255, 0.42)',
+    '--accent-rgb': '255, 255, 255', '--accent': '#ffffff', '--accent2': '#cccccc', '--accent-bg': 'rgba(255, 255, 255, 0.18)', '--accent-text': '#000000',
+    '--success-rgb': '48, 209, 88', '--success': '#30d158',
+    '--error-rgb': '255, 69, 58', '--error': '#ff453a',
+    '--mark-bg': 'rgba(255, 255, 255, 0.35)', '--mark-text': '#ffffff',
+    '--shadow': 'rgba(0,0,0,0.6)', '--blur-depth': '30px',
+    '--font-main': "'Outfit', sans-serif",
+  },
+  'mono-light': {
+    '--bg-solid': '#ffffff', '--bg': 'rgba(255, 255, 255, 0.98)', '--bg2': 'rgba(244, 244, 245, 0.95)', '--bg3': 'rgba(0, 0, 0, 0.06)', '--bg4': 'rgba(250, 250, 250, 0.98)',
+    '--border': 'rgba(0, 0, 0, 0.18)', '--border2': 'rgba(0, 0, 0, 0.30)',
+    '--text': '#000000', '--text2': '#171717', '--text3': '#262626', '--text4': '#525252', '--text5': '#737373',
+    '--accent-rgb': '0, 0, 0', '--accent': '#000000', '--accent2': '#262626', '--accent-bg': 'rgba(0, 0, 0, 0.10)', '--accent-text': '#ffffff',
+    '--success-rgb': '5, 150, 105', '--success': '#059669',
+    '--error-rgb': '220, 38, 38', '--error': '#dc2626',
+    '--mark-bg': 'rgba(0, 0, 0, 0.18)', '--mark-text': '#000000',
+    '--shadow': 'rgba(0,0,0,0.12)', '--blur-depth': '20px',
+    '--font-main': "'Outfit', sans-serif",
+  },
 };
+
+export const THEME_LIST = [
+  { id: 'dark', name: 'Dark', desc: 'Classic Dark', bg: '#282828', accent: '#0a84ff', border: 'rgba(255,255,255,0.3)' },
+  { id: 'light', name: 'Light', desc: 'Classic Light', bg: '#f0f2f5', accent: '#2563eb', border: 'rgba(0,0,0,0.2)' },
+  { id: 'mono-dark', name: 'Black & White', desc: 'Pure Black', bg: '#000000', accent: '#ffffff', border: '#ffffff' },
+  { id: 'mono-light', name: 'White & Black', desc: 'Pure White', bg: '#ffffff', accent: '#000000', border: '#000000' },
+];
+
+export function isDarkTheme(t = state.theme) {
+  return t === 'dark' || t === 'mono-dark';
+}
 
 // Preset accent colors offered in Preferences.
 export const ACCENT_PRESETS = [
@@ -45,6 +78,8 @@ export const ACCENT_PRESETS = [
   { name: 'Orange', value: '#ff9f0a' },
   { name: 'Green', value: '#30d158' },
   { name: 'Cyan', value: '#64d2ff' },
+  { name: 'White', value: '#ffffff' },
+  { name: 'Black', value: '#000000' },
 ];
 
 function hexToRgb(hex) {
@@ -55,8 +90,12 @@ function hexToRgb(hex) {
 
 // Scale an "r, g, b" string by a factor (e.g. 0.8 = darker) for the secondary accent.
 function shadeRgb(rgb, factor) {
-  return rgb.split(',')
-    .map(n => Math.max(0, Math.min(255, Math.round(parseInt(n, 10) * factor))))
+  const parts = rgb.split(',').map(n => parseInt(n.trim(), 10));
+  if (parts.every(n => n === 0)) {
+    return '38, 38, 38';
+  }
+  return parts
+    .map(n => Math.max(0, Math.min(255, Math.round(n * factor))))
     .join(', ');
 }
 
@@ -64,8 +103,15 @@ export function isValidHex(hex) {
   return /^#[0-9a-f]{6}$/i.test(hex);
 }
 
+function isBrightColor(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return false;
+  const [r, g, b] = rgb.split(',').map(n => parseInt(n.trim(), 10));
+  return (r * 0.299 + g * 0.587 + b * 0.114) > 160;
+}
+
 // Accents that are bright enough to require black button text instead of white.
-const DARK_TEXT_ACCENTS = new Set(['#ff9f0a', '#30d158', '#64d2ff']); // Orange, Green, Cyan
+const DARK_TEXT_ACCENTS = new Set(['#ff9f0a', '#30d158', '#64d2ff', '#ffffff']); // Orange, Green, Cyan, White
 
 // Default accent for a theme (used when no custom color is set).
 export function defaultAccent(t = state.theme) {
@@ -83,20 +129,32 @@ export function applyAccent(hex, stateRef = state) {
   // Secondary accent (hover states, focus borders) — a darker shade of the same hue.
   root.style.setProperty('--accent2', `rgb(${shadeRgb(rgb, 0.8)})`);
   // Search highlight color follows the accent too.
-  root.style.setProperty('--mark-bg', `rgba(${rgb}, ${stateRef?.theme === 'dark' ? 0.3 : 0.35})`);
+  const isDark = isDarkTheme(stateRef?.theme);
+  root.style.setProperty('--mark-bg', `rgba(${rgb}, ${isDark ? 0.3 : 0.35})`);
   // Bright accents need black button text for contrast.
-  root.style.setProperty('--accent-text', DARK_TEXT_ACCENTS.has(hex.toLowerCase()) ? '#000' : '#fff');
+  root.style.setProperty('--accent-text', (DARK_TEXT_ACCENTS.has(hex.toLowerCase()) || isBrightColor(hex)) ? '#000' : '#fff');
 }
 
 export function applyTheme(t, stateRef = state) {
-  stateRef.theme = t;
-  saveTheme(t);
-  const vars = THEMES[t];
+  const themeKey = THEMES[t] ? t : 'dark';
+  stateRef.theme = themeKey;
+  saveTheme(themeKey);
+  const vars = THEMES[themeKey];
   const root = styleTarget();
-  if (root) {
+  if (root && vars) {
     Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
   }
-  // Re-apply the custom accent on top of the freshly applied theme.
+  // Re-apply the custom accent or restore theme default accent tokens
   const accent = stateRef.globalSettings?.accentColor;
-  if (accent) applyAccent(accent, stateRef);
+  if (accent) {
+    applyAccent(accent, stateRef);
+  } else if (root && vars) {
+    root.style.setProperty('--accent', vars['--accent']);
+    root.style.setProperty('--accent-rgb', vars['--accent-rgb']);
+    root.style.setProperty('--accent-bg', vars['--accent-bg']);
+    root.style.setProperty('--accent2', vars['--accent2']);
+    root.style.setProperty('--accent-text', vars['--accent-text']);
+    root.style.setProperty('--mark-bg', vars['--mark-bg']);
+    root.style.setProperty('--mark-text', vars['--mark-text']);
+  }
 }
