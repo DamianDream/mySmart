@@ -33,14 +33,14 @@ const infoTip = (text, pos = 'center') =>
       <div style="margin-bottom:14px;">
         <div class="ss-section-label" style="margin-bottom:10px;">Appearance &amp; Colors</div>
         
-        <!-- Dark / Light toggle -->
-        <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-          <span style="font-size:13px;font-weight:${activePresetId === 'dark' || !activePresetId ? '700' : '400'};color:${activePresetId === 'light' ? 'var(--text4)' : 'var(--text)'};transition:all 0.2s;">🌑 Dark</span>
+        <!-- Dark / Light toggle (compact) -->
+        <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;font-weight:${activePresetId === 'dark' || !activePresetId ? '700' : '500'};color:${activePresetId === 'light' ? 'var(--text5)' : 'var(--text3)'};transition:color 0.2s;">🌑 Dark</span>
           <label class="ss-theme-switch" title="Switch Dark / Light" style="flex-shrink:0;margin:0;">
             <input type="checkbox" id="ss-dark-light-toggle"${activePresetId === 'light' ? ' checked' : ''}>
             <span class="ss-slider"></span>
           </label>
-          <span style="font-size:13px;font-weight:${activePresetId === 'light' ? '700' : '400'};color:${activePresetId === 'dark' || !activePresetId ? 'var(--text4)' : 'var(--text)'};transition:all 0.2s;">☀️ Light</span>
+          <span style="font-size:11px;font-weight:${activePresetId === 'light' ? '700' : '500'};color:${activePresetId === 'dark' || !activePresetId ? 'var(--text5)' : 'var(--text3)'};transition:color 0.2s;">☀️ Light</span>
         </div>
 
         <!-- 3 Color Parameters: Background, Buttons, Text -->
