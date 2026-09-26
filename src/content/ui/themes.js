@@ -19,10 +19,8 @@ export const COLOR_PRESETS = [
 export const THEME_LIST = COLOR_PRESETS;
 
 export const THEMES = {
-  dark: computeThemeVars(COLOR_PRESETS[0]),
+  dark:  computeThemeVars(COLOR_PRESETS[0]),
   light: computeThemeVars(COLOR_PRESETS[1]),
-  'mono-dark': computeThemeVars(COLOR_PRESETS[2]),
-  'mono-light': computeThemeVars(COLOR_PRESETS[3]),
 };
 
 export const ACCENT_PRESETS = [
