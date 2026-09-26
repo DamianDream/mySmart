@@ -31,12 +31,8 @@ export function renderHeader() {
 export function renderNav() {
   const nav = shadowRootRef.getElementById('ss-nav'); if (!nav) return;
   nav.innerHTML = `
-    <div class="ss-info-header" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:28px;height:28px;border-radius:7px;background:#09090b;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.18);user-select:none;">mS</div>
-        <div class="ss-info-title" style="font-size:17px;font-weight:700;letter-spacing:-0.3px;">mySmart</div>
-      </div>
-      <button class="ss-close" id="ss-nav-close">${iX}</button>
+    <div style="display:flex;align-items:center;justify-content:flex-end;padding:4px 16px 8px;background:transparent;">
+      <button class="ss-close" id="ss-nav-close" title="Close">${iX}</button>
     </div>
     <div class="ss-section-label" style="padding: 0 16px; margin: 8px 0;">Menu</div>
     <button class="ss-nav-item ${state.view !== 'settings' && state.activeTab === 'vars' ? 'active' : ''}" data-tab="vars">
@@ -92,7 +88,7 @@ export function renderNav() {
   });
 
   const closeBtn = shadowRootRef.getElementById('ss-nav-close');
-  if (closeBtn) closeBtn.onclick = () => toggleSidePanel('ss-nav');
+  if (closeBtn) closeBtn.onclick = (e) => { if (e) e.stopPropagation(); toggleSidePanel('ss-nav'); };
 }
 
 // ─── VIEW / TAB SWITCHING ──────────────────────────────────────────────────
