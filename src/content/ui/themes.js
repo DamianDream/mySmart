@@ -12,10 +12,8 @@ function styleTarget() {
 }
 
 export const COLOR_PRESETS = [
-  { id: 'dark', name: 'Dark', desc: 'Classic Dark', bg: '#282828', button: '#0a84ff', text: '#ffffff' },
+  { id: 'dark',  name: 'Dark',  desc: 'Classic Dark',  bg: '#282828', button: '#0a84ff', text: '#ffffff' },
   { id: 'light', name: 'Light', desc: 'Classic Light', bg: '#f0f2f5', button: '#2563eb', text: '#0f172a' },
-  { id: 'mono-dark', name: 'Black & White', desc: 'Pure Black', bg: '#000000', button: '#ffffff', text: '#ffffff' },
-  { id: 'mono-light', name: 'White & Black', desc: 'Pure White', bg: '#ffffff', button: '#000000', text: '#000000' },
 ];
 
 export const THEME_LIST = COLOR_PRESETS;

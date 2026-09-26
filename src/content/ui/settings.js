@@ -33,22 +33,14 @@ const infoTip = (text, pos = 'center') =>
       <div style="margin-bottom:14px;">
         <div class="ss-section-label" style="margin-bottom:10px;">Appearance &amp; Colors</div>
         
-        <!-- Presets -->
-        <div style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:11px;color:var(--text5);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Presets</span>
-            <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;">${activePreset ? activePreset.name : 'Custom'}</span>
-          </div>
-          <div class="ss-theme-grid">
-            ${COLOR_PRESETS.map(p => `
-              <button type="button" class="ss-theme-option-btn${activePresetId === p.id ? ' active' : ''}" data-preset="${p.id}" title="${esc(p.name)} (${esc(p.desc)})">
-                <span style="width:14px;height:14px;border-radius:50%;background:${p.bg};border:1px solid ${p.button};display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <span style="width:5px;height:5px;border-radius:50%;background:${p.button};"></span>
-                </span>
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;">${esc(p.name)}</span>
-              </button>
-            `).join('')}
-          </div>
+        <!-- Dark / Light toggle -->
+        <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
+          <span style="font-size:13px;font-weight:${activePresetId === 'dark' || !activePresetId ? '700' : '400'};color:${activePresetId === 'light' ? 'var(--text4)' : 'var(--text)'};transition:all 0.2s;">🌑 Dark</span>
+          <label class="ss-theme-switch" title="Switch Dark / Light" style="flex-shrink:0;margin:0;">
+            <input type="checkbox" id="ss-dark-light-toggle"${activePresetId === 'light' ? ' checked' : ''}>
+            <span class="ss-slider"></span>
+          </label>
+          <span style="font-size:13px;font-weight:${activePresetId === 'light' ? '700' : '400'};color:${activePresetId === 'dark' || !activePresetId ? 'var(--text4)' : 'var(--text)'};transition:all 0.2s;">☀️ Light</span>
         </div>
 
         <!-- 3 Color Parameters: Background, Buttons, Text -->
@@ -185,18 +177,18 @@ const infoTip = (text, pos = 'center') =>
       </div>
     `;
 
-    // 1. Presets click
-    shadowRootRef.querySelectorAll('.ss-theme-option-btn').forEach(btn => {
-      btn.onclick = () => {
-        const presetId = btn.dataset.preset;
-        const preset = COLOR_PRESETS.find(p => p.id === presetId);
+    // 1. Dark / Light toggle
+    const darkLightToggle = shadowRootRef.getElementById('ss-dark-light-toggle');
+    if (darkLightToggle) {
+      darkLightToggle.onchange = () => {
+        const preset = COLOR_PRESETS.find(p => p.id === (darkLightToggle.checked ? 'light' : 'dark'));
         if (preset) {
           applyThemeColors({ bg: preset.bg, button: preset.button, text: preset.text });
           logAction('Color Scheme', `Preset applied: ${preset.name}`);
           renderSettings();
         }
       };
-    });
+    }
 
     // 2. Custom color update helper
     const updateCustomColor = (param, val) => {
