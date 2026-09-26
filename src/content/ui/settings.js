@@ -17,10 +17,6 @@ const infoTip = (text, pos = 'center') =>
 
   export function renderSettings() {
     const body = shadowRootRef.getElementById('ss-body');
-    const ep = state.editingProjectId ? getPreset(state.editingProjectId) : null;
-    const sysName = ep ? ep.projectId : (state.projectId || '');
-    const dispName = ep ? (ep.customName || '') : '';
-    const token = ep ? (ep.apiToken || '') : '';
     const colors = state.themeColors || DEFAULT_THEME_COLORS;
     const activePreset = COLOR_PRESETS.find(p =>
       p.bg.toLowerCase() === colors.bg.toLowerCase() &&
@@ -136,28 +132,11 @@ const infoTip = (text, pos = 'center') =>
       </div>
       <div class="ss-divider"></div>
       <div style="margin-top:14px;">
-        <div class="ss-section-label">${state.editingProjectId ? 'Edit Project' : 'Add Project'}</div>
-        
-        <label class="ss-field-label">Display Name (Optional)</label>
-        <input class="ss-input" id="ss-preset-custom-name" type="text" placeholder="e.g. My Main Project" style="margin-bottom:12px;" value="${esc(dispName)}" />
-
-        <label class="ss-field-label">System Name (URL identifier)</label>
-        <div style="position:relative;margin-bottom:12px;">
-          <input class="ss-input" id="ss-preset-name" type="text" placeholder="newlook" 
-                 style="padding-right:36px;${state.systemicNameLocked ? 'color:var(--text5);' : ''}" 
-                 value="${esc(sysName)}" ${state.systemicNameLocked ? 'disabled' : ''} />
-          <button id="ss-lock-toggle" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:${state.systemicNameLocked ? 'var(--text4)' : 'var(--error)'};cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;">
-            ${state.systemicNameLocked ? iLock : iUnlock}
-          </button>
-        </div>
-
-        <label class="ss-field-label">API Token</label>
-        <input class="ss-input" id="ss-preset-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:12px;" value="${token ? '********' : ''}" />
-        <div id="ss-preset-msg" style="display:none;font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;"></div>
-        <div style="display:flex;gap:8px;">
-          <button class="ss-btn-primary" id="ss-preset-save" style="flex:1;">${state.editingProjectId ? 'Update' : 'Save'} Project</button>
-          ${state.editingProjectId ? '<button class="ss-btn-search" id="ss-preset-cancel" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);">Cancel</button>' : ''}
-        </div>
+        <div class="ss-section-label" style="margin-bottom:8px;">Projects</div>
+        <button class="ss-btn-primary" id="ss-open-project-panel-btn" style="justify-content:center;gap:8px;">
+          <span style="font-size:18px;line-height:1;">+</span>
+          <span>Add Project</span>
+        </button>
       </div>
       <div class="ss-divider"></div>
       <div style="margin-top:14px;">
@@ -284,16 +263,14 @@ const infoTip = (text, pos = 'center') =>
       else showNotice('Auto Fetch disabled', 'info');
     };
 
-    shadowRootRef.getElementById('ss-lock-toggle').onclick = () => {
-      state.systemicNameLocked = !state.systemicNameLocked;
-      renderSettings();
-    };
-
-    if (state.editingProjectId) {
-      shadowRootRef.getElementById('ss-preset-cancel').onclick = () => {
+    // ─── Open project switcher panel ─────────────────────────────
+    const openProjectPanelBtn = shadowRootRef.getElementById('ss-open-project-panel-btn');
+    if (openProjectPanelBtn) {
+      openProjectPanelBtn.onclick = () => {
         state.editingProjectId = null;
-        state.systemicNameLocked = true;
-        renderSettings();
+        state.systemicNameLocked = false;
+        renderProjectSwitcherPanel();
+        toggleSidePanel('ss-project-switcher-panel');
       };
     }
 
@@ -393,55 +370,8 @@ const infoTip = (text, pos = 'center') =>
         e.target.value = '';
       };
     }
-
-    shadowRootRef.getElementById('ss-preset-save').onclick = () => {
-      const pid = shadowRootRef.getElementById('ss-preset-name').value.trim();
-      const customName = shadowRootRef.getElementById('ss-preset-custom-name').value.trim();
-      let token = shadowRootRef.getElementById('ss-preset-token').value.trim();
-      const msg = shadowRootRef.getElementById('ss-preset-msg');
-
-      if (!pid) { msg.textContent = '⚠ System name required'; msg.style.cssText = 'display:block;color:var(--error);font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;'; return; }
-
-      const presets = loadPresets();
-
-      // If token is just placeholders, use existing one
-      if (token === '********') {
-        const existing = presets.find(p => p.projectId === (state.editingProjectId || pid));
-        token = existing ? existing.apiToken : '';
-      }
-
-      const preset = { projectId: pid, apiToken: token, name: pid, customName: customName };
-
-      if (state.editingProjectId && state.editingProjectId !== pid) {
-        const oldIdx = presets.findIndex(p => p.projectId === state.editingProjectId);
-        if (oldIdx >= 0) presets.splice(oldIdx, 1);
-      }
-
-      const targetIdx = presets.findIndex(p => p.projectId === pid);
-      if (targetIdx >= 0) presets[targetIdx] = preset;
-      else presets.push(preset);
-
-      savePresets(presets);
-      if (pid === state.projectId) {
-        state.activePreset = preset;
-        state.projectName = customName || pid;
-        renderHeader();
-      }
-
-      msg.textContent = '✅ Saved!';
-      msg.style.cssText = 'display:block;color:var(--success);font-size:13px;margin-bottom:8px;font-family:Roboto,sans-serif;';
-
-      state.editingProjectId = null;
-      state.systemicNameLocked = true;
-
-      setTimeout(() => {
-        msg.style.display = 'none';
-        renderSettings();
-      }, 1500);
-
-      renderProjectSwitcherPanel();
-    };
   }
+
 
   // ─── SWITCH ───────────────────────────────────────────────────────────────
 
@@ -462,32 +392,62 @@ const infoTip = (text, pos = 'center') =>
           </div>
         </div>
       `).join('')
-      : '<div class="ss-empty" style="border:none;padding:12px;">No projects saved. Click below to add one.</div>';
+      : '<div class="ss-empty" style="border:none;padding:12px;">No projects saved.</div>';
+
+    const ep = state.editingProjectId ? getPreset(state.editingProjectId) : null;
+    const sysName = ep ? ep.projectId : '';
+    const dispName = ep ? (ep.customName || '') : '';
+    const token = ep ? ep.apiToken : '';
+    const isEdit = !!state.editingProjectId;
+
+    const formHtml = `
+      <div style="padding:16px;border-top:1px solid var(--border);background:var(--bg);">
+        <div style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:10px;">${isEdit ? 'Edit Project' : 'New Project'}</div>
+
+        <label class="ss-field-label">Display Name (Optional)</label>
+        <input class="ss-input" id="ss-panel-custom-name" type="text" placeholder="e.g. My Main Project" style="margin-bottom:10px;" value="${esc(dispName)}" />
+
+        <label class="ss-field-label">System Name (URL identifier)</label>
+        <div style="position:relative;margin-bottom:10px;">
+          <input class="ss-input" id="ss-panel-sys-name" type="text" placeholder="newlook"
+                 style="padding-right:36px;${state.systemicNameLocked ? 'color:var(--text5);' : ''}"
+                 value="${esc(sysName)}" ${state.systemicNameLocked ? 'disabled' : ''} />
+          <button id="ss-panel-lock-toggle" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:${state.systemicNameLocked ? 'var(--text4)' : 'var(--error)'};cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;">
+            ${state.systemicNameLocked ? iLock : iUnlock}
+          </button>
+        </div>
+
+        <label class="ss-field-label">API Token</label>
+        <input class="ss-input" id="ss-panel-token" type="password" placeholder="••••••••••••••••" style="margin-bottom:10px;" value="${token ? '********' : ''}" />
+
+        <div id="ss-panel-msg" style="display:none;font-size:12px;margin-bottom:8px;font-family:Roboto,sans-serif;"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="ss-btn-primary" id="ss-panel-save" style="flex:1;justify-content:center;">${isEdit ? 'Update' : 'Save'} Project</button>
+          ${isEdit ? '<button class="ss-btn-search" id="ss-panel-cancel" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);">Cancel</button>' : ''}
+        </div>
+      </div>
+    `;
 
     p.innerHTML = `
       <div class="ss-info-header">
-        <div class="ss-info-title">Switch Project</div>
+        <div class="ss-info-title">${isEdit ? 'Edit Project' : 'Projects'}</div>
         <button class="ss-close" id="ss-project-switcher-close">${iX}</button>
       </div>
       <div class="ss-panel-list-content" style="flex:1;overflow-y:auto;">
         ${listHtml}
       </div>
-      <div style="padding: 16px; border-top: 1px solid var(--border); background: var(--bg);">
-        <button class="ss-btn-primary" id="ss-project-add-btn" style="width: 100%; justify-content: center; gap: 8px;">
-          <span style="font-size: 18px; line-height: 1;">+</span>
-          <span>Add Project</span>
-        </button>
-      </div>
+      ${formHtml}
     `;
 
     shadowRootRef.getElementById('ss-project-switcher-close').onclick = () => {
+      state.editingProjectId = null;
+      state.systemicNameLocked = true;
       toggleSidePanel('ss-project-switcher-panel');
     };
 
     p.querySelectorAll('.ss-project-select-trigger').forEach(el => {
       el.onclick = () => {
         setProjectMode('MANUAL');
-        // Collapse the panel and show the selected project's content (same as Presets).
         p.classList.remove('open');
         switchProject(el.dataset.pid);
       };
@@ -498,7 +458,7 @@ const infoTip = (text, pos = 'center') =>
         e.stopPropagation();
         state.editingProjectId = btn.dataset.pid;
         state.systemicNameLocked = true;
-        switchView('settings');
+        renderProjectSwitcherPanel();
       };
     });
 
@@ -514,15 +474,76 @@ const infoTip = (text, pos = 'center') =>
           state.editingProjectId = null;
         }
         renderProjectSwitcherPanel();
-        if (state.view === 'settings') renderSettings();
       };
     });
 
-    shadowRootRef.getElementById('ss-project-add-btn').onclick = () => {
-      state.editingProjectId = null;
-      state.systemicNameLocked = false;
-      switchView('settings');
-    };
+    // Lock / unlock system name
+    const lockBtn = shadowRootRef.getElementById('ss-panel-lock-toggle');
+    if (lockBtn) {
+      lockBtn.onclick = () => {
+        state.systemicNameLocked = !state.systemicNameLocked;
+        renderProjectSwitcherPanel();
+      };
+    }
+
+    // Cancel edit
+    const cancelBtn = shadowRootRef.getElementById('ss-panel-cancel');
+    if (cancelBtn) {
+      cancelBtn.onclick = () => {
+        state.editingProjectId = null;
+        state.systemicNameLocked = true;
+        renderProjectSwitcherPanel();
+      };
+    }
+
+    // Save project
+    const saveBtn = shadowRootRef.getElementById('ss-panel-save');
+    if (saveBtn) {
+      saveBtn.onclick = () => {
+        const pid = shadowRootRef.getElementById('ss-panel-sys-name').value.trim();
+        const customName = shadowRootRef.getElementById('ss-panel-custom-name').value.trim();
+        let tokenVal = shadowRootRef.getElementById('ss-panel-token').value.trim();
+        const msg = shadowRootRef.getElementById('ss-panel-msg');
+
+        if (!pid) {
+          msg.textContent = '⚠ System name required';
+          msg.style.cssText = 'display:block;color:var(--error);font-size:12px;margin-bottom:8px;font-family:Roboto,sans-serif;';
+          return;
+        }
+
+        const presets = loadPresets();
+        if (tokenVal === '********') {
+          const existing = presets.find(p => p.projectId === (state.editingProjectId || pid));
+          tokenVal = existing ? existing.apiToken : '';
+        }
+
+        const preset = { projectId: pid, apiToken: tokenVal, name: pid, customName };
+
+        if (state.editingProjectId && state.editingProjectId !== pid) {
+          const oldIdx = presets.findIndex(p => p.projectId === state.editingProjectId);
+          if (oldIdx >= 0) presets.splice(oldIdx, 1);
+        }
+
+        const targetIdx = presets.findIndex(p => p.projectId === pid);
+        if (targetIdx >= 0) presets[targetIdx] = preset;
+        else presets.push(preset);
+
+        savePresets(presets);
+        if (pid === state.projectId) {
+          state.activePreset = preset;
+          state.projectName = customName || pid;
+          renderHeader();
+        }
+
+        msg.textContent = '✅ Saved!';
+        msg.style.cssText = 'display:block;color:var(--success);font-size:12px;margin-bottom:8px;font-family:Roboto,sans-serif;';
+
+        state.editingProjectId = null;
+        state.systemicNameLocked = true;
+
+        setTimeout(() => renderProjectSwitcherPanel(), 1200);
+      };
+    }
   }
 
   export function updateModeUI() {
