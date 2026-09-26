@@ -43,66 +43,74 @@ const infoTip = (text, pos = 'center') =>
           <span style="font-size:11px;font-weight:${activePresetId === 'light' ? '700' : '500'};color:${activePresetId === 'dark' || !activePresetId ? 'var(--text5)' : 'var(--text3)'};transition:color 0.2s;">☀️ Light</span>
         </div>
 
-        <!-- 3 Color Parameters: Background, Buttons, Text -->
-        <div style="margin-bottom:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <!-- 3 Color Parameters: collapsible accordion -->
+        <div id="ss-colors-accordion" style="margin-bottom:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+          <!-- Header (always visible, clickable) -->
+          <button type="button" id="ss-colors-accordion-hdr" style="width:100%;background:var(--bg3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:8px;">
             <span style="font-size:11px;color:var(--text4);font-family:Roboto,sans-serif;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Custom Colors (3 Parameters)</span>
-            <button type="button" id="ss-colors-reset-btn" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;">Reset</button>
-          </div>
+            <span id="ss-colors-accordion-icon" style="font-size:10px;color:var(--text5);transition:transform 0.2s;">▾</span>
+          </button>
 
-          <!-- Parameter 1: Background Color -->
-          <div style="margin-bottom:10px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
-                1. Background Color ${infoTip('Main background and canvas color.', 'left')}
-              </span>
-              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-bg-val">${colors.bg}</span>
+          <!-- Body (hidden by default) -->
+          <div id="ss-colors-accordion-body" style="display:none;padding:12px;background:var(--bg3);border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+              <button type="button" id="ss-colors-reset-btn" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;">Reset</button>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="color" id="ss-color-bg-picker" value="${colors.bg}" class="ss-color-input" title="Choose background color" />
-              <input type="text" id="ss-color-bg-hex" value="${colors.bg}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#282828" />
-              <div style="display:flex;gap:4px;">
-                ${['#282828', '#000000', '#0f172a', '#f0f2f5', '#ffffff'].map(c => `
-                  <button type="button" class="ss-color-swatch" data-param="bg" data-color="${c}" style="background:${c};" title="${c}"></button>
-                `).join('')}
+
+            <!-- Parameter 1: Background Color -->
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                  1. Background Color ${infoTip('Main background and canvas color.', 'left')}
+                </span>
+                <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-bg-val">${colors.bg}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="color" id="ss-color-bg-picker" value="${colors.bg}" class="ss-color-input" title="Choose background color" />
+                <input type="text" id="ss-color-bg-hex" value="${colors.bg}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#282828" />
+                <div style="display:flex;gap:4px;">
+                  ${['#282828', '#000000', '#0f172a', '#f0f2f5', '#ffffff'].map(c => `
+                    <button type="button" class="ss-color-swatch" data-param="bg" data-color="${c}" style="background:${c};" title="${c}"></button>
+                  `).join('')}
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Parameter 2: Button Color -->
-          <div style="margin-bottom:10px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
-                2. Button Color ${infoTip('Color of primary buttons, active highlights and markers.', 'left')}
-              </span>
-              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-button-val">${colors.button}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="color" id="ss-color-button-picker" value="${colors.button}" class="ss-color-input" title="Choose button color" />
-              <input type="text" id="ss-color-button-hex" value="${colors.button}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#0A84FF" />
-              <div style="display:flex;gap:4px;">
-                ${['#0a84ff', '#30d158', '#ff9f0a', '#bf5af2', '#ffffff', '#000000'].map(c => `
-                  <button type="button" class="ss-color-swatch" data-param="button" data-color="${c}" style="background:${c};" title="${c}"></button>
-                `).join('')}
+            <!-- Parameter 2: Button Color -->
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                  2. Button Color ${infoTip('Color of primary buttons, active highlights and markers.', 'left')}
+                </span>
+                <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-button-val">${colors.button}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="color" id="ss-color-button-picker" value="${colors.button}" class="ss-color-input" title="Choose button color" />
+                <input type="text" id="ss-color-button-hex" value="${colors.button}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#0A84FF" />
+                <div style="display:flex;gap:4px;">
+                  ${['#0a84ff', '#30d158', '#ff9f0a', '#bf5af2', '#ffffff', '#000000'].map(c => `
+                    <button type="button" class="ss-color-swatch" data-param="button" data-color="${c}" style="background:${c};" title="${c}"></button>
+                  `).join('')}
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Parameter 3: Text Color -->
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-              <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
-                3. Text Color ${infoTip('Primary typography color for text, headers and labels.', 'left')}
-              </span>
-              <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-text-val">${colors.text}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="color" id="ss-color-text-picker" value="${colors.text}" class="ss-color-input" title="Choose text color" />
-              <input type="text" id="ss-color-text-hex" value="${colors.text}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#FFFFFF" />
-              <div style="display:flex;gap:4px;">
-                ${['#ffffff', '#f2f2f7', '#000000', '#0f172a', '#94a3b8'].map(c => `
-                  <button type="button" class="ss-color-swatch" data-param="text" data-color="${c}" style="background:${c};" title="${c}"></button>
-                `).join('')}
+            <!-- Parameter 3: Text Color -->
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:4px;">
+                  3. Text Color ${infoTip('Primary typography color for text, headers and labels.', 'left')}
+                </span>
+                <span style="font-size:11px;color:var(--text4);font-family:monospace;" id="ss-color-text-val">${colors.text}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="color" id="ss-color-text-picker" value="${colors.text}" class="ss-color-input" title="Choose text color" />
+                <input type="text" id="ss-color-text-hex" value="${colors.text}" maxlength="7" class="ss-input" style="height:32px;flex:1;font-family:monospace;font-size:12px;text-transform:uppercase;padding:0 8px;" placeholder="#FFFFFF" />
+                <div style="display:flex;gap:4px;">
+                  ${['#ffffff', '#f2f2f7', '#000000', '#0f172a', '#94a3b8'].map(c => `
+                    <button type="button" class="ss-color-swatch" data-param="text" data-color="${c}" style="background:${c};" title="${c}"></button>
+                  `).join('')}
+                </div>
               </div>
             </div>
           </div>
@@ -187,6 +195,18 @@ const infoTip = (text, pos = 'center') =>
           logAction('Color Scheme', `Preset applied: ${preset.name}`);
           renderSettings();
         }
+      };
+    }
+
+    // 1b. Colors accordion toggle
+    const colorsAccordionHdr = shadowRootRef.getElementById('ss-colors-accordion-hdr');
+    const colorsAccordionBody = shadowRootRef.getElementById('ss-colors-accordion-body');
+    const colorsAccordionIcon = shadowRootRef.getElementById('ss-colors-accordion-icon');
+    if (colorsAccordionHdr && colorsAccordionBody) {
+      colorsAccordionHdr.onclick = () => {
+        const isOpen = colorsAccordionBody.style.display !== 'none';
+        colorsAccordionBody.style.display = isOpen ? 'none' : 'block';
+        if (colorsAccordionIcon) colorsAccordionIcon.style.transform = isOpen ? '' : 'rotate(180deg)';
       };
     }
 
