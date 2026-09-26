@@ -449,15 +449,7 @@
 }
 
 /* ─── PROJECT SWITCHER ─────────────────────────────────── */
-#ss-project-switcher-panel {
-  right: 0;
-  width: 280px;
-  transform: translateX(100%);
-}
-#ss-project-switcher-panel.open {
-  transform: translateX(-100%);
-  pointer-events: auto;
-}
+
 .ss-hist-term.active {
   background: var(--bg2);
   border-left: 2px solid var(--accent);

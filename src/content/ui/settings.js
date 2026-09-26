@@ -266,11 +266,15 @@ const infoTip = (text, pos = 'center') =>
     // ─── Open project switcher panel ─────────────────────────────
     const openProjectPanelBtn = shadowRootRef.getElementById('ss-open-project-panel-btn');
     if (openProjectPanelBtn) {
-      openProjectPanelBtn.onclick = () => {
+      openProjectPanelBtn.onclick = (e) => {
+        if (e) e.stopPropagation();
         state.editingProjectId = null;
         state.systemicNameLocked = false;
         renderProjectSwitcherPanel();
-        toggleSidePanel('ss-project-switcher-panel');
+        const p = shadowRootRef.getElementById('ss-project-switcher-panel');
+        if (p && !p.classList.contains('open')) {
+          toggleSidePanel('ss-project-switcher-panel');
+        }
       };
     }
 
@@ -439,11 +443,18 @@ const infoTip = (text, pos = 'center') =>
       ${formHtml}
     `;
 
-    shadowRootRef.getElementById('ss-project-switcher-close').onclick = () => {
-      state.editingProjectId = null;
-      state.systemicNameLocked = true;
-      toggleSidePanel('ss-project-switcher-panel');
-    };
+    const closeBtn = shadowRootRef.getElementById('ss-project-switcher-close');
+    if (closeBtn) {
+      closeBtn.onclick = (e) => {
+        if (e) e.stopPropagation();
+        state.editingProjectId = null;
+        state.systemicNameLocked = true;
+        const pEl = shadowRootRef.getElementById('ss-project-switcher-panel');
+        if (pEl && pEl.classList.contains('open')) {
+          toggleSidePanel('ss-project-switcher-panel');
+        }
+      };
+    }
 
     p.querySelectorAll('.ss-project-select-trigger').forEach(el => {
       el.onclick = () => {

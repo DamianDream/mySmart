@@ -145,7 +145,7 @@ function wireUI() {
     const extraPanels = ['ss-contact-search-hist', 'ss-contact-fav-panel', 'ss-contact-settings-panel', 'ss-project-switcher-panel'];
     extraPanels.forEach(pId => {
       const p = shadowRoot.getElementById(pId);
-      if (p && p.classList.contains('open') && !p.contains(e.target) && !e.target.closest('.ss-action-btn') && !e.target.closest('.ss-var-btn')) {
+      if (p && p.classList.contains('open') && !p.contains(e.target) && !e.target.closest('.ss-action-btn') && !e.target.closest('.ss-var-btn') && !e.target.closest('#ss-open-project-panel-btn') && !e.target.closest('#ss-project-container')) {
         p.classList.remove('open');
         if (pId === 'ss-contact-search-hist') state.contactShowSearchHist = false;
         if (pId === 'ss-contact-fav-panel') state.contactShowFavorites = false;
